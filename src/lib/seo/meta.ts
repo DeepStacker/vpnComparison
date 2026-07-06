@@ -63,8 +63,7 @@ export function buildTwitterCard(meta: SeoMeta): TwitterCard {
   };
 }
 
-/** Normalize a raw SeoMeta input, filling defaults. */
-export function normalizeSeoMeta(input: SeoMeta): SeoMeta {
+function normalizeSeoMetaImpl(input: SeoMeta): SeoMeta {
   return {
     title: input.title,
     description: input.description,
@@ -78,3 +77,6 @@ export function normalizeSeoMeta(input: SeoMeta): SeoMeta {
     alternates: input.alternates,
   };
 }
+
+export const normalizeSeoMeta = normalizeSeoMetaImpl;
+export const buildSeoMeta = normalizeSeoMetaImpl;

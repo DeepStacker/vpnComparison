@@ -86,12 +86,12 @@ for (const entry of await getCollection("faqs")) {
   });
 }
 
-for (const entry of await getCollection("providers")) {
+for (const entry of await getCollection("provider-overviews")) {
   entries.push({
     id: entry.id,
     title: entry.data.title,
     summary: entry.data.summary ?? "",
-    url: providerHref(entry.id),
+    url: providerHref(entry.data.provider.id),
     type: "provider",
     content: cleanBody(entry.body),
   });
