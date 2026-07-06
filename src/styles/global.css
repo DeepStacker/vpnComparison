@@ -211,6 +211,39 @@
 }
 
 /* ============================================================
+ * Animated gradient utility for hero/primary surfaces
+ * ============================================================ */
+@utility bg-gradient-hero {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-950) 0%,
+    var(--color-brand-900) 30%,
+    var(--color-brand-800) 70%,
+    var(--color-brand-700) 100%
+  );
+}
+
+/* Subtle dot-grid pattern for decorative backgrounds */
+@utility bg-dot-grid {
+  background-image: radial-gradient(var(--color-border) 0.5px, transparent 0.5px);
+  background-size: 16px 16px;
+}
+
+/* Brand gradient for buttons and accents */
+@utility bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-brand-500) 100%);
+}
+
+/* Subtle glow effect */
+@utility shadow-glow {
+  box-shadow: 0 0 24px -4px rgb(51 102 255 / 0.15);
+}
+
+.dark .shadow-glow {
+  box-shadow: 0 0 24px -4px rgb(89 141 255 / 0.12);
+}
+
+/* ============================================================
  * Project utilities
  * ============================================================ */
 

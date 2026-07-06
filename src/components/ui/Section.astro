@@ -17,9 +17,12 @@ interface Props {
 }
 
 const { padding = "default", background = false, element: Tag = "section", id, class: className } = Astro.props;
-const classes = cx(sectionPadClass[padding], background && "bg-surface-sunken", className);
+const classes = cx("relative", sectionPadClass[padding], background && "bg-surface-sunken overflow-hidden", className);
 ---
 
 <Tag id={id} class={classes}>
+  {background && (
+    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.02]" aria-hidden="true" />
+  )}
   <slot />
 </Tag>
