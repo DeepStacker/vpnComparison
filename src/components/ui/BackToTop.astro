@@ -1,0 +1,86 @@
+---
+interface Props {
+  label?: string;
+  threshold?: number;
+}
+
+const { label = "Back to top", threshold = 400 } = Astro.props;
+---
+
+<script>
+  class BackToTop extends HTMLElement {
+    private btn: HTMLButtonElement | null;
+    private threshold: number;
+
+    constructor() {
+      super();
+      this.btn = this.querySelector("button");
+      this.threshold = parseInt(this.dataset.threshold || "400", 10);
+      this.onScroll = this.onScroll.bind(this);
+      this.onClick = this.onClick.bind(this);
+    }
+
+    connectedCallback() {
+      window.addEventListener("scroll", this.onScroll, { passive: true });
+      this.btn?.addEventListener("click", this.onClick);
+      this.onScroll();
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener("scroll", this.onScroll);
+      this.btn?.removeEventListener("click", this.onClick);
+    }
+
+    private onScroll() {
+      if (!this.btn) return;
+      const isVisible = window.scrollY > this.threshold;
+      this.btn.classList.toggle("opacity-0", !isVisible);
+      this.btn.classList.toggle("pointer-events-none", !isVisible);
+      this.btn.setAttribute("aria-hidden", String(!isVisible));
+    }
+
+    private onClick() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  customElements.define("back-to-top", BackToTop);
+</script>
+
+<back-to-top
+  class="fixed bottom-6 right-6 z-50"
+  data-threshold={threshold}
+  role="complementary"
+  aria-label={label}
+>
+  <button
+    type="button"
+    class="
+      opacity-0 pointer-events-none
+      flex size-11 items-center justify-center
+      rounded-full
+      bg-primary text-primary-foreground
+      shadow-lg
+      transition-all duration-200 ease-out
+      hover:scale-110 hover:bg-primary-hover
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+      motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out
+    "
+    aria-label={label}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  </button>
+</back-to-top>

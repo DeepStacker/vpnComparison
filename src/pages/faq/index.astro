@@ -9,6 +9,7 @@ import Accordion from "@/components/ui/Accordion.astro";
 import AccordionItem from "@/components/ui/AccordionItem.astro";
 import Button from "@/components/ui/Button.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import { faqPageJsonLd } from "@/lib/schema/jsonld";
 import type { Breadcrumb } from "@/types/site";
 
 const allFaqs = await getCollection("faqs");
@@ -18,6 +19,8 @@ const [allProviders, allGuides] = await Promise.all([
 ]);
 const providerMap = new Map(allProviders.map((p) => [p.id, p]));
 const guideMap = new Map(allGuides.map((g) => [g.id, g]));
+
+const categories = [...new Set(allFaqs.map((faq) => faq.data.category))];
 
 const grouped = allFaqs.reduce<Record<string, typeof allFaqs>>((acc, faq) => {
   const cat = faq.data.category;
@@ -43,9 +46,16 @@ const seo = normalizeSeoMeta({
 const breadcrumbs: Breadcrumb[] = [
   { label: "VPN FAQ", href: "/faq/" },
 ];
+
+const faqLd = faqPageJsonLd(
+  allFaqs.map((faq) => ({
+    question: faq.data.question,
+    answer: faq.data.answer,
+  })),
+);
 ---
 
-<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs} jsonLd={faqLd}>
   <Section background>
     <Container>
       <div class="mx-auto max-w-2xl text-center">
@@ -59,13 +69,27 @@ const breadcrumbs: Breadcrumb[] = [
 
   <Section>
     <Container>
+      {categories.length > 1 && (
+        <div class="mb-8 flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+          {categories.map((cat) => (
+            <button
+              type="button"
+              data-category={cat}
+              class="category-filter rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-surface-raised hover:text-foreground data-[active]:border-primary data-[active]:bg-primary-surface data-[active]:text-primary"
+            >
+              {categoryNames[cat] ?? cat}
+            </button>
+          ))}
+        </div>
+      )}
+
       {allFaqs.length === 0 && (
         <div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
           <Text tone="muted">No FAQs published yet.</Text>
         </div>
       )}
       {Object.entries(grouped).map(([category, faqs]) => (
-        <div class="mb-10 last:mb-0">
+        <div class="group mb-10 last:mb-0" data-category={category}>
           <Heading level={2} class="mb-4">{categoryNames[category] ?? category}</Heading>
           <Accordion>
             {faqs.map((faq) => {
@@ -76,7 +100,7 @@ const breadcrumbs: Breadcrumb[] = [
                 ? guideMap.get(faq.data.relatedGuide.id)
                 : null;
               return (
-                <AccordionItem summary={faq.data.question} id={faq.id}>
+                <AccordionItem summary={faq.data.question} id={faq.id} open={Astro.url.hash === `#${faq.id}`}>
                   <div class="space-y-3">
                     <Text size="sm">{faq.data.answer}</Text>
                     <div class="flex flex-wrap gap-2 pt-2">
@@ -101,3 +125,29 @@ const breadcrumbs: Breadcrumb[] = [
     </Container>
   </Section>
 </SeoLayout>
+
+<script>
+  const filters = document.querySelectorAll<HTMLButtonElement>(".category-filter");
+  const groups = document.querySelectorAll<HTMLDivElement>("[data-category]");
+
+  function updateFilter(active: string | null | undefined) {
+    filters.forEach((btn) => {
+      const isActive = active === null || btn.dataset.category === active;
+      btn.toggleAttribute("data-active", isActive);
+    });
+    groups.forEach((group) => {
+      if (active === null || group.dataset.category === active) {
+        group.style.display = "";
+      } else {
+        group.style.display = "none";
+      }
+    });
+  }
+
+  filters.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const active: string | null = btn.hasAttribute("data-active") ? null : (btn.dataset.category ?? null);
+      updateFilter(active);
+    });
+  });
+</script>

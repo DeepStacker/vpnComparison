@@ -41,11 +41,15 @@ const padClass: Record<string, string> = {
   lg: "p-6",
 };
 
+const isInteractive = Boolean(href);
+
 const classes = cx(
   variantClass[variant],
   padClass[padding],
   radiusClass[radius],
-  href && "transition-shadow hover:shadow-md focus-visible:outline-none",
+  isInteractive
+    ? "transition-all motion-safe:duration-200 motion-safe:ease-standard hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    : "transition-shadow motion-safe:duration-200 motion-safe:ease-standard",
   className,
 );
 

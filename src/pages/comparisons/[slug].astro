@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import SeoLayout from "@/layouts/SeoLayout.astro";
+import ComparisonLayout from "@/layouts/ComparisonLayout.astro";
 import Section from "@/components/ui/Section.astro";
 import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
@@ -76,29 +76,25 @@ function humanizeAttr(key: string): string {
 }
 ---
 
-<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section background padding="loose">
-    <Container>
-      <div class="mx-auto max-w-3xl">
-        {winnerEntry && (
-          <Badge tone="success" size="md" class="mb-3">
-            <Icon name="trophy" size={14} class="mr-1" />
-            Winner: {winnerEntry.name}
-          </Badge>
-        )}
-        <Heading level={1}>{comparison.title}</Heading>
-        <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{comparison.summary}</Text>
-        <div class="mt-4 flex flex-wrap gap-3">
-          {comparison.publishedAt && (
-            <Text size="sm" tone="muted" element="span">Published {comparison.publishedAt}</Text>
-          )}
-          {comparison.updatedAt && (
-            <Text size="sm" tone="muted" element="span">· Updated {comparison.updatedAt}</Text>
-          )}
-        </div>
-      </div>
-    </Container>
-  </Section>
+<ComparisonLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <div slot="summary">
+    {winnerEntry && (
+      <Badge tone="success" size="md" class="mb-3">
+        <Icon name="trophy" size={14} class="mr-1" />
+        Winner: {winnerEntry.name}
+      </Badge>
+    )}
+    <Heading level={1}>{comparison.title}</Heading>
+    <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{comparison.summary}</Text>
+    <div class="mt-4 flex flex-wrap gap-3">
+      {comparison.publishedAt && (
+        <Text size="sm" tone="muted" element="span">Published {comparison.publishedAt}</Text>
+      )}
+      {comparison.updatedAt && (
+        <Text size="sm" tone="muted" element="span">· Updated {comparison.updatedAt}</Text>
+      )}
+    </div>
+  </div>
 
   <Section>
     <Container>
@@ -209,4 +205,4 @@ function humanizeAttr(key: string): string {
       </Container>
     </Section>
   )}
-</SeoLayout>
+</ComparisonLayout>

@@ -183,6 +183,14 @@
     color: var(--color-accent-foreground);
   }
 
+  /* Scroll margin for anchor targets (accounts for sticky header) */
+  :target {
+    scroll-margin-top: 5.5rem;
+  }
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+
   /* Respect reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *,
