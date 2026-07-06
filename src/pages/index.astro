@@ -8,8 +8,8 @@ import Text from "@/components/ui/Text.astro";
 import Card from "@/components/ui/Card.astro";
 import Button from "@/components/ui/Button.astro";
 import Badge from "@/components/ui/Badge.astro";
-import Rating from "@/components/ui/Rating.astro";
 import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
 import { SITE } from "@/constants/site";
 import { canonicalUrl, normalizeSeoMeta } from "@/lib/seo/meta";
 
@@ -21,6 +21,10 @@ const allComparisons = await getCollection("comparisons");
 
 const providers = allProviders.map((e) => e.data).slice(0, 5);
 const reviewMap = new Map(allReviews.map((r) => [r.data.provider.id, r.data]));
+
+const avgScore =
+  allReviews.reduce((sum, r) => sum + r.data.scores.overall, 0) / allReviews.length;
+
 const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.description, canonical: canonicalUrl("/") });
 ---
 
@@ -29,9 +33,9 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
     <Container>
       <div class="mx-auto max-w-2xl text-center">
         <Badge tone="primary">Independent VPN Reviews Since 2025</Badge>
-        <Heading level={1} class="mt-4 text-balance">{SITE.name}</Heading>
-        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">{SITE.description}</Text>
-        <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <Heading level={1} class="mt-5 text-balance leading-tight">{SITE.name}</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto leading-relaxed">{SITE.description}</Text>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
           <Button href="/best-lists/">Browse Best VPNs</Button>
           <Button variant="outline" href="/comparisons/">Compare Services</Button>
         </div>
@@ -41,23 +45,32 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
 
   <Section id="providers">
     <Container>
+      <div class="mb-2">
+        <Badge tone="primary" size="sm">Hands-on testing</Badge>
+      </div>
       <Heading level={2}>Reviewed VPN Services</Heading>
-      <Text tone="muted" class="mt-2">Hands-on testing with real data — not just marketing claims.</Text>
-      <Grid cols={3} class="mt-6">
+      <Text tone="muted" class="mt-2 max-w-xl">
+        Every VPN on this site has been independently tested. We measure speed, verify privacy claims, and assess real-world streaming performance.
+      </Text>
+      <Grid cols={3} class="mt-8">
         {providers.map((p) => {
           const review = reviewMap.get(p.id);
           const score = review?.scores.overall;
           return (
-            <Card>
-              <Heading level={3}>{p.name}</Heading>
-              <Text size="sm" tone="muted" class="mt-1">{p.tagline}</Text>
-              {score != null && (
-                <div class="mt-3">
-                  <Rating value={score} label="Overall score" />
-                </div>
-              )}
-              <div class="mt-4">
-                <Button variant="outline" size="sm" href={`/vpn/${p.slug}/`}>Read Review</Button>
+            <Card class="flex flex-col">
+              <div class="flex items-start justify-between">
+                <Heading level={3}>{p.name}</Heading>
+                {score != null && (
+                  <Badge tone={score >= 9 ? "success" : score >= 8 ? "primary" : "neutral"} size="sm">
+                    {score.toFixed(1)}
+                  </Badge>
+                )}
+              </div>
+              <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{p.tagline}</Text>
+              <div class="mt-auto pt-4">
+                <Button variant="outline" size="sm" href={`/vpn/${p.slug}/`}>
+                  Read Review <Icon name="arrow-right" size={14} class="ml-1" />
+                </Button>
               </div>
             </Card>
           );
@@ -68,15 +81,23 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
 
   <Section background>
     <Container>
+      <div class="mb-2">
+        <Badge tone="primary" size="sm">Curated recommendations</Badge>
+      </div>
       <Heading level={2}>Best VPN Lists</Heading>
-      <Text tone="muted" class="mt-2">Curated shortlists for every need — streaming, privacy, speed, and budget.</Text>
-      <Grid cols={3} class="mt-6">
+      <Text tone="muted" class="mt-2 max-w-xl">Shortlists for every need — streaming, privacy, speed, and budget — ranked by transparent criteria.</Text>
+      <Grid cols={3} class="mt-8">
         {allBestLists.slice(0, 6).map((bl) => (
-          <Card>
+          <Card class="flex flex-col">
             <Heading level={3}>{bl.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1">{bl.data.summary}</Text>
-            <div class="mt-4">
-              <Button variant="outline" size="sm" href={`/best-lists/${bl.id}/`}>View List</Button>
+            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{bl.data.summary}</Text>
+            <div class="mt-2 flex items-center gap-2">
+              <Badge tone="neutral" size="sm">{bl.data.entries.length} entries</Badge>
+            </div>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/best-lists/${bl.id}/`}>
+                View List <Icon name="arrow-right" size={14} class="ml-1" />
+              </Button>
             </div>
           </Card>
         ))}
@@ -86,16 +107,28 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
 
   <Section>
     <Container>
+      <div class="mb-2">
+        <Badge tone="primary" size="sm">Educational resources</Badge>
+      </div>
       <Heading level={2}>Latest Guides</Heading>
-      <Text tone="muted" class="mt-2">Learn how VPNs work, how to choose one, and how to set it up.</Text>
-      <Grid cols={3} class="mt-6">
+      <Text tone="muted" class="mt-2 max-w-xl">Learn how VPNs work, how to choose one, and how to set it up — written for beginners and experts alike.</Text>
+      <Grid cols={3} class="mt-8">
         {allGuides.slice(0, 6).map((g) => (
-          <Card>
+          <Card class="flex flex-col">
             <Heading level={3}>{g.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
-            <Badge tone="neutral" class="mt-2">{g.data.difficulty}</Badge>
-            <div class="mt-4">
-              <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{g.data.summary}</Text>
+            <div class="mt-2 flex items-center gap-2">
+              <Badge
+                tone={g.data.difficulty === "beginner" ? "success" : g.data.difficulty === "intermediate" ? "primary" : "warning"}
+                size="sm"
+              >
+                {g.data.difficulty}
+              </Badge>
+            </div>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>
+                Read Guide <Icon name="arrow-right" size={14} class="ml-1" />
+              </Button>
             </div>
           </Card>
         ))}
@@ -105,19 +138,59 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
 
   <Section background>
     <Container>
+      <div class="mb-2">
+        <Badge tone="primary" size="sm">Head-to-head</Badge>
+      </div>
       <Heading level={2}>VPN Comparisons</Heading>
-      <Text tone="muted" class="mt-2">Head-to-head matchups to help you decide between top services.</Text>
-      <Grid cols={3} class="mt-6">
+      <Text tone="muted" class="mt-2 max-w-xl">Side-by-side matchups across speed, privacy, features, and value to help you make an informed choice.</Text>
+      <Grid cols={3} class="mt-8">
         {allComparisons.map((c) => (
-          <Card>
+          <Card class="flex flex-col">
+            {c.data.winner && (
+              <Badge tone="success" size="sm" class="mb-2 self-start">
+                <Icon name="trophy" size={12} class="mr-1" />
+                Winner
+              </Badge>
+            )}
             <Heading level={3}>{c.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1">{c.data.summary}</Text>
-            <div class="mt-4">
-              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>Read Comparison</Button>
+            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{c.data.summary}</Text>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>
+                Read Comparison <Icon name="arrow-right" size={14} class="ml-1" />
+              </Button>
             </div>
           </Card>
         ))}
       </Grid>
+    </Container>
+  </Section>
+
+  <Section padding="loose">
+    <Container>
+      <div class="mx-auto max-w-xl text-center">
+        <Icon name="shield-check" size={32} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Why Trust Our Reviews?</Heading>
+        <Text tone="muted" class="mt-3 leading-relaxed">
+          Every VPN is tested using a consistent methodology. We measure speeds from multiple locations, verify privacy claims against audit reports, and test streaming unblocking on every major platform. Our editorial team maintains full independence — no payment or partnership influences our scores or recommendations.
+        </Text>
+        <div class="mt-6 flex flex-wrap justify-center gap-6">
+          <div class="text-center">
+            <Text size="xl" weight="semibold">{providers.length}</Text>
+            <Text size="sm" tone="muted">VPNs tested</Text>
+          </div>
+          <div class="text-center">
+            <Text size="xl" weight="semibold">{avgScore.toFixed(1)}</Text>
+            <Text size="sm" tone="muted">Avg. score</Text>
+          </div>
+          <div class="text-center">
+            <Text size="xl" weight="semibold">{allGuides.length}</Text>
+            <Text size="sm" tone="muted">Guides published</Text>
+          </div>
+        </div>
+        <div class="mt-8">
+          <Button variant="outline" href="/methodology/">View Methodology</Button>
+        </div>
+      </div>
     </Container>
   </Section>
 </SeoLayout>

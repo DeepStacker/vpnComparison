@@ -5,6 +5,8 @@ import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
 import Text from "@/components/ui/Text.astro";
 import Card from "@/components/ui/Card.astro";
+import Icon from "@/components/ui/Icon.astro";
+import Button from "@/components/ui/Button.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import type { Breadcrumb } from "@/types/site";
 
@@ -41,19 +43,19 @@ const breadcrumbs: Breadcrumb[] = [
       </Text>
       <ul class="mt-4 space-y-2">
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
           <span>Clean test environment with no other VPN software installed</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
           <span>Baseline speed measured before each test session</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
           <span>Multiple server locations tested per provider</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
           <span>Tests performed at different times of day to account for network congestion</span>
         </li>
       </ul>
@@ -66,19 +68,19 @@ const breadcrumbs: Breadcrumb[] = [
       </Text>
       <ul class="mt-4 space-y-2">
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Download speed reduction percentage compared to baseline</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Upload speed impact for streaming and torrenting</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Latency increase for real-time applications like gaming and video calls</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Connection stability and consistency across multiple tests</span>
         </li>
       </ul>
@@ -91,23 +93,23 @@ const breadcrumbs: Breadcrumb[] = [
       </Text>
       <ul class="mt-4 space-y-2">
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>DNS leak testing across multiple server connections</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>IPv6 and WebRTC leak detection</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Kill switch verification through simulated connection drops</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Encryption protocol verification (WireGuard, OpenVPN, IKEv2)</span>
         </li>
         <li class="flex items-start gap-2 text-sm text-foreground">
-          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span class="mt-0.5 text-primary">{/* icon check */}</span>
           <span>Review of independent audit reports and warrant canaries</span>
         </li>
       </ul>
@@ -141,11 +143,13 @@ const breadcrumbs: Breadcrumb[] = [
   <Section background>
     <Container>
       <Card variant="raised" padding="lg" class="mx-auto max-w-2xl text-center">
-        <Heading level={2}>Have Questions About Our Process?</Heading>
+        <Heading level={2}>Questions About Our Process?</Heading>
         <Text tone="muted" class="mt-2">
-          We believe in full transparency. If you have questions about how we test or score VPN services,
-          please reach out to us at our contact page.
+          We believe in full transparency. If something isn't clear, we want to hear about it.
         </Text>
+        <div class="mt-5">
+          <Button href="/contact/">Get in Touch</Button>
+        </div>
       </Card>
     </Container>
   </Section>

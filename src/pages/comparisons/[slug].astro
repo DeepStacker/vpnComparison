@@ -124,22 +124,67 @@ function humanizeAttr(key: string): string {
   </Section>
 
   {comparison.sections.length > 0 && (
-    <Section background>
+    <Section>
       <Container>
         <Heading level={2}>Comparison Overview</Heading>
-        <div class="mt-6 space-y-4">
+        <nav class="sticky top-16 z-sticky -mx-4 mt-6 overflow-x-auto border-y border-border bg-background/95 px-4 py-3 backdrop-blur-md motion-safe:transition-shadow" aria-label="Section quick navigation">
+          <div class="flex gap-2">
+            {comparison.sections.map((section) => (
+              <a
+                href={`#section-${section.id}`}
+                class="whitespace-nowrap rounded-full border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors motion-safe:duration-150 hover:border-primary hover:text-primary"
+              >
+                {section.title}
+              </a>
+            ))}
+          </div>
+        </nav>
+        <div class="mt-8 space-y-6">
           {comparison.sections.map((section) => (
-            <Card padding="md">
-              <Heading level={3}>{section.title}</Heading>
-              {section.attributes && section.attributes.length > 0 && (
-                <div class="mt-2 flex flex-wrap gap-1.5">
-                  {section.attributes.map((attr) => (
-                    <Badge tone="neutral" size="sm">{humanizeAttr(attr)}</Badge>
-                  ))}
-                </div>
-              )}
-            </Card>
+            <div id={`section-${section.id}`}>
+              <Card padding="md">
+                <Heading level={3}>{section.title}</Heading>
+                {section.attributes && section.attributes.length > 0 && (
+                  <div class="mt-3 flex flex-wrap gap-1.5">
+                    {section.attributes.map((attr) => (
+                      <Badge tone="neutral" size="sm">{humanizeAttr(attr)}</Badge>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            </div>
           ))}
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  {winnerEntry && (
+    <Section background>
+      <Container>
+        <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-success-surface to-background border border-success/20">
+          <div class="relative p-8 sm:p-10">
+            <div class="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
+              <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-success text-success-foreground shadow-lg">
+                <Icon name="trophy" size={36} />
+              </div>
+              <div class="min-w-0">
+                <Badge tone="success" size="md">Winner</Badge>
+                <Heading level={2} class="mt-3 text-2xl sm:text-3xl">{winnerEntry.name}</Heading>
+                <Text tone="muted" class="mt-2 max-w-xl leading-relaxed">
+                  {reviewMap.get(winnerEntry.id)?.verdict.headline ?? `${winnerEntry.name} wins this comparison based on our analysis.`}
+                </Text>
+                <div class="mt-6 flex flex-wrap gap-3">
+                  <Button href={`/vpn/${winnerEntry.slug}/`}>Read Full Review</Button>
+                  {comparison.winner && (
+                    <Button variant="outline" href={`/vpn/${winnerEntry.slug}/`}>
+                      View Pricing
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </Container>
     </Section>
@@ -147,35 +192,12 @@ function humanizeAttr(key: string): string {
 
   <Section>
     <Container size="prose">
-      <div class="prose max-w-none">
+      <Heading level={2}>Full Analysis</Heading>
+      <div class="prose max-w-none mt-4">
         <Content />
       </div>
     </Container>
   </Section>
-
-  {winnerEntry && (
-    <Section background>
-      <Container>
-        <Card variant="raised" padding="lg">
-          <div class="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-success-surface text-success">
-              <Icon name="trophy" size={28} />
-            </div>
-            <div>
-              <Badge tone="success" size="md">Our Pick</Badge>
-              <Heading level={2} class="mt-2">{winnerEntry.name}</Heading>
-              <Text tone="muted" class="mt-1 max-w-xl">
-                {reviewMap.get(winnerEntry.id)?.verdict.headline ?? `${winnerEntry.name} wins this comparison based on our analysis.`}
-              </Text>
-              <div class="mt-4">
-                <Button href={`/vpn/${winnerEntry.slug}/`}>Read Full Review</Button>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </Container>
-    </Section>
-  )}
 
   {(relatedBestLists.length > 0 || relatedGuides.length > 0) && (
     <Section>

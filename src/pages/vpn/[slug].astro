@@ -305,29 +305,54 @@ function capitalize(s: string): string {
           })}
         </Grid>
         {reviewData?.verdict && (
-          <Card variant="raised" class="mt-6">
-            <div class="flex items-start gap-3">
-              <div>
-                <Badge
-                  tone={
-                    reviewData.verdict.recommendation === "recommended"
-                      ? "success"
-                      : reviewData.verdict.recommendation === "conditional"
-                        ? "warning"
-                        : "danger"
-                    }
+          <div class="mt-6">
+            <Card
+              variant="raised"
+              padding="lg"
+              class:list={{
+                "border-l-4 border-success": reviewData.verdict.recommendation === "recommended",
+                "border-l-4 border-warning": reviewData.verdict.recommendation === "conditional",
+                "border-l-4 border-danger": reviewData.verdict.recommendation === "not-recommended",
+              }}
+            >
+              <div class="flex items-start gap-4">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
+                  class:list={{
+                    "bg-success-surface text-success": reviewData.verdict.recommendation === "recommended",
+                    "bg-warning-surface text-warning": reviewData.verdict.recommendation === "conditional",
+                    "bg-danger-surface text-danger": reviewData.verdict.recommendation === "not-recommended",
+                  }}
                 >
-                  {reviewData.verdict.recommendation === "recommended"
-                    ? "Recommended"
-                    : reviewData.verdict.recommendation === "conditional"
-                      ? "Conditional"
-                      : "Not Recommended"}
-                </Badge>
-                <Heading level={3} class="mt-2">{reviewData.verdict.headline}</Heading>
-                <Text tone="muted" class="mt-1">{reviewData.verdict.summary}</Text>
+                  <Icon
+                    name={reviewData.verdict.recommendation === "recommended" ? "circle-check" : "alert-circle"}
+                    size={24}
+                  />
+                </div>
+                <div class="min-w-0">
+                  <Badge
+                    tone={
+                      reviewData.verdict.recommendation === "recommended"
+                        ? "success"
+                        : reviewData.verdict.recommendation === "conditional"
+                          ? "warning"
+                          : "danger"
+                      }
+                  >
+                    {reviewData.verdict.recommendation === "recommended"
+                      ? "Recommended"
+                      : reviewData.verdict.recommendation === "conditional"
+                        ? "Conditional"
+                        : "Not Recommended"}
+                  </Badge>
+                  <Heading level={3} class="mt-2">{reviewData.verdict.headline}</Heading>
+                  <Text tone="muted" class="mt-2 leading-relaxed">{reviewData.verdict.summary}</Text>
+                  <div class="mt-4">
+                    <Button variant="outline" size="sm" href="/methodology/">How we test →</Button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </div>
         )}
       </Container>
     </Section>
@@ -336,42 +361,48 @@ function capitalize(s: string): string {
   {reviewData && (reviewData.pros.length > 0 || reviewData.cons.length > 0) && (
     <Section background>
       <Container>
-        <Grid cols={1} colsMd={2} gap={6}>
+        <Heading level={2}>Pros & Cons</Heading>
+        <Text tone="muted" class="mt-2">What sets {provider.name} apart — and where it falls short.</Text>
+        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
           {reviewData.pros.length > 0 && (
-            <div>
+            <Card variant="raised" padding="lg" class="border-t-4 border-success">
               <Heading level={3}>
-                <span class="flex items-center gap-2">
-                  <Icon name="circle-check" size={20} class="text-success" />
+                <span class="flex items-center gap-2 text-success">
+                  <Icon name="circle-check" size={20} />
                   Pros
                 </span>
               </Heading>
-              <ul class="mt-3 space-y-2">
+              <ul class="mt-4 space-y-3">
                 {reviewData.pros.map((pro) => (
-                  <li class="flex items-start gap-2">
-                    <Icon name="check" size={16} class="mt-0.5 shrink-0 text-success" />
-                    <Text size="sm">{pro}</Text>
+                  <li class="flex items-start gap-3">
+                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success-surface text-success">
+                      <Icon name="check" size={12} />
+                    </span>
+                    <Text size="sm" class="leading-relaxed">{pro}</Text>
                   </li>
                 ))}
               </ul>
-            </div>
+            </Card>
           )}
           {reviewData.cons.length > 0 && (
-            <div>
+            <Card variant="raised" padding="lg" class="border-t-4 border-danger">
               <Heading level={3}>
-                <span class="flex items-center gap-2">
-                  <Icon name="circle-x" size={20} class="text-danger" />
+                <span class="flex items-center gap-2 text-danger">
+                  <Icon name="circle-x" size={20} />
                   Cons
                 </span>
               </Heading>
-              <ul class="mt-3 space-y-2">
+              <ul class="mt-4 space-y-3">
                 {reviewData.cons.map((con) => (
-                  <li class="flex items-start gap-2">
-                    <Icon name="x" size={16} class="mt-0.5 shrink-0 text-danger" />
-                    <Text size="sm">{con}</Text>
+                  <li class="flex items-start gap-3">
+                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger-surface text-danger">
+                      <Icon name="x" size={12} />
+                    </span>
+                    <Text size="sm" class="leading-relaxed">{con}</Text>
                   </li>
                 ))}
               </ul>
-            </div>
+            </Card>
           )}
         </Grid>
       </Container>
