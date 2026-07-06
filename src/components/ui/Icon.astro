@@ -1,0 +1,33 @@
+---
+/**
+ * Icon — thin wrapper around astro-icon that normalizes the lucide namespace
+ * and enforces a consistent sizing API (px) + currentColor inheritance.
+ * @prop name - lucide icon name, with or without the "lucide:" prefix.
+ * @prop size - pixel size (default 20).
+ * Icons inherit text color via `color: currentColor`.
+ */
+import { Icon } from "astro-icon/components";
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+  "aria-label"?: string;
+  title?: string;
+}
+
+const { name, size = 20, class: className, "aria-label": ariaLabel, title } = Astro.props;
+const resolved = name.includes(":") ? name : `lucide:${name}`;
+const isDecorative = !ariaLabel && !title;
+---
+
+<Icon
+  name={resolved}
+  width={size}
+  height={size}
+  class={cx("inline-block shrink-0", className)}
+  aria-hidden={isDecorative ? true : undefined}
+  aria-label={ariaLabel}
+  title={title}
+/>

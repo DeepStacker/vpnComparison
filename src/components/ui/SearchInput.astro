@@ -1,0 +1,57 @@
+---
+/**
+ * SearchInput — labeled search field with a leading icon.
+ * Presentational only; client search behavior is wired at the feature level
+ * (Fuse.js / Pagefind) by querying `[data-search-input]`.
+ * @prop id - required to associate the label.
+ * @prop placeholder - input placeholder.
+ * @prop name - form field name (defaults to "q").
+ * @prop value - initial value.
+ * @prop label - visible label text (rendered above); defaults to a sr-only "Search".
+ */
+import Icon from "./Icon.astro";
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  id: string;
+  placeholder?: string;
+  name?: string;
+  value?: string;
+  label?: string;
+  class?: string;
+  autocomplete?: boolean;
+}
+
+const {
+  id,
+  placeholder = "Search…",
+  name = "q",
+  value = "",
+  label,
+  class: className,
+  autocomplete = false,
+} = Astro.props;
+---
+
+<div class={cx("w-full", className)}>
+  <label for={id} class={label ? "mb-1 block text-sm font-medium text-foreground" : "sr-only"}>
+    {label ?? "Search"}
+  </label>
+  <div class="relative">
+    <Icon
+      name="search"
+      size={18}
+      class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+    />
+    <input
+      id={id}
+      type="search"
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      autocomplete={autocomplete ? "on" : "off"}
+      data-search-input
+      class="w-full rounded-md border border-border bg-surface py-2 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none"
+    />
+  </div>
+</div>

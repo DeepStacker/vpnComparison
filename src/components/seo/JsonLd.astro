@@ -1,0 +1,21 @@
+---
+/**
+ * JsonLd — emits one or more schema.org nodes as <script type="application/ld+json">.
+ * @prop data - a single JsonLdNode or an array of nodes.
+ */
+import { serializeJsonLd } from "@/lib/schema/jsonld";
+import type { JsonLdNode } from "@/types/seo";
+
+interface Props {
+  data: JsonLdNode | JsonLdNode[];
+}
+
+const { data } = Astro.props;
+const nodes = Array.isArray(data) ? data : [data];
+---
+
+{
+  nodes.map((node) => (
+    <script type="application/ld+json" set:html={serializeJsonLd(node)} is:inline />
+  ))
+}

@@ -1,0 +1,42 @@
+---
+/**
+ * LoadingState — skeleton or spinner placeholder for async UI regions
+ * (e.g. client-side search results before hydration).
+ * @prop variant - "skeleton" (default) | "spinner".
+ * @prop lines - number of skeleton lines (skeleton variant).
+ * @prop label - accessible loading label (spinner).
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  variant?: "skeleton" | "spinner";
+  lines?: number;
+  label?: string;
+  class?: string;
+}
+
+const { variant = "skeleton", lines = 3, label = "Loading…", class: className } = Astro.props;
+
+const pulse = "animate-pulse rounded-md bg-surface-sunken";
+---
+
+<div class={cx("w-full", className)} role="status" aria-live="polite">
+  {
+    variant === "spinner" && (
+      <div class="flex items-center gap-3 text-sm text-muted-foreground">
+        <span class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
+        <span>{label}</span>
+      </div>
+    )
+  }
+  {
+    variant === "skeleton" && (
+      <div class="flex flex-col gap-3">
+        {Array.from({ length: lines }).map((_, i) => (
+          <div class={cx(pulse, "h-4", i % 3 === 0 ? "w-2/3" : "w-full")} />
+        ))}
+      </div>
+    )
+  }
+  <span class="sr-only">{label}</span>
+</div>

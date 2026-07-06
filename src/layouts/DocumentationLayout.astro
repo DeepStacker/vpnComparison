@@ -1,0 +1,94 @@
+---
+/**
+ * DocumentationLayout — long-form reading layout for guides and explainers.
+ *
+ * Features a centered prose column with an optional sticky table-of-contents
+ * sidebar (xl+), a "last updated" byline, and the breadcrumbs above the title.
+ * The body is provided via the default slot (rendered MDX/markdown content).
+ *
+ * @prop seo - page SEO metadata.
+ * @prop breadcrumbs - breadcrumb trail.
+ * @prop toc - optional heading list for the sidebar TOC.
+ * @prop updatedAt - ISO date shown in the byline.
+ * @prop readingTime - optional reading-time label.
+ * @prop jsonLd - extra structured data.
+ */
+import SeoLayout from "./SeoLayout.astro";
+import Breadcrumbs from "@/components/ui/Breadcrumbs.astro";
+import { formatDate } from "@/lib/utils/date";
+import { cx } from "@/lib/utils/string";
+import type { JsonLdNode, SeoMeta } from "@/types/seo";
+import type { Breadcrumb } from "@/types/site";
+
+interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  seo: SeoMeta;
+  breadcrumbs?: Breadcrumb[];
+  toc?: TocItem[];
+  updatedAt?: string;
+  readingTime?: string;
+  jsonLd?: JsonLdNode | JsonLdNode[];
+}
+
+const { seo, breadcrumbs = [], toc = [], updatedAt, readingTime, jsonLd } = Astro.props;
+const filteredToc = toc.filter((item) => item.depth >= 2 && item.depth <= 3);
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs} renderBreadcrumbs={false} container="full" jsonLd={jsonLd}>
+  <div class="container-page grid gap-10 xl:grid-cols-[minmax(0,1fr)_16rem]">
+    <article class="container-prose max-w-none px-0">
+      {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} class="mb-6" />}
+      <slot name="header" />
+      <div class="prose prose-neutral max-w-none dark:prose-invert">
+        <slot />
+      </div>
+      <slot name="footer" />
+    </article>
+
+    {
+      filteredToc.length > 0 && (
+        <aside class="hidden xl:block" aria-label="Table of contents">
+          <div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              On this page
+            </p>
+            <nav class="flex flex-col gap-2 text-sm">
+              {filteredToc.map((item) => (
+                <a
+                  href={`#${item.slug}`}
+                  class={cx(
+                    "no-underline text-muted-foreground hover:text-foreground transition-colors",
+                    item.depth === 3 && "pl-3",
+                  )}
+                >
+                  {item.text}
+                </a>
+              ))}
+            </nav>
+            {(updatedAt || readingTime) && (
+              <dl class="mt-6 space-y-1 text-xs text-muted-foreground">
+                {readingTime && (
+                  <div class="flex justify-between gap-4">
+                    <dt>Reading time</dt>
+                    <dd>{readingTime}</dd>
+                  </div>
+                )}
+                {updatedAt && (
+                  <div class="flex justify-between gap-4">
+                    <dt>Updated</dt>
+                    <dd>{formatDate(updatedAt)}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+          </div>
+        </aside>
+      )
+    }
+  </div>
+</SeoLayout>

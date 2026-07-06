@@ -1,0 +1,65 @@
+---
+/**
+ * SeoLayout — the default page chrome: root shell + header + footer + a
+ * <main> landmark with optional breadcrumbs. Most pages use this layout.
+ *
+ * @prop seo - page SEO metadata.
+ * @prop breadcrumbs - ordered breadcrumb segments; rendered and emitted as
+ *   BreadcrumbList JSON-LD automatically.
+ * @prop jsonLd - extra page-level structured data.
+ * @prop container - main content width: "page" | "prose" | "wide" | "full".
+ * @prop mainClass - extra classes for <main>.
+ */
+import BaseLayout from "./BaseLayout.astro";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import Breadcrumbs from "@/components/ui/Breadcrumbs.astro";
+import { breadcrumbListJsonLd } from "@/lib/schema/jsonld";
+import { cx } from "@/lib/utils/string";
+import type { JsonLdNode, SeoMeta } from "@/types/seo";
+import type { Breadcrumb } from "@/types/site";
+
+interface Props {
+  seo: SeoMeta;
+  breadcrumbs?: Breadcrumb[];
+  /** Render the visible breadcrumb nav. JSON-LD is emitted regardless. */
+  renderBreadcrumbs?: boolean;
+  jsonLd?: JsonLdNode | JsonLdNode[];
+  container?: "page" | "prose" | "wide" | "full";
+  mainClass?: string;
+}
+
+const {
+  seo,
+  breadcrumbs = [],
+  renderBreadcrumbs = true,
+  jsonLd,
+  container = "page",
+  mainClass,
+} = Astro.props;
+
+const containerClass: Record<string, string> = {
+  page: "container-page",
+  prose: "container-prose",
+  wide: "container-page",
+  full: "w-full px-0",
+};
+
+const allJsonLd: JsonLdNode[] = [
+  ...(breadcrumbs.length > 0 ? [breadcrumbListJsonLd(breadcrumbs)] : []),
+  ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []),
+];
+---
+
+<BaseLayout seo={seo} jsonLd={allJsonLd.length > 0 ? allJsonLd : undefined}>
+  <Header />
+  <main id="main" class={cx("focus-restore", containerClass[container], mainClass)}>
+    {renderBreadcrumbs && breadcrumbs.length > 0 && (
+      <div class="py-6">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+    )}
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>

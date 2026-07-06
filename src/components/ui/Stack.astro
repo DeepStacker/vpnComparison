@@ -1,0 +1,30 @@
+---
+/**
+ * Stack — vertical flex layout with consistent gap.
+ * @prop gap - spacing between children (mapped to Tailwind gap utilities).
+ * @prop align - cross-axis alignment.
+ */
+import { cx } from "@/lib/utils/string";
+import { gapClass } from "./maps";
+
+interface Props {
+  gap?: keyof typeof gapClass;
+  align?: "start" | "center" | "end" | "stretch";
+  element?: "div" | "ul" | "ol" | "nav" | "section";
+  class?: string;
+}
+
+const { gap = 4, align = "stretch", element: Tag = "div", class: className } = Astro.props;
+const alignClass = {
+  start: "items-start",
+  center: "items-center",
+  end: "items-end",
+  stretch: "items-stretch",
+} as const;
+
+const classes = cx("flex flex-col", gapClass[gap], alignClass[align], className);
+---
+
+<Tag class={classes}>
+  <slot />
+</Tag>

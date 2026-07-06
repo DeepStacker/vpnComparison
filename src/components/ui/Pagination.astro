@@ -1,0 +1,89 @@
+---
+/**
+ * Pagination — accessible page navigation.
+ * @prop currentPage - 1-based current page.
+ * @prop totalPages - total number of pages.
+ * @prop href - function mapping a page number to its URL.
+ * @prop siblingCount - pages shown on each side of the current page.
+ */
+import Icon from "./Icon.astro";
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  href: (page: number) => string;
+  siblingCount?: number;
+  class?: string;
+}
+
+const { currentPage, totalPages, href, siblingCount = 1, class: className } = Astro.props;
+
+function pageRange(start: number, end: number): number[] {
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+}
+
+function buildPages(): (number | "ellipsis")[] {
+  const total = totalPages;
+  const current = currentPage;
+  const left = Math.max(current - siblingCount, 1);
+  const right = Math.min(current + siblingCount, total);
+
+  const showLeftEllipsis = left > 2;
+  const showRightEllipsis = right < total - 1;
+
+  const pages: (number | "ellipsis")[] = [1];
+  if (showLeftEllipsis) pages.push("ellipsis");
+  pages.push(...pageRange(Math.max(left, 2), Math.min(right, total - 1)));
+  if (showRightEllipsis) pages.push("ellipsis");
+  if (total > 1) pages.push(total);
+  return pages;
+}
+
+const pages = buildPages();
+const hasPrev = currentPage > 1;
+const hasNext = currentPage < totalPages;
+---
+
+<nav aria-label="Pagination" class={cx("flex items-center gap-1 text-sm", className)}>
+  <a
+    href={hasPrev ? href(currentPage - 1) : undefined}
+    aria-disabled={!hasPrev}
+    rel="prev"
+    class="inline-flex h-9 items-center gap-1 rounded-md border border-border px-3 hover:bg-surface-raised aria-disabled:pointer-events-none aria-disabled:opacity-40"
+  >
+    <Icon name="chevron-left" size={16} />
+    <span class="sr-only sm:not-sr-only">Previous</span>
+  </a>
+
+  {
+    pages.map((page) =>
+      page === "ellipsis" ? (
+        <span class="inline-flex h-9 w-9 items-center justify-center text-muted-foreground">…</span>
+      ) : (
+        <a
+          href={href(page)}
+          aria-current={page === currentPage ? "page" : undefined}
+          class={cx(
+            "inline-flex h-9 min-w-9 items-center justify-center rounded-md border px-3",
+            page === currentPage
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border hover:bg-surface-raised",
+          )}
+        >
+          {page}
+        </a>
+      ),
+    )
+  }
+
+  <a
+    href={hasNext ? href(currentPage + 1) : undefined}
+    aria-disabled={!hasNext}
+    rel="next"
+    class="inline-flex h-9 items-center gap-1 rounded-md border border-border px-3 hover:bg-surface-raised aria-disabled:pointer-events-none aria-disabled:opacity-40"
+  >
+    <span class="sr-only sm:not-sr-only">Next</span>
+    <Icon name="chevron-right" size={16} />
+  </a>
+</nav>

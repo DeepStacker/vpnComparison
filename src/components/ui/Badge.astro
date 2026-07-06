@@ -1,0 +1,41 @@
+---
+/**
+ * Badge — compact status/label indicator with a filled tone background.
+ * @prop tone - "neutral" | "primary" | "success" | "warning" | "danger" | "info".
+ * @prop size - "sm" | "md".
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  tone?: "neutral" | "primary" | "success" | "warning" | "danger" | "info";
+  size?: "sm" | "md";
+  class?: string;
+}
+
+const { tone = "neutral", size = "sm", class: className } = Astro.props;
+
+const toneClass: Record<string, string> = {
+  neutral: "bg-surface-sunken text-muted-foreground",
+  primary: "bg-accent text-accent-foreground",
+  success: "bg-success-surface text-success",
+  warning: "bg-warning-surface text-warning",
+  danger: "bg-danger-surface text-danger",
+  info: "bg-info-surface text-info",
+};
+
+const sizeClass: Record<string, string> = {
+  sm: "text-xs px-2 py-0.5",
+  md: "text-sm px-2.5 py-1",
+};
+
+const classes = cx(
+  "inline-flex items-center rounded-md font-medium whitespace-nowrap",
+  toneClass[tone],
+  sizeClass[size],
+  className,
+);
+---
+
+<span class={classes}>
+  <slot />
+</span>

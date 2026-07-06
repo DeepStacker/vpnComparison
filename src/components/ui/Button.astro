@@ -1,0 +1,86 @@
+---
+/**
+ * Button — primary interactive primitive.
+ * Renders <a> when `href` is set, otherwise <button>.
+ * @prop variant - "primary" | "secondary" | "outline" | "ghost" | "danger".
+ * @prop size - "sm" | "md" | "lg".
+ * @prop href - turns the button into a link.
+ * @prop fullWidth - stretch to container width.
+ * @prop type - button type (only when rendered as <button>).
+ * Slots: default (label), "icon-leading", "icon-trailing".
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  fullWidth?: boolean;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  target?: string;
+  rel?: string;
+  "aria-label"?: string;
+  class?: string;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  fullWidth = false,
+  type = "button",
+  disabled = false,
+  target,
+  rel,
+  "aria-label": ariaLabel,
+  class: className,
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+const isExternal = href ? /^(https?:|mailto:|tel:)/i.test(href) : false;
+const resolvedTarget = target ?? (isExternal ? "_blank" : undefined);
+const resolvedRel = rel ?? (isExternal ? "noopener noreferrer" : undefined);
+
+const base =
+  "inline-flex items-center justify-center gap-2 rounded-md font-medium no-underline transition-colors duration-base ease-standard focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap";
+
+const sizeClass: Record<string, string> = {
+  sm: "text-sm px-3 py-1.5",
+  md: "text-sm px-4 py-2",
+  lg: "text-base px-5 py-2.5",
+};
+
+const variantClass: Record<string, string> = {
+  primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
+  secondary:
+    "bg-surface-raised text-foreground border border-border hover:bg-surface-sunken",
+  outline:
+    "bg-transparent text-foreground border border-border-strong hover:bg-surface-raised",
+  ghost: "bg-transparent text-foreground hover:bg-surface-raised",
+  danger: "bg-danger text-danger-foreground hover:opacity-90",
+};
+
+const classes = cx(
+  base,
+  sizeClass[size],
+  variantClass[variant],
+  fullWidth && "w-full",
+  className,
+);
+---
+
+<Tag
+  href={href}
+  type={Tag === "button" ? type : undefined}
+  disabled={Tag === "button" ? disabled : undefined}
+  target={Tag === "a" ? resolvedTarget : undefined}
+  rel={Tag === "a" ? resolvedRel : undefined}
+  aria-disabled={Tag === "a" && disabled ? true : undefined}
+  aria-label={ariaLabel}
+  class={classes}
+>
+  <slot name="icon-leading" />
+  <slot />
+  <slot name="icon-trailing" />
+</Tag>

@@ -1,0 +1,20 @@
+---
+/**
+ * Accordion — vertical list of collapsible sections.
+ * Built on native <details> for zero-JS keyboard + a11y. Pair with
+ * <AccordionItem>. To enforce single-open behavior, add a small inline
+ * script on the container (left to feature work to keep JS minimal).
+ * @prop class - extra classes for the wrapper.
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class={cx("divide-y divide-border rounded-lg border border-border bg-surface", className)}>
+  <slot />
+</div>

@@ -1,0 +1,57 @@
+---
+/**
+ * Temporary foundation verification route (Phase 1).
+ *
+ * This is NOT the designed homepage — it only exercises the layout + UI
+ * system so the build proves the foundation compiles end-to-end. It will be
+ * replaced by the real homepage in Phase 2 (Information Architecture).
+ */
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Button from "@/components/ui/Button.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Rating from "@/components/ui/Rating.astro";
+import { SITE } from "@/constants/site";
+import type { SeoMeta } from "@/types/seo";
+
+const seo: SeoMeta = {
+  title: "Foundation ready",
+  description: "NetworksHome foundation is configured. The homepage arrives in Phase 2.",
+  canonical: "/",
+  robots: "noindex,follow",
+};
+---
+
+<SeoLayout seo={seo}>
+  <Section>
+    <Container>
+      <Badge tone="primary">Phase 1 · Foundation</Badge>
+      <Heading level={1} class="mt-4">{SITE.name}</Heading>
+      <Text tone="muted" size="lg" class="mt-3 max-w-prose">{SITE.description}</Text>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <Button href="/sitemap-index.xml">View sitemap</Button>
+        <Button variant="outline" href="https://docs.astro.build" target="_blank">Astro docs</Button>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <Heading level={3} size="lg">Architecture</Heading>
+          <Text tone="muted" class="mt-2">Static-first, modular folders, typed data layer.</Text>
+        </Card>
+        <Card>
+          <Heading level={3} size="lg">Design system</Heading>
+          <Text tone="muted" class="mt-2">Tokens, dark mode, accessible primitives.</Text>
+          <div class="mt-3"><Rating value={8.5} label="Sample score" /></div>
+        </Card>
+        <Card>
+          <Heading level={3} size="lg">SEO & schema</Heading>
+          <Text tone="muted" class="mt-2">Per-page metadata, JSON-LD, sitemap, OG.</Text>
+        </Card>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

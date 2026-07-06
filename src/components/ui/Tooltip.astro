@@ -1,0 +1,42 @@
+---
+/**
+ * Tooltip — lightweight CSS-only tooltip shown on hover and keyboard focus.
+ * No JS. The trigger is supplied via the default slot (must be focusable for
+ * keyboard users). The tooltip text is exposed via role="tooltip".
+ * @prop label - tooltip text.
+ * @prop placement - "top" | "bottom" | "left" | "right".
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  label: string;
+  placement?: "top" | "bottom" | "left" | "right";
+  class?: string;
+}
+
+const { label, placement = "top", class: className } = Astro.props;
+const tooltipId = `tt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 24)}-${Math.random().toString(36).slice(2, 6)}`;
+
+const placementClass: Record<string, string> = {
+  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
+  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
+  left: "right-full top-1/2 -translate-y-1/2 mr-2",
+  right: "left-full top-1/2 -translate-y-1/2 ml-2",
+};
+---
+
+<span class={cx("group relative inline-flex", className)}>
+  <slot />
+  <span
+    id={tooltipId}
+    role="tooltip"
+    class={cx(
+      "pointer-events-none absolute z-dropdown w-max max-w-xs rounded-md bg-neutral-900 px-2.5 py-1.5 text-xs text-white shadow-md",
+      "opacity-0 scale-95 transition duration-fast ease-standard",
+      "group-hover:opacity-100 group-focus-within:opacity-100 group-hover:scale-100 group-focus-within:scale-100",
+      placementClass[placement],
+    )}
+  >
+    {label}
+  </span>
+</span>

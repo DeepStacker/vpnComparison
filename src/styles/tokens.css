@@ -1,0 +1,74 @@
+/**
+ * NetworksHome — Semantic theme tokens.
+ *
+ * These variables carry *meaning* (background, foreground, surface, border...)
+ * and are the only tokens that switch between light and dark themes. Primitive
+ * palette + scale tokens live in `global.css` under `@theme` so Tailwind can
+ * generate utilities from them and expose them as CSS variables simultaneously.
+ *
+ * `global.css` maps these semantic vars into Tailwind's color namespace via
+ * `@theme inline`, producing utilities like `bg-background`, `text-foreground`,
+ * `border-border` that respond to `.dark` automatically.
+ */
+
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-neutral-900);
+  --surface: #ffffff;
+  --surface-raised: var(--color-neutral-50);
+  --surface-sunken: var(--color-neutral-100);
+  --border: var(--color-neutral-200);
+  --border-strong: var(--color-neutral-300);
+  --muted: var(--color-neutral-100);
+  --muted-foreground: var(--color-neutral-500);
+  --primary: var(--color-brand-600);
+  --primary-hover: var(--color-brand-700);
+  --primary-foreground: #ffffff;
+  --accent: var(--color-brand-50);
+  --accent-foreground: var(--color-brand-800);
+  --ring: var(--color-brand-500);
+
+  --success: #157f4a;
+  --success-foreground: #ffffff;
+  --success-surface: #e7f6ee;
+  --warning: #b7791f;
+  --warning-foreground: #ffffff;
+  --warning-surface: #fbf3e0;
+  --danger: #c2362e;
+  --danger-foreground: #ffffff;
+  --danger-surface: #fbe9e8;
+  --info: #2563eb;
+  --info-foreground: #ffffff;
+  --info-surface: #e8effe;
+}
+
+.dark {
+  --background: var(--color-neutral-950);
+  --foreground: var(--color-neutral-100);
+  --surface: var(--color-neutral-900);
+  --surface-raised: var(--color-neutral-800);
+  --surface-sunken: var(--color-neutral-950);
+  --border: var(--color-neutral-800);
+  --border-strong: var(--color-neutral-700);
+  --muted: var(--color-neutral-800);
+  --muted-foreground: var(--color-neutral-400);
+  --primary: var(--color-brand-400);
+  --primary-hover: var(--color-brand-300);
+  --primary-foreground: var(--color-neutral-950);
+  --accent: var(--color-brand-950);
+  --accent-foreground: var(--color-brand-200);
+  --ring: var(--color-brand-400);
+
+  --success: #4cb782;
+  --success-foreground: #07140c;
+  --success-surface: #122019;
+  --warning: #d8a23a;
+  --warning-foreground: #1a1406;
+  --warning-surface: #211a0d;
+  --danger: #ec6b62;
+  --danger-foreground: #1a0908;
+  --danger-surface: #231311;
+  --info: #6b95ff;
+  --info-foreground: #0a1024;
+  --info-surface: #131a2e;
+}

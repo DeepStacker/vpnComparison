@@ -1,0 +1,33 @@
+---
+/**
+ * Pill — rounded-full soft label, used for compact counts or status chips.
+ * @prop tone - "neutral" | "primary" | "success" | "warning" | "danger" | "info".
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  tone?: "neutral" | "primary" | "success" | "warning" | "danger" | "info";
+  class?: string;
+}
+
+const { tone = "neutral", class: className } = Astro.props;
+
+const toneClass: Record<string, string> = {
+  neutral: "bg-surface-sunken text-muted-foreground",
+  primary: "bg-accent text-accent-foreground",
+  success: "bg-success-surface text-success",
+  warning: "bg-warning-surface text-warning",
+  danger: "bg-danger-surface text-danger",
+  info: "bg-info-surface text-info",
+};
+
+const classes = cx(
+  "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
+  toneClass[tone],
+  className,
+);
+---
+
+<span class={classes}>
+  <slot />
+</span>

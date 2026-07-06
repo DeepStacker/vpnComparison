@@ -1,0 +1,24 @@
+---
+/**
+ * Section — vertical rhythm wrapper for page sections.
+ * @prop padding - vertical padding scale: "default" | "tight" | "loose" | "none".
+ * @prop as - element tag.
+ * @prop id - optional anchor id.
+ */
+import { cx } from "@/lib/utils/string";
+import { sectionPadClass } from "./maps";
+
+interface Props {
+  padding?: keyof typeof sectionPadClass;
+  element?: "section" | "div" | "main" | "article";
+  id?: string;
+  class?: string;
+}
+
+const { padding = "default", element: Tag = "section", id, class: className } = Astro.props;
+const classes = cx(sectionPadClass[padding], className);
+---
+
+<Tag id={id} class={classes}>
+  <slot />
+</Tag>

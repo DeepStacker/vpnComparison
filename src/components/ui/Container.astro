@@ -1,0 +1,22 @@
+---
+/**
+ * Container — horizontal content width clamp + centered.
+ * @prop size - max-width variant: "page" (default, ~1152px), "prose" (768px), "wide", "full".
+ * @prop as - element tag to render (div, main, section, ...).
+ */
+import { cx } from "@/lib/utils/string";
+import { containerSizeClass } from "./maps";
+
+interface Props {
+  size?: keyof typeof containerSizeClass;
+  element?: "div" | "main" | "section" | "article" | "aside" | "header" | "footer";
+  class?: string;
+}
+
+const { size = "page", element: Tag = "div", class: className } = Astro.props;
+const classes = cx(containerSizeClass[size], className);
+---
+
+<Tag class={classes}>
+  <slot />
+</Tag>

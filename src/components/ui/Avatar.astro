@@ -1,0 +1,40 @@
+---
+/**
+ * Avatar — circular profile image with initials fallback.
+ * @prop src - image URL (optional; falls back to initials).
+ * @prop name - person/entity name (used for alt + initials).
+ * @prop size - pixel diameter (default 40).
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  src?: string;
+  name: string;
+  size?: number;
+  class?: string;
+}
+
+const { src, name, size = 40, class: className } = Astro.props;
+const initials = name
+  .split(" ")
+  .map((part) => part[0] ?? "")
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
+---
+
+<span
+  class={cx(
+    "inline-flex items-center justify-center rounded-full bg-surface-sunken text-muted-foreground font-medium overflow-hidden",
+    className,
+  )}
+  style={`width:${size}px;height:${size}px;font-size:${Math.round(size * 0.4)}px`}
+>
+  {
+    src ? (
+      <img src={src} alt={name} width={size} height={size} loading="lazy" class="h-full w-full object-cover" />
+    ) : (
+      <span aria-hidden="true">{initials}</span>
+    )
+  }
+</span>

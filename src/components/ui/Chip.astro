@@ -1,0 +1,38 @@
+---
+/**
+ * Chip — compact rounded label with optional leading icon slot.
+ * Subtler than a Badge; used for filters, metadata, and inline attributes.
+ * @prop tone - "neutral" | "primary" | "success" | "warning" | "danger" | "info".
+ * @prop href - render as a link.
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  tone?: "neutral" | "primary" | "success" | "warning" | "danger" | "info";
+  href?: string;
+  class?: string;
+}
+
+const { tone = "neutral", href, class: className } = Astro.props;
+const Tag = href ? "a" : "span";
+
+const toneClass: Record<string, string> = {
+  neutral: "bg-surface-raised text-foreground border border-border",
+  primary: "bg-accent text-accent-foreground border border-primary/20",
+  success: "bg-success-surface text-success border border-success/20",
+  warning: "bg-warning-surface text-warning border border-warning/20",
+  danger: "bg-danger-surface text-danger border border-danger/20",
+  info: "bg-info-surface text-info border border-info/20",
+};
+
+const classes = cx(
+  "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium no-underline",
+  toneClass[tone],
+  className,
+);
+---
+
+<Tag href={href} class={classes}>
+  <slot name="icon" />
+  <slot />
+</Tag>

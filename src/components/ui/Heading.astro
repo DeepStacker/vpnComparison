@@ -1,0 +1,49 @@
+---
+/**
+ * Heading — semantic heading with a token-driven type scale.
+ * @prop level - h1–h6 (also determines default size unless `size` given).
+ * @prop size - explicit size override ("xl" | "2xl" | ... | "base").
+ * @prop as - render as a different tag than `level` for SEO flexibility.
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  size?: "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl";
+  element?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  id?: string;
+  class?: string;
+}
+
+const { level = 2, size, element, id, class: className } = Astro.props;
+const Tag = element ?? (`h${level}` as const);
+
+const sizeByLevel: Record<number, string> = {
+  1: "text-4xl sm:text-5xl",
+  2: "text-3xl sm:text-4xl",
+  3: "text-2xl",
+  4: "text-xl",
+  5: "text-lg",
+  6: "text-base",
+};
+const sizeOverride: Record<string, string> = {
+  base: "text-base",
+  lg: "text-lg",
+  xl: "text-xl",
+  "2xl": "text-2xl",
+  "3xl": "text-3xl",
+  "4xl": "text-4xl",
+  "5xl": "text-5xl",
+  "6xl": "text-6xl",
+};
+
+const classes = cx(
+  "font-semibold tracking-tight text-balance text-foreground",
+  size ? sizeOverride[size] : sizeByLevel[level],
+  className,
+);
+---
+
+<Tag id={id} class={classes}>
+  <slot />
+</Tag>

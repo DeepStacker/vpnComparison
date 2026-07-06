@@ -1,0 +1,82 @@
+---
+/**
+ * Header — sticky site header with primary navigation, theme toggle, and a
+ * <details>-based mobile menu (no JS hydration). The current route is marked
+ * with aria-current when it matches a nav item's href prefix.
+ */
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { PRIMARY_NAV } from "@/constants/navigation";
+import { cx } from "@/lib/utils/string";
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  pathname === href || pathname.startsWith(href.replace(/\/$/, "") + "/");
+---
+
+<header class="sticky top-0 z-header border-b border-border bg-surface/85 backdrop-blur-md">
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <Logo />
+
+    <nav aria-label="Primary" class="hidden md:block">
+      <ul class="flex items-center gap-1">
+        {
+          PRIMARY_NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                class={cx(
+                  "rounded-md px-3 py-2 text-sm font-medium no-underline transition-colors",
+                  isActive(item.href)
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface-raised",
+                )}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <details class="group relative md:hidden">
+        <summary
+          class="inline-flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-border bg-surface text-foreground hover:bg-surface-raised focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+          aria-label="Open menu"
+        >
+          <Icon name="menu" size={18} class="group-open:hidden" />
+          <Icon name="x" size={18} class="hidden group-open:block" />
+        </summary>
+        <div
+          class="absolute right-0 top-11 w-60 rounded-lg border border-border bg-surface p-2 shadow-lg"
+        >
+          <ul class="flex flex-col gap-1">
+            {
+              PRIMARY_NAV.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    class={cx(
+                      "block rounded-md px-3 py-2 text-sm font-medium no-underline",
+                      isActive(item.href)
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-surface-raised",
+                    )}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

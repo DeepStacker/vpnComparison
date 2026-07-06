@@ -1,0 +1,49 @@
+---
+/**
+ * Text — body copy primitive with size/weight/tone controls.
+ * @prop size - "xs" | "sm" | "base" (default) | "lg" | "xl".
+ * @prop tone - "default" | "muted" | "primary" | "success" | "warning" | "danger" | "info".
+ * @prop weight - "normal" | "medium" | "semibold".
+ * @prop as - element tag (p, span, small, ...).
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  size?: "xs" | "sm" | "base" | "lg" | "xl";
+  tone?: "default" | "muted" | "primary" | "success" | "warning" | "danger" | "info";
+  weight?: "normal" | "medium" | "semibold";
+  element?: "p" | "span" | "small" | "div" | "label";
+  class?: string;
+}
+
+const { size = "base", tone = "default", weight = "normal", element: Tag = "p", class: className } =
+  Astro.props;
+
+const sizeClass: Record<string, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+  xl: "text-xl",
+};
+const toneClass: Record<string, string> = {
+  default: "text-foreground",
+  muted: "text-muted-foreground",
+  primary: "text-primary",
+  success: "text-success",
+  warning: "text-warning",
+  danger: "text-danger",
+  info: "text-info",
+};
+const weightClass: Record<string, string> = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+};
+
+const classes = cx(sizeClass[size], toneClass[tone], weightClass[weight], className);
+---
+
+<Tag class={classes}>
+  <slot />
+</Tag>

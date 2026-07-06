@@ -1,0 +1,52 @@
+---
+/**
+ * Alert — prominent inline message banner.
+ * @prop tone - "info" | "success" | "warning" | "danger".
+ * @prop title - optional bold heading.
+ * @prop icon - optional lucide icon name override (auto-picked by tone).
+ * Uses role="alert" for danger/warning, role="status" otherwise.
+ */
+import Icon from "./Icon.astro";
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  tone?: "info" | "success" | "warning" | "danger";
+  title?: string;
+  icon?: string;
+  class?: string;
+}
+
+const { tone = "info", title, icon, class: className } = Astro.props;
+
+const toneClass: Record<string, string> = {
+  info: "bg-info-surface text-info border-info/20",
+  success: "bg-success-surface text-success border-success/20",
+  warning: "bg-warning-surface text-warning border-warning/20",
+  danger: "bg-danger-surface text-danger border-danger/20",
+};
+
+const defaultIcon: Record<string, string> = {
+  info: "info",
+  success: "check-circle",
+  warning: "alert-triangle",
+  danger: "alert-octagon",
+};
+
+const role = tone === "danger" || tone === "warning" ? "alert" : "status";
+
+const classes = cx(
+  "flex gap-3 rounded-lg border p-4 text-sm",
+  toneClass[tone],
+  className,
+);
+---
+
+<div role={role} class={classes}>
+  <Icon name={icon ?? defaultIcon[tone] ?? "info"} size={18} class="mt-0.5" />
+  <div class="flex flex-col gap-1">
+    {title && <p class="font-semibold">{title}</p>}
+    <div class="text-foreground/90 [&_a]:text-current [&_a]:underline">
+      <slot />
+    </div>
+  </div>
+</div>

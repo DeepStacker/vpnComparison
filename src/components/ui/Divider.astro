@@ -1,0 +1,21 @@
+---
+/**
+ * Divider — semantic horizontal rule with a subtle token color.
+ * @prop variant - "subtle" (default) | "strong".
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  variant?: "subtle" | "strong";
+  class?: string;
+}
+
+const { variant = "subtle", class: className } = Astro.props;
+const classes = cx(
+  "w-full border-0 border-t my-4",
+  variant === "strong" ? "border-border-strong" : "border-border",
+  className,
+);
+---
+
+<hr class={classes} />

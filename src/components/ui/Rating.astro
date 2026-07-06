@@ -1,0 +1,49 @@
+---
+/**
+ * Rating — score visualization on a 0–max scale, rendered as a 5-star row
+ * with partial fill, plus an optional numeric readout.
+ * @prop value - score (e.g. 8.5).
+ * @prop max - scale maximum (default 10).
+ * @prop size - star pixel size (default 16).
+ * @prop showValue - render the numeric "value/max" label.
+ * @prop label - accessible label, e.g. "Privacy score".
+ */
+import { Icon } from "astro-icon/components";
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  value: number;
+  max?: number;
+  size?: number;
+  showValue?: boolean;
+  label?: string;
+  class?: string;
+}
+
+const { value, max = 10, size = 16, showValue = true, label, class: className } = Astro.props;
+const clamped = Math.max(0, Math.min(value, max));
+const fillPercent = (clamped / max) * 100;
+const stars = 5;
+---
+
+<span
+  class={cx("inline-flex items-center gap-2", className)}
+  role="img"
+  aria-label={label ? `${label}: ${clamped.toFixed(1)} of ${max}` : `${clamped.toFixed(1)} of ${max}`}
+>
+  <span class="relative inline-block leading-none" style={`width:${size * stars + (stars - 1) * 2}px`}>
+    {/* Empty (outline) layer */}
+    <span class="inline-flex gap-0.5 text-muted-foreground/50">
+      {Array.from({ length: stars }).map(() => <Icon name="lucide:star" width={size} height={size} />)}
+    </span>
+    {/* Filled layer, clipped to fill percent */}
+    <span
+      class="absolute inset-0 inline-flex gap-0.5 overflow-hidden whitespace-nowrap text-primary [&_svg]:fill-current"
+      style={`width:${fillPercent}%`}
+      aria-hidden="true"
+    >
+      {Array.from({ length: stars }).map(() => <Icon name="lucide:star" width={size} height={size} />)}
+    </span>
+  </span>
+  {showValue && <span class="text-sm font-medium text-foreground">{clamped.toFixed(1)}<span class="text-muted-foreground">/{max}</span></span>}
+</span>

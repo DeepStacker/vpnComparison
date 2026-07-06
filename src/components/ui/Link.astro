@@ -1,0 +1,51 @@
+---
+/**
+ * Link — styled anchor with tone variants and safe external handling.
+ * External links (http/https/mailto/tel) auto-get target=_blank + rel=noopener.
+ * @prop href - URL.
+ * @prop variant - "default" | "muted" | "primary" | "unstyled".
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  href: string;
+  variant?: "default" | "muted" | "primary" | "unstyled";
+  class?: string;
+  rel?: string;
+  target?: string;
+  "aria-label"?: string;
+}
+
+const {
+  href,
+  variant = "default",
+  class: className,
+  rel,
+  target,
+  "aria-label": ariaLabel,
+} = Astro.props;
+
+const isExternal = /^(https?:|mailto:|tel:)/i.test(href);
+const resolvedTarget = target ?? (isExternal ? "_blank" : undefined);
+const resolvedRel = rel ?? (isExternal ? "noopener noreferrer" : undefined);
+
+const variantClass: Record<string, string> = {
+  default: "text-primary underline underline-offset-4 hover:text-primary-hover",
+  muted: "text-muted-foreground hover:text-foreground underline underline-offset-4",
+  primary:
+    "text-primary-foreground bg-primary rounded-md px-3 py-1.5 hover:bg-primary-hover no-underline",
+  unstyled: "",
+};
+
+const classes = cx(variantClass[variant], className);
+---
+
+<a
+  href={href}
+  target={resolvedTarget}
+  rel={resolvedRel}
+  aria-label={ariaLabel}
+  class={classes}
+>
+  <slot />
+</a>

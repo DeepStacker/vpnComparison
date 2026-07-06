@@ -1,0 +1,114 @@
+---
+/**
+ * Tabs — accessible ARIA tablist with a tiny progressive-enhancement script.
+ * No hydration; a single inline module script wires up all [data-tabs] on the
+ * page (click + roving-tabindex arrow-key navigation). Falls back to showing
+ * the first panel if JS is disabled (panels are toggled via `hidden`).
+ * @prop tabs - array of { id, label }.
+ * @prop defaultTab - id of the initially active tab.
+ * @prop id - unique id prefix for ARIA wiring (defaults to a random one).
+ * Panels are provided via named slots: <Fragment slot="panel-{id}" />.
+ */
+import { cx } from "@/lib/utils/string";
+
+interface Tab {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  tabs: Tab[];
+  defaultTab?: string;
+  id?: string;
+  class?: string;
+}
+
+const { tabs, defaultTab, id = `tabs-${Math.random().toString(36).slice(2, 8)}`, class: className } =
+  Astro.props;
+const activeId = defaultTab ?? tabs[0]?.id;
+
+const tabButtonClass = cx(
+  "rounded-t-md border-b-2 border-transparent px-3 py-2 text-sm font-medium text-muted-foreground transition-colors",
+  "hover:text-foreground focus-visible:outline-none",
+  "[&[aria-selected='true']]:text-foreground [&[aria-selected='true']]:border-primary",
+);
+---
+
+<div class={cx("w-full", className)} data-tabs>
+  <div role="tablist" aria-label="Tabbed content" class="flex gap-1 border-b border-border">
+    {
+      tabs.map((tab) => (
+        <button
+          type="button"
+          role="tab"
+          id={`${id}-tab-${tab.id}`}
+          aria-controls={`${id}-panel-${tab.id}`}
+          aria-selected={tab.id === activeId}
+          tabindex={tab.id === activeId ? 0 : -1}
+          class={tabButtonClass}
+        >
+          {tab.label}
+        </button>
+      ))
+    }
+  </div>
+  {
+    tabs.map((tab) => (
+      <div
+        role="tabpanel"
+        id={`${id}-panel-${tab.id}`}
+        aria-labelledby={`${id}-tab-${tab.id}`}
+        hidden={tab.id !== activeId}
+        tabindex="0"
+        class="mt-4 focus-visible:outline-none"
+      >
+        <slot name={`panel-${tab.id}`} />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  // Progressive enhancement for every [data-tabs] on the page.
+  function initTabs(root: ParentNode = document) {
+    const groups = root.querySelectorAll<HTMLElement>("[data-tabs]");
+    groups.forEach((group) => {
+      const tablist = group.querySelector<HTMLElement>('[role="tablist"]');
+      if (!tablist) return;
+      const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+      const panels = tabs
+        .map((tab) => group.querySelector<HTMLElement>(`#${tab.getAttribute("aria-controls")}`))
+        .filter((p): p is HTMLElement => p !== null);
+
+      function activate(tab: HTMLButtonElement) {
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.setAttribute("aria-selected", String(active));
+          t.tabIndex = active ? 0 : -1;
+        });
+        panels.forEach((panel) => {
+          if (!panel) return;
+          panel.hidden = panel.id !== tab.getAttribute("aria-controls");
+        });
+      }
+
+      tabs.forEach((tab) => tab.addEventListener("click", () => activate(tab)));
+
+      tablist.addEventListener("keydown", (event) => {
+        const current = tabs.findIndex((t) => t.tabIndex === 0);
+        if (current === -1) return;
+        let next = current;
+        if (event.key === "ArrowRight") next = (current + 1) % tabs.length;
+        else if (event.key === "ArrowLeft") next = (current - 1 + tabs.length) % tabs.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        tabs[next]?.focus();
+        activate(tabs[next]!);
+      });
+    });
+  }
+
+  initTabs();
+</script>

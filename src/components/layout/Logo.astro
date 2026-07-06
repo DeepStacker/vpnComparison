@@ -1,0 +1,30 @@
+---
+/**
+ * Logo — NetworksHome brand wordmark linking to the homepage.
+ * @prop href - link target (defaults to "/").
+ */
+import Icon from "@/components/ui/Icon.astro";
+import { cx } from "@/lib/utils/string";
+import { SITE } from "@/constants/site";
+
+interface Props {
+  href?: string;
+  class?: string;
+}
+
+const { href = "/", class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class={cx(
+    "inline-flex items-center gap-2 rounded-md text-foreground no-underline focus-visible:outline-none",
+    className,
+  )}
+  aria-label={`${SITE.name} home`}
+>
+  <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+    <Icon name="shield-check" size={18} />
+  </span>
+  <span class="text-base font-semibold tracking-tight">{SITE.name}</span>
+</a>

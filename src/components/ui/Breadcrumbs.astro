@@ -1,0 +1,42 @@
+---
+/**
+ * Breadcrumbs — visible navigation trail. Renders the last item as the
+ * current page (aria-current="page"). The BreadcrumbList JSON-LD is emitted
+ * separately by the SEO layout from the same `items` array.
+ * @prop items - ordered breadcrumb segments (root → leaf).
+ */
+import Icon from "./Icon.astro";
+import { cx } from "@/lib/utils/string";
+import type { Breadcrumb } from "@/types/site";
+
+interface Props {
+  items: Breadcrumb[];
+  class?: string;
+}
+
+const { items, class: className } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class={cx("w-full", className)}>
+  <ol class="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+    {
+      items.map((crumb, index) => {
+        const isLast = index === items.length - 1;
+        return (
+          <li class="flex items-center gap-1.5">
+            {isLast ? (
+              <span aria-current="page" class="font-medium text-foreground">
+                {crumb.label}
+              </span>
+            ) : (
+              <a href={crumb.href} class="hover:text-foreground transition-colors">
+                {crumb.label}
+              </a>
+            )}
+            {!isLast && <Icon name="chevron-right" size={14} class="text-muted-foreground/60" />}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

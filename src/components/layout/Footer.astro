@@ -1,0 +1,57 @@
+---
+/**
+ * Footer — site footer with grouped navigation, utility/legal links, and
+ * the copyright line. Pulls from the centralized navigation constants so the
+ * footer never drifts from the IA.
+ */
+import Logo from "./Logo.astro";
+import { FOOTER_NAV, UTILITY_NAV } from "@/constants/navigation";
+import { SITE, copyrightYears } from "@/constants/site";
+---
+
+<footer class="mt-20 border-t border-border bg-surface-raised">
+  <div class="container-page py-12">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
+      <div class="lg:col-span-1">
+        <Logo />
+        <p class="mt-3 max-w-xs text-sm text-muted-foreground">{SITE.tagline}</p>
+      </div>
+      {
+        FOOTER_NAV.map((section) => (
+          <nav aria-label={section.title} class="text-sm">
+            <h2 class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              {section.title}
+            </h2>
+            <ul class="flex flex-col gap-2">
+              {section.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-muted-foreground no-underline hover:text-foreground transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <div class="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row">
+      <p>© {copyrightYears()} {SITE.name}. All rights reserved.</p>
+      <ul class="flex flex-wrap items-center gap-4">
+        {
+          UTILITY_NAV.map((link) => (
+            <li>
+              <a href={link.href} class="no-underline hover:text-foreground transition-colors">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>

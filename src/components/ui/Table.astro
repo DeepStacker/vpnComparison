@@ -1,0 +1,93 @@
+---
+/**
+ * Table — responsive data table with a sticky header option.
+ * @prop columns - column definitions ({ key, label, align, sticky }).
+ * @prop rows - row records keyed by column.key.
+ * @prop caption - accessible table caption.
+ * @prop zebra - alternating row backgrounds.
+ * @prop firstColumnSticky - keep the first column visible on horizontal scroll.
+ */
+import Icon from "./Icon.astro";
+import { cx } from "@/lib/utils/string";
+
+interface Column {
+  key: string;
+  label: string;
+  align?: "left" | "center" | "right";
+  sticky?: boolean;
+}
+
+interface Props {
+  columns: Column[];
+  rows: Record<string, string | number | boolean | null | undefined>[];
+  caption?: string;
+  zebra?: boolean;
+  firstColumnSticky?: boolean;
+  class?: string;
+}
+
+const { columns, rows, caption, zebra = true, firstColumnSticky = false, class: className } =
+  Astro.props;
+
+const alignClass: Record<string, string> = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+};
+
+function renderCell(value: string | number | boolean | null | undefined) {
+  if (typeof value === "boolean") {
+    return value
+      ? <Icon name="check" size={16} class="text-success inline-block" />
+      : <Icon name="minus" size={16} class="text-muted-foreground inline-block" />;
+  }
+  return String(value ?? "");
+}
+---
+
+<div class={cx("w-full overflow-x-auto", className)}>
+  <table class="w-full border-collapse text-sm">
+    {
+      caption && <caption class="sr-only">{caption}</caption>
+    }
+    <thead>
+      <tr class="border-b border-border-strong bg-surface-raised">
+        {
+          columns.map((col, i) => (
+            <th
+              scope="col"
+              class={cx(
+                "whitespace-nowrap px-4 py-2.5 font-semibold text-foreground",
+                alignClass[col.align ?? "left"],
+                (col.sticky || (firstColumnSticky && i === 0)) &&
+                  "sticky left-0 z-raised bg-surface-raised",
+              )}
+            >
+              {col.label}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr class={cx("border-b border-border last:border-0", zebra && "even:bg-surface-sunken/50")}>
+            {columns.map((col, i) => (
+              <td
+                class={cx(
+                  "px-4 py-3 text-foreground/90",
+                  alignClass[col.align ?? "left"],
+                  (col.sticky || (firstColumnSticky && i === 0)) &&
+                    "sticky left-0 bg-inherit",
+                )}
+              >
+                {renderCell(row[col.key])}
+              </td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

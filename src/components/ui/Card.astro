@@ -1,0 +1,59 @@
+---
+/**
+ * Card — surface container for grouped content.
+ * @prop variant - "default" (flat + border) | "raised" (shadow) | "outline" (border only).
+ * @prop padding - "none" | "sm" | "md" (default) | "lg".
+ * @prop href - makes the whole card a link (renders <a>).
+ * @prop radius - corner radius scale.
+ * Slots: default, "header", "footer".
+ */
+import { cx } from "@/lib/utils/string";
+import { radiusClass } from "./maps";
+
+interface Props {
+  variant?: "default" | "raised" | "outline";
+  padding?: "none" | "sm" | "md" | "lg";
+  href?: string;
+  radius?: keyof typeof radiusClass;
+  element?: "div" | "article" | "li" | "section";
+  class?: string;
+}
+
+const {
+  variant = "default",
+  padding = "md",
+  href,
+  radius = "lg",
+  element: Tag = "div",
+  class: className,
+} = Astro.props;
+
+const variantClass: Record<string, string> = {
+  default: "bg-surface border border-border",
+  raised: "bg-surface border border-border shadow-md",
+  outline: "bg-transparent border border-border-strong",
+};
+
+const padClass: Record<string, string> = {
+  none: "p-0",
+  sm: "p-3",
+  md: "p-5",
+  lg: "p-6",
+};
+
+const classes = cx(
+  variantClass[variant],
+  padClass[padding],
+  radiusClass[radius],
+  href && "transition-shadow hover:shadow-md focus-visible:outline-none",
+  className,
+);
+
+const Element = href ? "a" : Tag;
+---
+
+<Element href={href} class={classes}>
+  <slot name="header" />
+  <slot />
+  <slot name="footer" />
+</Element>

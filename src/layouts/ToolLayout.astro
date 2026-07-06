@@ -1,0 +1,34 @@
+---
+/**
+ * ToolLayout — full-bleed, app-like layout for interactive decision tools
+ * (e.g. the VPN picker quiz). Keeps chrome minimal and gives the tool maximum
+ * width. The tool UI is provided via the default slot.
+ *
+ * @prop seo - page SEO metadata.
+ * @prop breadcrumbs - breadcrumb trail.
+ * @prop jsonLd - extra structured data (e.g. WebApplication schema).
+ * Slots: "intro" (above the tool surface), default (tool surface).
+ */
+import SeoLayout from "./SeoLayout.astro";
+import Breadcrumbs from "@/components/ui/Breadcrumbs.astro";
+import type { JsonLdNode, SeoMeta } from "@/types/seo";
+import type { Breadcrumb } from "@/types/site";
+
+interface Props {
+  seo: SeoMeta;
+  breadcrumbs?: Breadcrumb[];
+  jsonLd?: JsonLdNode | JsonLdNode[];
+}
+
+const { seo, breadcrumbs = [], jsonLd } = Astro.props;
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs} renderBreadcrumbs={false} container="full" jsonLd={jsonLd}>
+  <div class="container-page">
+    {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} class="mb-6" />}
+    <slot name="intro" />
+    <section class="mt-8 rounded-xl border border-border bg-surface p-4 shadow-sm sm:p-6">
+      <slot />
+    </section>
+  </div>
+</SeoLayout>

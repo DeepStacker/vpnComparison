@@ -1,0 +1,96 @@
+---
+/**
+ * ArticleLayout — editorial article shell (reviews, comparisons narrative).
+ *
+ * Adds an article header (title, byline with author + dates + reading time),
+ * a prose body via the default slot, and emits TechArticle JSON-LD from the
+ * page metadata. Use the "header" / "footer" slots for content above/below
+ * the prose body (e.g. verdict callouts, related links).
+ *
+ * @prop seo - page SEO metadata (publishedAt/author used for byline + schema).
+ * @prop breadcrumbs - breadcrumb trail.
+ * @prop authorName - byline author name.
+ * @prop readingTime - human reading-time label.
+ * @prop jsonLd - extra structured data (e.g. Review/Product).
+ */
+import SeoLayout from "./SeoLayout.astro";
+import Breadcrumbs from "@/components/ui/Breadcrumbs.astro";
+import Avatar from "@/components/ui/Avatar.astro";
+import { articleJsonLd } from "@/lib/schema/jsonld";
+import { buildOpenGraph as ogFromMeta } from "@/lib/seo/meta";
+import { formatDate } from "@/lib/utils/date";
+import type { JsonLdNode, SeoMeta } from "@/types/seo";
+import type { Breadcrumb } from "@/types/site";
+
+interface Props {
+  seo: SeoMeta;
+  breadcrumbs?: Breadcrumb[];
+  authorName?: string;
+  authorAvatar?: string;
+  readingTime?: string;
+  jsonLd?: JsonLdNode | JsonLdNode[];
+}
+
+const { seo, breadcrumbs = [], authorName, authorAvatar, readingTime, jsonLd } = Astro.props;
+const path = Astro.url.pathname;
+const og = ogFromMeta(seo, path);
+
+const articleLd: JsonLdNode | null =
+  seo.publishedAt && authorName
+    ? articleJsonLd({
+        path,
+        title: seo.title,
+        description: seo.description,
+        og,
+        authorName,
+      })
+    : null;
+
+const extra = [
+  ...(articleLd ? [articleLd] : []),
+  ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []),
+];
+---
+
+<SeoLayout
+  seo={seo}
+  breadcrumbs={breadcrumbs}
+  renderBreadcrumbs={false}
+  container="full"
+  jsonLd={extra.length > 0 ? extra : undefined}
+>
+  <article class="container-prose max-w-none px-0">
+    {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} class="mb-6" />}
+
+    <slot name="title" />
+
+    {(authorName || seo.publishedAt || readingTime) && (
+      <div class="mb-8 flex flex-wrap items-center gap-4 border-b border-border pb-6 text-sm text-muted-foreground">
+        {authorName && (
+          <div class="flex items-center gap-2">
+            <Avatar src={authorAvatar} name={authorName} size={32} />
+            <span class="font-medium text-foreground">{authorName}</span>
+          </div>
+        )}
+        {seo.publishedAt && (
+          <time datetime={seo.publishedAt} class="flex items-center gap-1.5">
+            <span aria-hidden="true">·</span>
+            {formatDate(seo.publishedAt)}
+          </time>
+        )}
+        {readingTime && (
+          <span class="flex items-center gap-1.5">
+            <span aria-hidden="true">·</span>
+            {readingTime}
+          </span>
+        )}
+      </div>
+    )}
+
+    <div class="prose prose-neutral max-w-none dark:prose-invert">
+      <slot />
+    </div>
+
+    <slot name="footer" />
+  </article>
+</SeoLayout>

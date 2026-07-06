@@ -1,0 +1,55 @@
+---
+/**
+ * Callout — softer document aside for notes/tips/warnings inside editorial
+ * content. Less assertive than Alert; blends into prose.
+ * @prop tone - "note" | "tip" | "warning" | "danger".
+ * @prop title - optional heading; defaults to a tone label.
+ */
+import Icon from "./Icon.astro";
+import { cx } from "@/lib/utils/string";
+
+interface Props {
+  tone?: "note" | "tip" | "warning" | "danger";
+  title?: string;
+  class?: string;
+}
+
+const { tone = "note", title, class: className } = Astro.props;
+
+const toneClass: Record<string, string> = {
+  note: "border-l-info bg-info-surface/50",
+  tip: "border-l-success bg-success-surface/50",
+  warning: "border-l-warning bg-warning-surface/50",
+  danger: "border-l-danger bg-danger-surface/50",
+};
+
+const iconByTone: Record<string, string> = {
+  note: "info",
+  tip: "lightbulb",
+  warning: "alert-triangle",
+  danger: "alert-octagon",
+};
+
+const labelByTone: Record<string, string> = {
+  note: "Note",
+  tip: "Tip",
+  warning: "Warning",
+  danger: "Important",
+};
+
+const classes = cx(
+  "my-6 flex gap-3 rounded-r-lg border-l-4 p-4 text-sm",
+  toneClass[tone],
+  className,
+);
+---
+
+<aside class={classes}>
+  <Icon name={iconByTone[tone] ?? "info"} size={18} class="mt-0.5 text-foreground/70" />
+  <div class="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <p class="mb-1 font-semibold text-foreground">{title ?? labelByTone[tone]}</p>
+    <div class="text-foreground/80 [&_a]:text-primary [&_a]:underline">
+      <slot />
+    </div>
+  </div>
+</aside>

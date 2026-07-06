@@ -1,0 +1,54 @@
+---
+/**
+ * Grid — responsive CSS grid with breakpoint column controls.
+ * @prop cols - base column count (1–6, 12).
+ * @prop colsSm / colsMd / colsLg / colsXl - responsive overrides.
+ * @prop gap - gap scale.
+ */
+import { cx } from "@/lib/utils/string";
+import {
+  colsClass,
+  colsLgClass,
+  colsMdClass,
+  colsSmClass,
+  colsXlClass,
+  gapClass,
+} from "./maps";
+
+interface Props {
+  cols?: keyof typeof colsClass;
+  colsSm?: keyof typeof colsSmClass;
+  colsMd?: keyof typeof colsMdClass;
+  colsLg?: keyof typeof colsLgClass;
+  colsXl?: keyof typeof colsXlClass;
+  gap?: keyof typeof gapClass;
+  element?: "div" | "ul" | "ol" | "section";
+  class?: string;
+}
+
+const {
+  cols = 1,
+  colsSm,
+  colsMd,
+  colsLg,
+  colsXl,
+  gap = 4,
+  element: Tag = "div",
+  class: className,
+} = Astro.props;
+
+const classes = cx(
+  "grid",
+  colsClass[cols],
+  colsSm ? colsSmClass[colsSm] : false,
+  colsMd ? colsMdClass[colsMd] : false,
+  colsLg ? colsLgClass[colsLg] : false,
+  colsXl ? colsXlClass[colsXl] : false,
+  gapClass[gap],
+  className,
+);
+---
+
+<Tag class={classes}>
+  <slot />
+</Tag>
