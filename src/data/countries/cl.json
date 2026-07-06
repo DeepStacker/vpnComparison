@@ -1,1 +1,15 @@
-{"code":"CL","slug":"cl","name":"Chile","region":"south-america","flagEmoji":"cl","privacyFriendly":false}
+{
+  "code": "CL",
+  "slug": "cl",
+  "name": "Chile",
+  "region": "south-america",
+  "flagEmoji": "🇨🇱",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": false,
+  "internetPenetration": 88,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

@@ -1,1 +1,15 @@
-{"code":"IE","slug":"ie","name":"Ireland","region":"europe","flagEmoji":"ie","privacyFriendly":false}
+{
+  "code": "IE",
+  "slug": "ie",
+  "name": "Ireland",
+  "region": "europe",
+  "flagEmoji": "🇮🇪",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 88,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

@@ -1,1 +1,15 @@
-{"code":"RO","slug":"ro","name":"Romania","region":"europe","flagEmoji":"ro","privacyFriendly":false}
+{
+  "code": "RO",
+  "slug": "ro",
+  "name": "Romania",
+  "region": "europe",
+  "flagEmoji": "🇷🇴",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 76,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

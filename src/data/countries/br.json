@@ -1,1 +1,15 @@
-{"code":"BR","slug":"br","name":"Brazil","region":"south-america","flagEmoji":"br","privacyFriendly":false}
+{
+  "code": "BR",
+  "slug": "br",
+  "name": "Brazil",
+  "region": "south-america",
+  "flagEmoji": "🇧🇷",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 81,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

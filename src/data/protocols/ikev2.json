@@ -1,1 +1,35 @@
-{"id":"ikev2","slug":"ikev2","name":"IKEv2/IPsec","category":"ikev2","description":"Protocol developed by Microsoft and Cisco, known for stability when switching networks (Wi-Fi to mobile). Often paired with IPsec for encryption.","encryption":"AES-256-GCM / IPsec","transport":"udp","openSource":false,"strengths":["Excellent mobile stability","Fast reconnection","Good speeds","Windows and iOS native support"]}
+{
+  "id": "ikev2",
+  "slug": "ikev2",
+  "name": "IKEv2/IPsec",
+  "category": "ikev2",
+  "description": "Protocol developed by Microsoft and Cisco, known for stability when switching networks (Wi-Fi to mobile). Often paired with IPsec for encryption.",
+  "encryption": "AES-256-GCM / IPsec",
+  "transport": "udp",
+  "openSource": false,
+  "port": 500,
+  "creator": "Microsoft and Cisco",
+  "releaseYear": 2005,
+  "speedRating": "fast",
+  "securityRating": "strong",
+  "strengths": [
+    "Excellent mobile stability",
+    "Fast reconnection",
+    "Good speeds",
+    "Windows and iOS native support"
+  ],
+  "weaknesses": [
+    "Complex implementation",
+    "Proprietary on some platforms",
+    "Limited third-party client ecosystem",
+    "Can be blocked more easily than OpenVPN"
+  ],
+  "platformSupport": [
+    "Windows",
+    "macOS",
+    "Linux",
+    "Android",
+    "iOS",
+    "Router"
+  ]
+}

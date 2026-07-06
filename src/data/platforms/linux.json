@@ -1,1 +1,20 @@
-{"id":"linux","slug":"linux","name":"Linux","icon":"terminal","official":true}
+{
+  "id": "linux",
+  "slug": "linux",
+  "name": "Linux",
+  "icon": "terminal",
+  "official": true,
+  "category": "desktop",
+  "limitations": [
+    "No native GUI application — command-line only",
+    "Requires manual OpenVPN or WireGuard configuration",
+    "Kill set-up depends on firewall rules"
+  ],
+  "commonIssues": [
+    "NetworkManager conflicts with manual VPN configs",
+    "DNS leaks if resolvconf is not properly configured",
+    "Missing TUN/TAP kernel module on some distros"
+  ],
+  "storeUrl": "https://snapcraft.io/freevpn4usa",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/linux"
+}

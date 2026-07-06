@@ -1,1 +1,15 @@
-{"code":"SE","slug":"se","name":"Sweden","region":"europe","flagEmoji":"se","privacyFriendly":true}
+{
+  "code": "SE",
+  "slug": "se",
+  "name": "Sweden",
+  "region": "europe",
+  "flagEmoji": "🇸🇪",
+  "privacyFriendly": true,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "fourteen-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 97,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

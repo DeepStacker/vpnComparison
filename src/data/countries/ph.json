@@ -1,1 +1,15 @@
-{"code":"PH","slug":"ph","name":"Philippines","region":"asia","flagEmoji":"ph","privacyFriendly":false}
+{
+  "code": "PH",
+  "slug": "ph",
+  "name": "Philippines",
+  "region": "asia",
+  "flagEmoji": "🇵🇭",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 73,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

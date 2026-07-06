@@ -1,1 +1,16 @@
-{"code":"HK","slug":"hk","name":"Hong Kong","region":"asia","flagEmoji":"hk","privacyFriendly":false}
+{
+  "code": "HK",
+  "slug": "hk",
+  "name": "Hong Kong",
+  "region": "asia",
+  "flagEmoji": "🇭🇰",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 93,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn"
+  ]
+}

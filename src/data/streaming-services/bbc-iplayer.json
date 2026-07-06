@@ -1,1 +1,18 @@
-{"id":"bbc-iplayer","slug":"bbc-iplayer","name":"BBC iPlayer","icon":"tv","regions":["GB"]}
+{
+  "id": "bbc-iplayer",
+  "slug": "bbc-iplayer",
+  "name": "BBC iPlayer",
+  "icon": "tv",
+  "regions": ["GB"],
+  "websiteUrl": "https://www.bbc.co.uk/iplayer",
+  "category": "entertainment",
+  "vpnDetectionDifficulty": "difficult",
+  "reliabilityNotes": "BBC iPlayer has one of the most aggressive VPN detection systems. It uses device-level detection, requires a UK TV license, and blocks most consumer VPN IP ranges.",
+  "troubleshootingTips": [
+    "Use a VPN server physically located in the UK",
+    "Clear browser cache and cookies before connecting",
+    "Try a dedicated/static IP address if available",
+    "Disable WebRTC in your browser to prevent IP leaks",
+    "Ensure your VPN provider offers obfuscated servers"
+  ]
+}

@@ -1,1 +1,17 @@
-{"code":"EG","slug":"eg","name":"Egypt","region":"africa","flagEmoji":"eg","privacyFriendly":false}
+{
+  "code": "EG",
+  "slug": "eg",
+  "name": "Egypt",
+  "region": "africa",
+  "flagEmoji": "🇪🇬",
+  "privacyFriendly": false,
+  "censorshipLevel": "high",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 72,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn",
+    "obfuscation"
+  ]
+}

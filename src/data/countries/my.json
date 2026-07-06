@@ -1,1 +1,16 @@
-{"code":"MY","slug":"my","name":"Malaysia","region":"asia","flagEmoji":"my","privacyFriendly":false}
+{
+  "code": "MY",
+  "slug": "my",
+  "name": "Malaysia",
+  "region": "asia",
+  "flagEmoji": "🇲🇾",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 84,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn"
+  ]
+}

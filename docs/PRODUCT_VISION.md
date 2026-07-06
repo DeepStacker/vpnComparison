@@ -1,12 +1,12 @@
 # Product Vision
 
-## What NetworksHome is
+## What FreeVPN4USA is
 
 A **VPN Intelligence Platform**: a knowledge platform and decision-support
 system that helps users choose the right VPN through transparent information,
 structured comparisons, educational content, and interactive tools.
 
-## What NetworksHome is not
+## What FreeVPN4USA is not
 
 - Not a blog.
 - Not an affiliate landing page.

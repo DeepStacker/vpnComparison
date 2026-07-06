@@ -1,1 +1,15 @@
-{"code":"JP","slug":"jp","name":"Japan","region":"asia","flagEmoji":"jp","privacyFriendly":false}
+{
+  "code": "JP",
+  "slug": "jp",
+  "name": "Japan",
+  "region": "asia",
+  "flagEmoji": "🇯🇵",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": false,
+  "internetPenetration": 85,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

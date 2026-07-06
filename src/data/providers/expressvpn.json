@@ -2,185 +2,97 @@
   "id": "expressvpn",
   "slug": "expressvpn",
   "name": "ExpressVPN",
-  "tagline": "Premium VPN with blazing speeds and a proven no-logs record",
-  "websiteUrl": "https://expressvpn.com",
+  "tagline": "Premium VPN with TrustedServer RAM-only infrastructure, custom Lightway protocol, and 105 country locations.",
+  "websiteUrl": "https://www.expressvpn.com/",
   "foundedYear": 2009,
   "jurisdiction": "VG",
   "hqCountry": "VG",
+  "parentCompany": "Kape Technologies",
+  "ownership": "subsidiary",
+  "warrantCanary": false,
+  "ramOnlyServers": true,
+  "transparencyReports": ["https://www.expressvpn.com/transparency"],
   "serverNetwork": {
     "serverCount": 3000,
     "countryCount": 105,
-    "countries": [
-      "US",
-      "GB",
-      "DE",
-      "FR",
-      "NL",
-      "CA",
-      "AU",
-      "JP",
-      "SG",
-      "HK",
-      "CH",
-      "SE",
-      "NO",
-      "DK",
-      "FI",
-      "IT",
-      "ES",
-      "BR",
-      "MX",
-      "IN",
-      "KR",
-      "TW",
-      "NZ",
-      "ZA",
-      "AE",
-      "PL",
-      "AT",
-      "BE",
-      "IE",
-      "PT",
-      "GR",
-      "HU",
-      "RO",
-      "TR",
-      "AR",
-      "CL",
-      "CO",
-      "MY",
-      "TH",
-      "ID",
-      "VN"
-    ],
-    "virtualLocations": true
+    "countries": ["AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","BS","CA","CH","CL","CO","CR","CY","CZ","DE","DK","DO","EC","EE","ES","FI","FR","GB","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LB","LI","LK","LT","LU","LV","MA","MK","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","RO","RS","SE","SG","SI","SK","SV","TH","TR","TT","TW","UA","UG","US","UY","VE","VN","ZA"],
+    "virtualLocations": true,
+    "ownedInfrastructure": false
   },
-  "protocols": [
-    "openvpn",
-    "wireguard",
-    "ikev2",
-    "l2tp"
-  ],
-  "platforms": [
-    "windows",
-    "macos",
-    "linux",
-    "android",
-    "ios",
-    "android-tv",
-    "fire-tv",
-    "chromebook",
-    "router"
-  ],
-  "features": [
-    "kill-switch",
-    "split-tunneling",
-    "no-logs"
-  ],
+  "protocols": ["openvpn", "wireguard", "ikev2", "l2tp"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension", "router"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "obfuscation", "ad-blocker", "dedicated-ip"],
   "streaming": [
-    {
-      "service": "netflix",
-      "support": "verified",
-      "verifiedAt": "2025-12-05"
-    },
-    {
-      "service": "prime-video",
-      "support": "verified",
-      "verifiedAt": "2025-11-20"
-    },
-    {
-      "service": "disney-plus",
-      "support": "verified",
-      "verifiedAt": "2025-12-01"
-    },
-    {
-      "service": "hbo-max",
-      "support": "verified",
-      "verifiedAt": "2025-10-15"
-    },
-    {
-      "service": "hulu",
-      "support": "verified",
-      "verifiedAt": "2025-09-20"
-    },
-    {
-      "service": "bbc-iplayer",
-      "support": "verified",
-      "verifiedAt": "2025-11-10"
-    }
+    { "service": "netflix", "support": "verified", "verifiedAt": "2026-05-15", "notes": "Reliable access to Netflix US, UK, CA, AU, JP and other major libraries via MediaStreamer and VPN.", "regionsTested": ["US","GB","CA","AU","JP"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-05-15", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US","GB","DE"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
+    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-04-15", "regionsTested": ["GB"] }
   ],
   "torrenting": {
     "supported": true,
-    "labeledServers": true,
-    "rating": 8.5
+    "labeledServers": false,
+    "portForwarding": false,
+    "rating": 7,
+    "notes": "P2P traffic allowed on all servers. No port forwarding. Limited compared to dedicated P2P providers."
   },
   "loggingPolicy": "no-logs",
+  "dnsHandling": "Private DNS on every server. DNS queries routed through encrypted tunnel. DNS leak protection built into all apps.",
+  "leakProtection": "Network Lock kill switch blocks all traffic if VPN drops. DNS/IPv6 leak protection. IPv6 traffic blocked at network level to prevent leaks.",
+  "obfuscationType": "stealth",
+  "postQuantum": true,
   "killSwitch": true,
   "splitTunneling": true,
-  "adBlocker": false,
+  "adBlocker": true,
   "multiHop": false,
-  "dedicatedIp": false,
+  "dedicatedIp": true,
   "simultaneousConnections": 8,
   "pricing": {
     "currency": "USD",
     "plans": [
-      {
-        "cycle": "monthly",
-        "price": 12.95,
-        "currency": "USD",
-        "effectiveMonthly": 12.95,
-        "featured": false
-      },
-      {
-        "cycle": "quarterly",
-        "price": 38.85,
-        "currency": "USD",
-        "effectiveMonthly": 12.95,
-        "featured": false
-      },
-      {
-        "cycle": "biennially",
-        "price": 99.95,
-        "currency": "USD",
-        "effectiveMonthly": 4.16,
-        "featured": true
-      }
+      { "cycle": "monthly", "price": 12.95, "currency": "USD", "effectiveMonthly": 12.95 },
+      { "cycle": "yearly", "price": 99.95, "currency": "USD", "effectiveMonthly": 8.33 },
+      { "cycle": "biennially", "price": 134.70, "currency": "USD", "effectiveMonthly": 5.61, "featured": true }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": [
-      "card",
-      "paypal",
-      "crypto",
-      "google-pay",
-      "apple-pay"
-    ],
+    "paymentMethods": ["credit-card", "paypal", "bitcoin", "ideal", "giropay"],
     "freeTier": false
+  },
+  "support": {
+    "liveChat": true,
+    "email": true,
+    "knowledgeBase": true,
+    "averageResponseTime": "Within 5 minutes (live chat)"
   },
   "audits": [
     {
-      "auditor": "PwC",
-      "date": "2024-05-20",
-      "scope": "No-logs policy audit \u2014 TrustedServer technology",
-      "reportUrl": "https://www.expressvpn.com/blog/expressvpn-pwc-audit/",
+      "auditor": "PwC Switzerland",
+      "date": "2023-08-01",
+      "scope": "No-logs policy audit — review of logging practices, data retention, and infrastructure.",
+      "reportUrl": "https://www.expressvpn.com/blog/independent-audit-confirms-no-logs/",
       "independent": true
     },
     {
       "auditor": "Cure53",
-      "date": "2023-08-15",
-      "scope": "Security audit of Lightway protocol and apps",
-      "reportUrl": "https://cure53.de/pentest-report_expressvpn.pdf",
+      "date": "2024-03-01",
+      "scope": "Security audit of Lightway protocol and VPN applications.",
+      "reportUrl": "https://www.expressvpn.com/blog/lightway-security-audit/",
       "independent": true
     },
     {
       "auditor": "KPMG",
-      "date": "2022-11-10",
-      "scope": "Privacy policy compliance audit",
+      "date": "2022-06-01",
+      "scope": "TrustedServer architecture and security controls audit.",
+      "reportUrl": "https://www.expressvpn.com/blog/trustedserver-audit/",
       "independent": true
     }
   ],
-  "updatedAt": "2025-12-10",
+  "updatedAt": "2026-06-20",
   "sources": [
-    "https://expressvpn.com/features",
-    "https://expressvpn.com/what-is-vpn"
+    "https://www.expressvpn.com/vpn-server",
+    "https://www.expressvpn.com/lightway",
+    "https://www.expressvpn.com/features/trustedserver",
+    "https://www.expressvpn.com/blog/independent-audit-confirms-no-logs/"
   ]
 }

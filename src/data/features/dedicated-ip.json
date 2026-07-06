@@ -1,1 +1,32 @@
-{"id":"dedicated-ip","slug":"dedicated-ip","name":"Dedicated IP","category":"advanced","description":"Provides a unique IP address not shared with other users, useful for accessing corporate networks or avoiding CAPTCHAs."}
+{
+  "id": "dedicated-ip",
+  "slug": "dedicated-ip",
+  "name": "Dedicated IP",
+  "category": "advanced",
+  "description": "Provides a unique IP address not shared with other users, useful for accessing corporate networks or avoiding CAPTCHAs.",
+  "technicalExplanation": "Unlike shared IPs where hundreds of users egress from the same address, a dedicated IP is assigned exclusively to one account. The VPN gateway maintains a static 1:1 NAT mapping between the user's tunnel interface and the public IP. Traffic from that account always appears to originate from the same, non-recycled IP address, allowing remote services to build a consistent reputation for that address.",
+  "advantages": [
+    "Avoids CAPTCHA challenges that are frequently triggered by shared VPN IPs with mixed reputation",
+    "Enables access to corporate networks, banking portals, and services that whitelist specific IPs",
+    "Reduces the chance of being rate-limited on APIs and web scraping targets",
+    "Lowers the risk of IP blacklisting due to other users' activity on the same IP",
+    "Provides a consistent geolocation for services that use IP-based location detection"
+  ],
+  "disadvantages": [
+    "Costs significantly more than shared IP access — dedicated IPs require reserved address space on the provider's infrastructure",
+    "Reduces anonymity since all traffic from a single user is tied to one persistent IP address over time",
+    "May still be flagged by some services if the IP range is published as belonging to a VPN provider",
+    "Not available on all server locations — limited to specific cities or regions selected by the provider",
+    "Cannot be reassigned instantly if the IP becomes blacklisted; resolution depends on the provider's delisting process"
+  ],
+  "idealUsers": [
+    "Business travelers who need reliable access to corporate VPNs and office networks with IP allowlists",
+    "Online banking users whose financial institutions block shared VPN IPs",
+    "E-commerce operators managing seller accounts on platforms that flag shared IPs",
+    "Users of ticket purchasing or limited-release systems where IP reputation matters",
+    "Streaming subscribers who want consistent geolocation per service"
+  ],
+  "securityImpact": "Neutral — the security properties of the VPN tunnel (encryption, authentication) remain identical; however, the persistent IP reduces anonymity and makes user activity easier to correlate across sessions.",
+  "performanceImpact": "Negligible — dedicated IPs have no inherent performance advantage over shared IPs. Performance depends on server load, routing, and bandwidth allocation.",
+  "importance": "specialized"
+}

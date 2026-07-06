@@ -1,1 +1,22 @@
-{"id":"browser-extension","slug":"browser-extension","name":"Browser Extension","icon":"globe","official":true}
+{
+  "id": "browser-extension",
+  "slug": "browser-extension",
+  "name": "Browser Extension",
+  "icon": "globe",
+  "official": true,
+  "category": "browser",
+  "limitations": [
+    "VPN protects only browser traffic, not other apps",
+    "No kill switch available",
+    "WebRTC leaks possible without additional configuration",
+    "Limited to Chromium-based browsers and Firefox"
+  ],
+  "commonIssues": [
+    "Extension may be disabled by browser after updates",
+    "Incognito mode requires separate permissions",
+    "Private tabs may not route through VPN by default",
+    "Conflict with other proxy extensions"
+  ],
+  "storeUrl": "https://chrome.google.com/webstore/detail/freevpn4usa/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/browser-extension"
+}

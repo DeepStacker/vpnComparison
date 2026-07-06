@@ -1,1 +1,21 @@
-{"id":"fire-tv","slug":"fire-tv","name":"Fire TV","icon":"tv","official":false}
+{
+  "id": "fire-tv",
+  "slug": "fire-tv",
+  "name": "Fire TV",
+  "icon": "tv",
+  "official": false,
+  "category": "tv",
+  "minOsVersion": "Fire OS 6",
+  "limitations": [
+    "VPN app may not persist after Fire OS updates",
+    "No split tunneling available",
+    "Requires sideloading if not on Amazon Appstore"
+  ],
+  "commonIssues": [
+    "VPN disconnects when device sleeps",
+    "Streaming apps may block VPN traffic",
+    "Remote-only navigation can be awkward"
+  ],
+  "storeUrl": "https://www.amazon.com/gp/product/B0XXXXXXXX",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/fire-tv"
+}

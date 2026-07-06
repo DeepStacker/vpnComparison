@@ -1,1 +1,15 @@
-{"code":"SG","slug":"sg","name":"Singapore","region":"asia","flagEmoji":"sg","privacyFriendly":false}
+{
+  "code": "SG",
+  "slug": "sg",
+  "name": "Singapore",
+  "region": "asia",
+  "flagEmoji": "🇸🇬",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 92,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

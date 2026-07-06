@@ -1,1 +1,15 @@
-{"code":"TW","slug":"tw","name":"Taiwan","region":"asia","flagEmoji":"tw","privacyFriendly":false}
+{
+  "code": "TW",
+  "slug": "tw",
+  "name": "Taiwan",
+  "region": "asia",
+  "flagEmoji": "🇹🇼",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": false,
+  "internetPenetration": 90,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

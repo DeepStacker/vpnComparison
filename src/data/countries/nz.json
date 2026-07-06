@@ -1,1 +1,15 @@
-{"code":"NZ","slug":"nz","name":"New Zealand","region":"oceania","flagEmoji":"nz","privacyFriendly":false}
+{
+  "code": "NZ",
+  "slug": "nz",
+  "name": "New Zealand",
+  "region": "oceania",
+  "flagEmoji": "🇳🇿",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "five-eyes",
+  "dataRetentionLaw": false,
+  "internetPenetration": 93,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

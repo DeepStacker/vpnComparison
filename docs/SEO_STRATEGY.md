@@ -5,7 +5,7 @@
 Every page supplies a `SeoMeta` object (`src/types/seo.ts`) consumed by
 `src/components/seo/Meta.astro`:
 
-- `<title>` via `buildTitle()` → `"{Page title} — NetworksHome"` (home variant
+- `<title>` via `buildTitle()` → `"{Page title} — FreeVPN4USA"` (home variant
   uses the tagline).
 - `meta[name=description]`.
 - `<link rel="canonical">` via `canonicalUrl()` (resolves absolute against

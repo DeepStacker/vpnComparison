@@ -1,1 +1,15 @@
-{"code":"BE","slug":"be","name":"Belgium","region":"europe","flagEmoji":"be","privacyFriendly":false}
+{
+  "code": "BE",
+  "slug": "be",
+  "name": "Belgium",
+  "region": "europe",
+  "flagEmoji": "🇧🇪",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "fourteen-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 92,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

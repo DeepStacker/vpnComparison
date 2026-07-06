@@ -1,1 +1,17 @@
-{"id":"disney-plus","slug":"disney-plus","name":"Disney+","icon":"monitor","regions":["US","GB","CA","AU","DE","FR","NL","JP","BR","MX"]}
+{
+  "id": "disney-plus",
+  "slug": "disney-plus",
+  "name": "Disney+",
+  "icon": "monitor",
+  "regions": ["US", "GB", "CA", "AU", "DE", "FR", "NL", "JP", "BR", "MX"],
+  "websiteUrl": "https://www.disneyplus.com",
+  "category": "entertainment",
+  "vpnDetectionDifficulty": "moderate",
+  "reliabilityNotes": "Disney+ blocks many known VPN IP ranges but is generally more permissive than Netflix. Regional libraries vary and some VPNs work reliably.",
+  "troubleshootingTips": [
+    "Connect to a server in the target region before opening Disney+",
+    "Clear browser cache or use incognito/private mode",
+    "Try different server locations within the same region",
+    "Disable IPv6 in your system network settings if issues persist"
+  ]
+}

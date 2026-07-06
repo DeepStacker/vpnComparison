@@ -1,1 +1,36 @@
-{"id":"wireguard","slug":"wireguard","name":"WireGuard","category":"wireguard","description":"Modern, high-performance VPN protocol built into the Linux kernel. Uses state-of-the-art cryptography (Curve25519, BLAKE2, ChaCha20-Poly1305) and establishes connections in milliseconds.","encryption":"ChaCha20-Poly1305 / Curve25519","transport":"udp","openSource":true,"strengths":["Exceptional speed","Minimal codebase (4k lines)","Built-in kernel support","Instant connection"]}
+{
+  "id": "wireguard",
+  "slug": "wireguard",
+  "name": "WireGuard",
+  "category": "wireguard",
+  "description": "Modern, high-performance VPN protocol built into the Linux kernel. Uses state-of-the-art cryptography (Curve25519, BLAKE2, ChaCha20-Poly1305) and establishes connections in milliseconds.",
+  "encryption": "ChaCha20-Poly1305 / Curve25519",
+  "transport": "udp",
+  "openSource": true,
+  "port": 51820,
+  "creator": "Jason A. Donenfeld",
+  "releaseYear": 2016,
+  "speedRating": "very-fast",
+  "securityRating": "very-strong",
+  "strengths": [
+    "Exceptional speed",
+    "Minimal codebase (4k lines)",
+    "Built-in kernel support",
+    "Instant connection"
+  ],
+  "weaknesses": [
+    "Static IP assignment model",
+    "No built-in obfuscation",
+    "No TCP mode — can be blocked by UDP-restricted networks",
+    "Limited logging and auditing capabilities"
+  ],
+  "platformSupport": [
+    "Windows",
+    "macOS",
+    "Linux",
+    "Android",
+    "iOS",
+    "Router",
+    "FreeBSD"
+  ]
+}

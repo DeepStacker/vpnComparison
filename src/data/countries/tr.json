@@ -1,1 +1,17 @@
-{"code":"TR","slug":"tr","name":"Turkey","region":"europe","flagEmoji":"tr","privacyFriendly":false}
+{
+  "code": "TR",
+  "slug": "tr",
+  "name": "Turkey",
+  "region": "europe",
+  "flagEmoji": "🇹🇷",
+  "privacyFriendly": false,
+  "censorshipLevel": "high",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 79,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn",
+    "obfuscation"
+  ]
+}

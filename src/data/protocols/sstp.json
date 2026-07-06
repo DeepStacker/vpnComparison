@@ -1,1 +1,31 @@
-{"id":"sstp","slug":"sstp","name":"SSTP","category":"sstp","description":"Secure Socket Tunneling Protocol developed by Microsoft. Uses SSL/TLS over port 443, making it very difficult to block as traffic appears as standard HTTPS.","encryption":"AES-256 / SSL 3.0","transport":"tcp","openSource":false,"strengths":["Hard to block","Uses port 443","Good Windows support"]}
+{
+  "id": "sstp",
+  "slug": "sstp",
+  "name": "SSTP",
+  "category": "sstp",
+  "description": "Secure Socket Tunneling Protocol developed by Microsoft. Uses SSL/TLS over port 443, making it very difficult to block as traffic appears as standard HTTPS.",
+  "encryption": "AES-256 / SSL 3.0",
+  "transport": "tcp",
+  "openSource": false,
+  "port": 443,
+  "creator": "Microsoft",
+  "releaseYear": 2008,
+  "speedRating": "moderate",
+  "securityRating": "strong",
+  "strengths": [
+    "Hard to block",
+    "Uses port 443",
+    "Good Windows support"
+  ],
+  "weaknesses": [
+    "Proprietary protocol tied to Microsoft",
+    "Limited third-party client support",
+    "Only supports TCP transport",
+    "No native support on Android or iOS"
+  ],
+  "platformSupport": [
+    "Windows",
+    "Linux",
+    "Router"
+  ]
+}

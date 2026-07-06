@@ -1,1 +1,32 @@
-{"id":"dns-leak-protection","slug":"dns-leak-protection","name":"DNS Leak Protection","category":"security","description":"Ensures DNS queries are routed through the encrypted tunnel and never exposed to your ISP."}
+{
+  "id": "dns-leak-protection",
+  "slug": "dns-leak-protection",
+  "name": "DNS Leak Protection",
+  "category": "security",
+  "description": "Ensures DNS queries are routed through the encrypted tunnel and never exposed to your ISP.",
+  "technicalExplanation": "The VPN client intercepts all DNS queries on the device by overriding the system DNS resolver settings — typically by updating the resolv.conf on Linux or using a virtual network adapter on Windows/macOS. Queries are forwarded over the encrypted tunnel to the VPN provider's DNS resolvers (or a user-specified resolver). The client also monitors the tunnel state; if the VPN disconnects unexpectedly, DNS queries are blocked until the tunnel is restored, preventing them from leaking to the ISP's DNS servers. This prevents DNS hijacking and transparent proxies from interfering with name resolution.",
+  "advantages": [
+    "Prevents ISPs from logging and selling DNS query history tied to the subscriber's identity",
+    "Blocks DNS-based censorship, redirection, and transparent proxy injection by ISPs or local network administrators",
+    "Ensures DNS resolution uses the VPN provider's resolvers, which may have different blocking/unblocking policies than the local ISP",
+    "Protects against DNS spoofing attacks on untrusted networks (public Wi-Fi, hotel networks)",
+    "Maintains operational consistency — applications continue resolving hostnames even when the DNS infrastructure of the local network is unreliable"
+  ],
+  "disadvantages": [
+    "IPv6 DNS leaks can still occur if the VPN client does not properly handle IPv6 resolver configuration — requires IPv6 leak protection in addition to IPv4 DNS protection",
+    "WebRTC in browsers can bypass the VPN tunnel and discover the real local IP and its associated DNS resolver, leaking DNS information at the application layer",
+    "Transparent DNS proxies on some networks may intercept outbound DNS even when the resolver is set to a VPN provider address",
+    "Split-tunnel configurations must explicitly exempt DNS destinations or risk routing DNS queries through the wrong interface",
+    "Some VPN clients may fail to restore original DNS settings after disconnection, leaving the device with incorrect resolver configuration"
+  ],
+  "idealUsers": [
+    "Privacy-conscious users who do not want their ISP logging DNS queries",
+    "Travelers connecting to untrusted public Wi-Fi where DNS hijacking is common",
+    "Users in countries where ISPs implement DNS-based censorship or redirects",
+    "Journalists and activists who require consistent DNS resolution independent of the local network",
+    "Users who have manually configured custom DNS resolvers (e.g., Pi-hole, NextDNS) and want them used exclusively"
+  ],
+  "securityImpact": "Significant — DNS leak protection is critical for maintaining the confidentiality of which domains a user visits. Without it, the ISP can observe all destination hostnames even if the content is encrypted over HTTPS, compromising the privacy benefit of the VPN.",
+  "performanceImpact": "Negligible — the overhead of rerouting DNS packets through the tunnel is approximately the same as the VPN's per-packet encapsulation overhead (typically <5% latency increase for DNS queries).",
+  "importance": "essential"
+}

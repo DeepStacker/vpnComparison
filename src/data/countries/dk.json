@@ -1,1 +1,15 @@
-{"code":"DK","slug":"dk","name":"Denmark","region":"europe","flagEmoji":"dk","privacyFriendly":true}
+{
+  "code": "DK",
+  "slug": "dk",
+  "name": "Denmark",
+  "region": "europe",
+  "flagEmoji": "🇩🇰",
+  "privacyFriendly": true,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "nine-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 98,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

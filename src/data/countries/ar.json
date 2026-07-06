@@ -1,1 +1,15 @@
-{"code":"AR","slug":"ar","name":"Argentina","region":"south-america","flagEmoji":"ar","privacyFriendly":false}
+{
+  "code": "AR",
+  "slug": "ar",
+  "name": "Argentina",
+  "region": "south-america",
+  "flagEmoji": "🇦🇷",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 87,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

@@ -1,1 +1,30 @@
-{"id":"multi-hop","slug":"multi-hop","name":"Multi-Hop","category":"privacy","description":"Routes traffic through two VPN servers for an extra layer of encryption and anonymity."}
+{
+  "id": "multi-hop",
+  "slug": "multi-hop",
+  "name": "Multi-Hop",
+  "category": "privacy",
+  "description": "Routes traffic through two VPN servers for an extra layer of encryption and anonymity.",
+  "technicalExplanation": "Traffic is encrypted in layers: the client connects to the entry server and establishes a tunnel. Inside that tunnel, a second VPN connection is initiated to the exit server. The entry server decrypts the outer encryption layer and forwards the still-encrypted inner packet to the exit server, which decrypts the inner layer before sending the request to the destination. Neither server sees both the user's real IP and the final destination IP simultaneously.",
+  "advantages": [
+    "No single VPN server knows both the user's real IP address and their destination — the entry server sees the real IP but not the destination, the exit server sees the destination but not the real IP",
+    "If either server is compromised or logs under legal duress, the other server's data alone is insufficient to identify the user or their activity",
+    "Defends against the threat model where the VPN provider itself becomes untrustworthy or is coerced",
+    "Makes correlation attacks significantly harder since traffic crosses two independent jurisdictions and server infrastructures"
+  ],
+  "disadvantages": [
+    "Latency approximately doubles since traffic takes two sequential VPN hops instead of one",
+    "Throughput is reduced by the serial encryption/decryption at each hop (typically 30-50% of single-hop speeds)",
+    "Limited server location combinations — not all entry and exit locations can be paired",
+    "Troubleshooting connectivity issues is more complex since the fault may be in either hop",
+    "The entry server still knows when the user is active, which may be sufficient metadata for some threat models"
+  ],
+  "idealUsers": [
+    "Journalists, whistleblowers, and activists who need strong anonymity guarantees against state-level adversaries",
+    "Users who do not fully trust their VPN provider's no-logs claims and want a technical safeguard",
+    "Users handling sensitive communications who want protection even if one VPN server is subpoenaed",
+    "Individuals in high-risk professions where identification by IP address could lead to legal consequences"
+  ],
+  "securityImpact": "Significant — eliminates the single point of trust in the VPN provider. A multi-hop connection requires two independent providers (or geographically isolated servers) to collude or both be compromised to deanonymize the user.",
+  "performanceImpact": "Negative — latency is approximately double that of a single-hop connection, and throughput is typically reduced by 50-70% due to double encryption/decryption overhead and additional network hops.",
+  "importance": "specialized"
+}

@@ -1,1 +1,20 @@
-{"id":"android","slug":"android","name":"Android","icon":"smartphone","official":true}
+{
+  "id": "android",
+  "slug": "android",
+  "name": "Android",
+  "icon": "smartphone",
+  "official": true,
+  "category": "mobile",
+  "minOsVersion": "Android 8.0",
+  "limitations": [
+    "Always-on VPN may block local network traffic",
+    "Split tunneling limited to specific apps only"
+  ],
+  "commonIssues": [
+    "Battery optimization kills VPN in background",
+    "MIUI / ColorOS aggressive app management disconnects VPN",
+    "Some Android TV-side features unavailable on mobile"
+  ],
+  "storeUrl": "https://play.google.com/store/apps/details?id=com.freevpn4usa.android",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/android"
+}

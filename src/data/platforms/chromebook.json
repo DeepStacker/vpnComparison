@@ -1,1 +1,21 @@
-{"id":"chromebook","slug":"chromebook","name":"Chromebook","icon":"laptop","official":true}
+{
+  "id": "chromebook",
+  "slug": "chromebook",
+  "name": "Chromebook",
+  "icon": "laptop",
+  "official": true,
+  "category": "desktop",
+  "minOsVersion": "Chrome OS 89",
+  "limitations": [
+    "Android VPN app protects Android apps only, not Chrome OS",
+    "Linux container traffic may bypass the VPN",
+    "No native Chrome OS VPN client available"
+  ],
+  "commonIssues": [
+    "VPN must be configured via Android subsystem",
+    "Chrome OS and Android app routing conflicts",
+    "VPN disconnects when Chromebook lid is closed"
+  ],
+  "storeUrl": "https://play.google.com/store/apps/details?id=com.freevpn4usa.android",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/chromebook"
+}

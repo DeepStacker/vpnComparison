@@ -1,1 +1,20 @@
-{"id":"windows","slug":"windows","name":"Windows","icon":"monitor","official":true}
+{
+  "id": "windows",
+  "slug": "windows",
+  "name": "Windows",
+  "icon": "monitor",
+  "official": true,
+  "category": "desktop",
+  "minOsVersion": "Windows 10",
+  "limitations": [
+    "Kill switch may not work with all network adapters",
+    "Some advanced features require administrative privileges"
+  ],
+  "commonIssues": [
+    "Firewall or antivirus conflicts can block connections",
+    "Split tunneling may conflict with corporate VPN software",
+    "TAP adapter driver issues after Windows updates"
+  ],
+  "storeUrl": "https://www.microsoft.com/store/apps/9WZDNCRD164V",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/windows"
+}

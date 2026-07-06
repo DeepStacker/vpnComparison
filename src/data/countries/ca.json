@@ -1,1 +1,15 @@
-{"code":"CA","slug":"ca","name":"Canada","region":"north-america","flagEmoji":"ca","privacyFriendly":true}
+{
+  "code": "CA",
+  "slug": "ca",
+  "name": "Canada",
+  "region": "north-america",
+  "flagEmoji": "🇨🇦",
+  "privacyFriendly": true,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "five-eyes",
+  "dataRetentionLaw": false,
+  "internetPenetration": 94,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

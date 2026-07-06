@@ -1,1 +1,30 @@
-{"id":"obfuscation","slug":"obfuscation","name":"Obfuscation","category":"privacy","description":"Disguises VPN traffic as regular HTTPS to bypass deep packet inspection and VPN blocking."}
+{
+  "id": "obfuscation",
+  "slug": "obfuscation",
+  "name": "Obfuscation",
+  "category": "privacy",
+  "description": "Disguises VPN traffic as regular HTTPS to bypass deep packet inspection and VPN blocking.",
+  "technicalExplanation": "The VPN client encapsulates VPN protocol data within TLS (Transport Layer Security) sessions, making the traffic appear as standard HTTPS web traffic to network observers. Common methods include OpenVPN over SSL/TLS on TCP port 443, WireGuard over WebSocket, and using the v2ray or Shadowsocks protocols. The obfuscation layer adds proper TLS handshake sequences, cipher suite negotiation, and session resumption that mimics browser HTTPS traffic, bypassing DPI systems that identify VPN protocols by their distinct handshake patterns.",
+  "advantages": [
+    "Bypasses DPI systems in corporate networks, schools, hotels, and airports that block standard VPN protocols",
+    "VPN traffic on port 443 is indistinguishable from regular HTTPS traffic to most inspection systems",
+    "Works without requiring special server configurations when using TLS-based obfuscation on standard ports",
+    "Can be combined with other privacy features (no-logs, kill switch) for comprehensive protection"
+  ],
+  "disadvantages": [
+    "Adds TLS encapsulation overhead, reducing throughput by approximately 10-20% compared to non-obfuscated connections",
+    "TCP-over-TCP can cause compounding packet loss and retransmission issues on lossy connections",
+    "Advanced DPI systems using behavioral analysis (packet timing, connection concurrency, traffic patterns) may still identify obfuscated VPN traffic",
+    "Obfuscation alone cannot bypass application-layer filtering or IP blacklisting — only protocol detection",
+    "Some implementations require additional software components (v2ray-core, Shadowsocks) that must be separately maintained"
+  ],
+  "idealUsers": [
+    "Users on corporate or school networks that actively block VPN protocols",
+    "Travelers connecting from hotel, airport, or conference Wi-Fi with restricted internet access",
+    "Users in countries with moderate internet censorship where VPN protocols are commonly blocked but HTTPS is not",
+    "Anyone on a network with commercial DPI appliances (Palo Alto, Fortinet, Cisco) configured to block VPN protocols"
+  ],
+  "securityImpact": "Moderate — obfuscation prevents protocol fingerprinting and DPI-based blocking, making VPN usage harder to detect. It does not add cryptographic strength beyond the underlying VPN protocol's encryption.",
+  "performanceImpact": "Moderate negative — TLS wrapping adds 10-20% CPU and bandwidth overhead. TCP-over-TCP scenarios on lossy connections can cause significant throughput degradation due to nested retransmission timeouts.",
+  "importance": "specialized"
+}

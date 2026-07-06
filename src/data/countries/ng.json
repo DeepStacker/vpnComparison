@@ -1,1 +1,16 @@
-{"code":"NG","slug":"ng","name":"Nigeria","region":"africa","flagEmoji":"ng","privacyFriendly":false}
+{
+  "code": "NG",
+  "slug": "ng",
+  "name": "Nigeria",
+  "region": "africa",
+  "flagEmoji": "🇳🇬",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 36,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn"
+  ]
+}

@@ -1,1 +1,15 @@
-{"code":"AU","slug":"au","name":"Australia","region":"oceania","flagEmoji":"au","privacyFriendly":false}
+{
+  "code": "AU",
+  "slug": "au",
+  "name": "Australia",
+  "region": "oceania",
+  "flagEmoji": "🇦🇺",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "five-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 90,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

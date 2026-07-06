@@ -1,1 +1,15 @@
-{"code":"AT","slug":"at","name":"Austria","region":"europe","flagEmoji":"at","privacyFriendly":false}
+{
+  "code": "AT",
+  "slug": "at",
+  "name": "Austria",
+  "region": "europe",
+  "flagEmoji": "🇦🇹",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 93,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

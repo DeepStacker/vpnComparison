@@ -1,1 +1,15 @@
-{"code":"KR","slug":"kr","name":"South Korea","region":"asia","flagEmoji":"kr","privacyFriendly":false}
+{
+  "code": "KR",
+  "slug": "kr",
+  "name": "South Korea",
+  "region": "asia",
+  "flagEmoji": "🇰🇷",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 97,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

@@ -6,7 +6,7 @@ import icon from "astro-icon";
 import tailwindcss from "@tailwindcss/vite";
 
 /**
- * NetworksHome — Astro configuration.
+ * FreeVPN4USA — Astro configuration.
  *
  * Static-first VPN Intelligence Platform.
  * - site URL is sourced from env (SITE_URL) with a production default so
@@ -15,7 +15,7 @@ import tailwindcss from "@tailwindcss/vite";
  * - MDX enables rich editorial content inside Content Collections.
  * - astro-icon + the Lucide set provide the icon system used by the UI library.
  */
-const SITE_URL = process.env.SITE_URL ?? "https://networkshome.com";
+const SITE_URL = process.env.SITE_URL ?? "https://freevpn4usa.com";
 
 // https://astro.build/config
 export default defineConfig({

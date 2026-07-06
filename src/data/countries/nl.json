@@ -1,1 +1,15 @@
-{"code":"NL","slug":"nl","name":"Netherlands","region":"europe","flagEmoji":"nl","privacyFriendly":false}
+{
+  "code": "NL",
+  "slug": "nl",
+  "name": "Netherlands",
+  "region": "europe",
+  "flagEmoji": "🇳🇱",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "nine-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 96,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

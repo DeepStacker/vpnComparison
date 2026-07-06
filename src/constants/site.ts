@@ -8,22 +8,22 @@
 
 export const SITE = {
   /** Product name shown across the UI. */
-  name: "NetworksHome",
+  name: "FreeVPN4USA",
   /** Short tagline used in headers and default meta descriptions. */
   tagline: "VPN Intelligence Platform",
   /** Full description for default SEO and JSON-LD organization. */
   description:
-    "NetworksHome helps you choose the right VPN through transparent information, structured comparisons, educational content, and interactive decision-making tools.",
+    "FreeVPN4USA helps you choose the right VPN through transparent information, structured comparisons, educational content, and interactive decision-making tools.",
   /** Published production origin (override with SITE_URL env var at build). */
-  url: process.env.SITE_URL ?? "https://networkshome.com",
+  url: process.env.SITE_URL ?? "https://freevpn4usa.com",
   /** Default site locale for <html lang> and hreflang root. */
   locale: "en",
   /** Default Open Graph image (relative to site root). */
   defaultOgImage: "/og/default.svg",
   /** Twitter handle for twitter:card metadata (no @). */
-  twitterHandle: "networkshome",
+  twitterHandle: "freevpn4usa",
   /** Contact email shown in footer/legal pages. */
-  contactEmail: "hello@networkshome.com",
+  contactEmail: "hello@freevpn4usa.com",
   /** Year the project was first published (for copyright). */
   foundingYear: 2025,
 } as const;

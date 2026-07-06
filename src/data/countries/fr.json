@@ -1,1 +1,15 @@
-{"code":"FR","slug":"fr","name":"France","region":"europe","flagEmoji":"fr","privacyFriendly":false}
+{
+  "code": "FR",
+  "slug": "fr",
+  "name": "France",
+  "region": "europe",
+  "flagEmoji": "🇫🇷",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "nine-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 88,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

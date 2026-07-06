@@ -1,1 +1,30 @@
-{"id":"tor-over-vpn","slug":"tor-over-vpn","name":"Tor over VPN","category":"privacy","description":"Routes traffic through the Tor network on top of the VPN connection for maximum anonymity."}
+{
+  "id": "tor-over-vpn",
+  "slug": "tor-over-vpn",
+  "name": "Tor over VPN",
+  "category": "privacy",
+  "description": "Routes traffic through the Tor network on top of the VPN connection for maximum anonymity.",
+  "technicalExplanation": "A VPN connection is established first, providing an encrypted tunnel to the VPN server. Inside that tunnel, the Tor daemon (tor) is configured to use the VPN interface as its transport. When the user launches Tor Browser or any application proxied through Tor, traffic is encrypted by the VPN, then encrypted again by Tor's three layers of onion routing. The VPN exit IP becomes the IP visible to Tor's entry guard, hiding the user's real IP from the Tor network. The ISP sees only an encrypted VPN tunnel and cannot detect Tor usage.",
+  "advantages": [
+    "Hides Tor usage from the ISP or local network observer, who sees only encrypted VPN traffic instead of the Tor protocol",
+    "Prevents Tor bridge discovery attacks since bridges are contacted through the VPN tunnel rather than directly",
+    "Defends against ISP-level timing correlation: the ISP cannot match timestamps of Tor traffic against known Tor node activity",
+    "The VPN provider does not see the final destination; the Tor exit node does not see the user's real IP; no single entity sees both"
+  ],
+  "disadvantages": [
+    "Latency is significantly higher due to the combined overhead of VPN encryption and three-hop Tor onion routing",
+    "Throughput is typically reduced by 60-80% compared to a direct connection, making streaming and large downloads impractical",
+    "The VPN provider knows the user is using Tor (since they see Tor protocol traffic inside the tunnel), which may be a concern in some threat models",
+    "Some privacy researchers argue that VPN + Tor provides minimal additional benefit over Tor alone for most threat models while doubling the trusted infrastructure",
+    "Complex setup; requires configuring Tor to route through the VPN interface and ensuring no traffic leaks bypass the VPN"
+  ],
+  "idealUsers": [
+    "Whistleblowers and sources communicating with journalists who need maximum anonymity guarantees",
+    "Users in countries where Tor is actively monitored or blocked and connecting openly would draw suspicion",
+    "Privacy researchers and security professionals testing the limits of network anonymity",
+    "Users who want Tor's anonymity for specific sensitive activities while benefiting from VPN for other traffic"
+  ],
+  "securityImpact": "Significant positive impact for anonymity; the layered architecture means deanonymization requires compromising both the VPN provider and the Tor network simultaneously. However, the VPN introduces a new point of trust, and some threat models see no net gain over Tor alone.",
+  "performanceImpact": "Severe negative impact; combined VPN encryption and Tor onion routing introduces 3-5x latency increase and 60-80% throughput reduction. Suitable only for low-bandwidth activities such as messaging, email, and web browsing.",
+  "importance": "specialized"
+}

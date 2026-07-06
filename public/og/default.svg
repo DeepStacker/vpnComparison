@@ -12,6 +12,6 @@
     <path d="M36 16 22 22v12c0 9.94 6.13 17.86 14 20 7.87-2.14 14-10.06 14-20V22L36 16Z" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round" />
     <path d="m29 36 5 5 9-10" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
   </g>
-  <text x="180" y="305" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#ffffff">NetworksHome</text>
+  <text x="180" y="305" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#ffffff">FreeVPN4USA</text>
   <text x="184" y="360" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="#9aa3b2">VPN Intelligence Platform</text>
 </svg>

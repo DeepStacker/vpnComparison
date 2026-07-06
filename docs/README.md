@@ -1,4 +1,4 @@
-# NetworksHome Documentation
+# FreeVPN4USA Documentation
 
 This directory is the project's single source of truth for product, design,
 engineering, and content decisions. The documentation evolves alongside the

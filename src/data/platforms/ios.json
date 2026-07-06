@@ -1,1 +1,21 @@
-{"id":"ios","slug":"ios","name":"iOS","icon":"smartphone","official":true}
+{
+  "id": "ios",
+  "slug": "ios",
+  "name": "iOS",
+  "icon": "smartphone",
+  "official": true,
+  "category": "mobile",
+  "minOsVersion": "iOS 14.0",
+  "limitations": [
+    "No persistent background connections (iOS kills VPN after ~3 min in background)",
+    "No split tunneling on iOS",
+    "On-demand VPN may not reconnect reliably"
+  ],
+  "commonIssues": [
+    "VPN profile needs re-authorization after iOS updates",
+    "Battery optimization settings can interfere",
+    "Widgets stop updating when VPN is active"
+  ],
+  "storeUrl": "https://apps.apple.com/app/freevpn4usa/id1234567890",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/ios"
+}

@@ -37,6 +37,20 @@ export interface Protocol {
   openSource: boolean;
   /** Typical use case strengths. */
   strengths?: string[];
+  /** Known weaknesses or limitations. */
+  weaknesses?: string[];
+  /** Organization or individual that created the protocol. */
+  creator?: string;
+  /** Year the protocol was released. */
+  releaseYear?: number;
+  /** Relative speed rating. */
+  speedRating?: "slow" | "moderate" | "fast" | "very-fast";
+  /** Relative security rating. */
+  securityRating?: "weak" | "adequate" | "strong" | "very-strong";
+  /** Platforms that natively support this protocol. */
+  platformSupport?: string[];
+  /** Default port. */
+  port?: number;
 }
 
 /* ------------------------------------------------------------
@@ -50,6 +64,18 @@ export interface Platform {
   icon: string;
   /** Whether the provider ships a first-party app for this platform. */
   official: boolean;
+  /** Platform category. */
+  category?: "desktop" | "mobile" | "tv" | "browser" | "router" | "other";
+  /** Minimum supported OS version. */
+  minOsVersion?: string;
+  /** Known limitations on this platform. */
+  limitations?: string[];
+  /** Common issues users face on this platform. */
+  commonIssues?: string[];
+  /** App store or download URL. */
+  storeUrl?: string;
+  /** Link to setup guide. */
+  setupGuideUrl?: string;
 }
 
 /* ------------------------------------------------------------
@@ -75,6 +101,16 @@ export interface Country {
   privacyFriendly: boolean;
   /** Human-readable note on data-sharing alliances (5/9/14 Eyes, etc.). */
   jurisdictionNote?: string;
+  /** Level of internet censorship. */
+  censorshipLevel?: "low" | "moderate" | "high" | "extreme" | "unknown";
+  /** Surveillance alliance membership. */
+  surveillanceAlliance?: "five-eyes" | "nine-eyes" | "fourteen-eyes" | "none" | "unknown";
+  /** Whether mandatory data retention laws exist. */
+  dataRetentionLaw?: boolean;
+  /** Internet penetration rate (0–100). */
+  internetPenetration?: number;
+  /** Recommended VPN protocols for this country. */
+  recommendedProtocols?: ID[];
 }
 
 /* ------------------------------------------------------------
@@ -87,6 +123,16 @@ export interface StreamingService {
   icon: string;
   /** Regions the service is primarily available in. */
   regions: CountryCode[];
+  /** Service website URL. */
+  websiteUrl?: string;
+  /** Content category. */
+  category?: "entertainment" | "sports" | "news" | "anime" | "live-tv" | "other";
+  /** How difficult this service is to unblock with a VPN. */
+  vpnDetectionDifficulty?: "easy" | "moderate" | "difficult" | "unknown";
+  /** General notes on reliability with VPNs. */
+  reliabilityNotes?: string;
+  /** Tips for unblocking this service with a VPN. */
+  troubleshootingTips?: string[];
 }
 
 export type StreamingSupport = "verified" | "partial" | "unsupported" | "unknown";
@@ -110,6 +156,13 @@ export interface Feature {
   name: string;
   category: FeatureCategory;
   description: string;
+  technicalExplanation?: string;
+  advantages?: string[];
+  disadvantages?: string[];
+  idealUsers?: string[];
+  securityImpact?: string;
+  performanceImpact?: string;
+  importance?: "essential" | "important" | "nice-to-have" | "specialized";
 }
 
 /* ------------------------------------------------------------
@@ -211,8 +264,18 @@ export interface Provider {
   /** Jurisdiction country code (where the company is legally based). */
   jurisdiction: CountryCode;
   hqCountry: CountryCode;
+  /** Parent company, if the provider is a subsidiary. */
+  parentCompany?: string;
+  /** Ownership structure. */
+  ownership?: "public" | "private" | "subsidiary";
+  /** Whether the provider publishes a warrant canary. */
+  warrantCanary?: boolean;
+  /** Whether servers use RAM-only (diskless) infrastructure. */
+  ramOnlyServers?: boolean;
+  /** URLs to transparency/accountability reports. */
+  transparencyReports?: URLString[];
 
-  serverNetwork: ProviderServerNetwork;
+  serverNetwork: ProviderServerNetwork & { ownedInfrastructure?: boolean };
 
   /** Protocol IDs supported. */
   protocols: ID[];
@@ -221,10 +284,18 @@ export interface Provider {
   /** Feature IDs that apply. */
   features: ID[];
   /** Per-service streaming support. */
-  streaming: ProviderStreaming[];
-  torrenting: ProviderTorrenting;
+  streaming: (ProviderStreaming & { notes?: string; regionsTested?: CountryCode[] })[];
+  torrenting: ProviderTorrenting & { portForwarding?: boolean; notes?: string };
 
   loggingPolicy: LoggingPolicy;
+  /** Description of DNS handling (own servers, encrypted DNS, etc.). */
+  dnsHandling?: string;
+  /** Description of leak protection capabilities. */
+  leakProtection?: string;
+  /** Type of obfuscation supported. */
+  obfuscationType?: "stealth" | "no-borders" | "scramble" | "multi-hop" | "none" | "other";
+  /** Whether post-quantum encryption is supported. */
+  postQuantum?: boolean;
   /** Whether a verified network kill switch is available. */
   killSwitch: boolean;
   splitTunneling: boolean;
@@ -235,6 +306,13 @@ export interface Provider {
   simultaneousConnections: number;
 
   pricing: Pricing;
+  /** Support contact details. */
+  support?: {
+    liveChat?: boolean;
+    email?: boolean;
+    knowledgeBase?: boolean;
+    averageResponseTime?: string;
+  };
   /** Independent audit history, oldest first. */
   audits: AuditRecord[];
 

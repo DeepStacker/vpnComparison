@@ -1,1 +1,17 @@
-{"code":"AE","slug":"ae","name":"United Arab Emirates","region":"asia","flagEmoji":"ae","privacyFriendly":false}
+{
+  "code": "AE",
+  "slug": "ae",
+  "name": "United Arab Emirates",
+  "region": "asia",
+  "flagEmoji": "🇦🇪",
+  "privacyFriendly": false,
+  "censorshipLevel": "high",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 99,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn",
+    "obfuscation"
+  ]
+}

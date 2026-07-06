@@ -1,1 +1,15 @@
-{"code":"CH","slug":"ch","name":"Switzerland","region":"europe","flagEmoji":"ch","privacyFriendly":true}
+{
+  "code": "CH",
+  "slug": "ch",
+  "name": "Switzerland",
+  "region": "europe",
+  "flagEmoji": "🇨🇭",
+  "privacyFriendly": true,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": false,
+  "internetPenetration": 96,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

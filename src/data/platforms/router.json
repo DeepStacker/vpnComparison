@@ -1,1 +1,19 @@
-{"id":"router","slug":"router","name":"Router","icon":"wifi","official":false}
+{
+  "id": "router",
+  "slug": "router",
+  "name": "Router",
+  "icon": "wifi",
+  "official": false,
+  "category": "router",
+  "limitations": [
+    "Requires router firmware that supports OpenVPN or WireGuard",
+    "No per-device split tunneling (all-or-nothing routing)",
+    "Performance limited by router CPU and RAM"
+  ],
+  "commonIssues": [
+    "Firmware flash may void router warranty",
+    "Incorrect config can lock you out of router admin",
+    "Consumer routers often lack足够的 processing power for full-speed VPN"
+  ],
+  "setupGuideUrl": "https://freevpn4usa.com/setup/router"
+}

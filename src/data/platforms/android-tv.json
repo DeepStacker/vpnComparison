@@ -1,1 +1,21 @@
-{"id":"android-tv","slug":"android-tv","name":"Android TV","icon":"tv","official":true}
+{
+  "id": "android-tv",
+  "slug": "android-tv",
+  "name": "Android TV",
+  "icon": "tv",
+  "official": true,
+  "category": "tv",
+  "minOsVersion": "Android TV 8.0",
+  "limitations": [
+    "Remote control navigation only — no touch input",
+    "App selection limited to Google Play on TV",
+    "No split tunneling available"
+  ],
+  "commonIssues": [
+    "VPN disconnects when device goes to sleep",
+    "Some streaming apps block VPN connections",
+    "Cursor navigation with remote can be cumbersome"
+  ],
+  "storeUrl": "https://play.google.com/store/apps/details?id=com.freevpn4usa.androidtv",
+  "setupGuideUrl": "https://freevpn4usa.com/setup/android-tv"
+}

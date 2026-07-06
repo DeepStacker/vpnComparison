@@ -1,1 +1,17 @@
-{"code":"ID","slug":"id","name":"Indonesia","region":"asia","flagEmoji":"id","privacyFriendly":false}
+{
+  "code": "ID",
+  "slug": "id",
+  "name": "Indonesia",
+  "region": "asia",
+  "flagEmoji": "🇮🇩",
+  "privacyFriendly": false,
+  "censorshipLevel": "high",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 62,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn",
+    "obfuscation"
+  ]
+}

@@ -1,1 +1,15 @@
-{"code":"GR","slug":"gr","name":"Greece","region":"europe","flagEmoji":"gr","privacyFriendly":false}
+{
+  "code": "GR",
+  "slug": "gr",
+  "name": "Greece",
+  "region": "europe",
+  "flagEmoji": "🇬🇷",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 81,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

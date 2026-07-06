@@ -1,1 +1,15 @@
-{"code":"PT","slug":"pt","name":"Portugal","region":"europe","flagEmoji":"pt","privacyFriendly":false}
+{
+  "code": "PT",
+  "slug": "pt",
+  "name": "Portugal",
+  "region": "europe",
+  "flagEmoji": "🇵🇹",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 82,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

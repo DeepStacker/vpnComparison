@@ -1,1 +1,29 @@
-{"id":"quantum-resistant","slug":"quantum-resistant","name":"Quantum-Resistant Encryption","category":"security","description":"Post-quantum encryption algorithms designed to protect VPN traffic against future quantum computing attacks."}
+{
+  "id": "quantum-resistant",
+  "slug": "quantum-resistant",
+  "name": "Quantum-Resistant Encryption",
+  "category": "security",
+  "description": "Post-quantum encryption algorithms designed to protect VPN traffic against future quantum computing attacks.",
+  "technicalExplanation": "The VPN key exchange uses a hybrid handshake combining traditional elliptic-curve Diffie-Hellman (X25519) with a post-quantum key encapsulation mechanism such as CRYSTALS-Kyber (ML-KEM, standardized by NIST). During the handshake, both key exchange methods run in parallel; the resulting shared secret is the concatenation of both outputs. This ensures security is maintained even if Shor's algorithm on a sufficiently large quantum computer can break the ECDH component, because the attacker would also need to break the PQC KEM, which is believed to be quantum-hard.",
+  "advantages": [
+    "Future-proofs recorded VPN traffic: data captured today cannot be decrypted later when quantum computers become viable",
+    "Hybrid approach maintains security even if either the traditional or quantum-resistant algorithm is broken",
+    "Uses NIST-standardized algorithms (ML-KEM) with ongoing community cryptanalysis and validation",
+    "No impact on data-transfer performance; overhead is limited to the initial handshake phase"
+  ],
+  "disadvantages": [
+    "Handshake packets are significantly larger (1-2 KB additional data per connection) due to the PQC public keys and ciphertexts",
+    "Newer technology with less real-world deployment and auditing compared to mature algorithms like X25519 or AES",
+    "Limited server support; only a subset of VPN providers and server locations offer PQC-enabled connections",
+    "The underlying VPN protocol (WireGuard, OpenVPN) must support PQC extensions, which may not be available in all clients"
+  ],
+  "idealUsers": [
+    "Users handling data with long-term sensitivity requirements (legal, medical, journalistic sources) who want protection against future decryption",
+    "Security researchers and cryptography enthusiasts evaluating or testing post-quantum VPN implementations",
+    "Enterprises with data retention policies that extend into the post-quantum era",
+    "Users in high-risk professions where current communications being recorded for future decryption is a credible threat"
+  ],
+  "securityImpact": "Significant positive impact; hybrid PQC+ECDH key exchange protects against future quantum cryptanalysis. For current threats, the security level matches or exceeds traditional VPN key exchange. No new attack surface is introduced for classical adversaries.",
+  "performanceImpact": "Negligible on data throughput; the overhead is confined to the handshake phase where PQC key exchange adds approximately 1-2 KB of additional data and one extra round trip on first connection. Post-handshake data encryption uses standard symmetric ciphers (AES-256, ChaCha20) with no PQC-related overhead.",
+  "importance": "nice-to-have"
+}

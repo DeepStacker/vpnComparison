@@ -1,1 +1,18 @@
-{"id":"prime-video","slug":"prime-video","name":"Amazon Prime Video","icon":"film","regions":["US","GB","CA","AU","DE","FR","NL","JP","BR","MX","IN"]}
+{
+  "id": "prime-video",
+  "slug": "prime-video",
+  "name": "Amazon Prime Video",
+  "icon": "film",
+  "regions": ["US", "GB", "CA", "AU", "DE", "FR", "NL", "JP", "BR", "MX", "IN"],
+  "websiteUrl": "https://www.primevideo.com",
+  "category": "entertainment",
+  "vpnDetectionDifficulty": "moderate",
+  "reliabilityNotes": "Amazon Prime Video blocks many known VPN IP ranges but is generally less aggressive than Netflix. Content licensing varies significantly by region, and most premium VPNs work reliably.",
+  "troubleshootingTips": [
+    "Connect to a VPN server in your desired region before loading Prime Video",
+    "Try different server locations if the current one is detected",
+    "Use a browser in incognito/private mode to avoid cached geolocation data",
+    "Disable IPv6 in your network settings to prevent IP leaks",
+    "Check that your VPN provider has servers optimized for streaming"
+  ]
+}

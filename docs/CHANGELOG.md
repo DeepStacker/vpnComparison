@@ -7,7 +7,7 @@ Documentation and architecture changes. Dates are UTC.
 ### Added
 
 - Initialized Astro 7 project (TypeScript strictest) in `freevpn4usa`/
-  (package name `networkshome`).
+  (package name `freevpn4usa`).
 - Installed and configured integrations: `@astrojs/mdx`,
   `@astrojs/sitemap`, `astro-icon` (Lucide), Tailwind v4 via
   `@tailwindcss/vite`, `@astrojs/check`.

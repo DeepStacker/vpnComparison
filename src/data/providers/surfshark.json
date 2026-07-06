@@ -2,187 +2,90 @@
   "id": "surfshark",
   "slug": "surfshark",
   "name": "Surfshark",
-  "tagline": "Budget-friendly VPN packed with advanced features and unlimited devices",
-  "websiteUrl": "https://surfshark.com",
+  "tagline": "Feature-packed VPN with unlimited simultaneous connections, RAM-only servers, and CleanWeb ad blocking.",
+  "websiteUrl": "https://surfshark.com/",
   "foundedYear": 2018,
   "jurisdiction": "NL",
   "hqCountry": "NL",
+  "parentCompany": "Surfshark B.V.",
+  "ownership": "private",
+  "warrantCanary": false,
+  "ramOnlyServers": true,
+  "transparencyReports": ["https://surfshark.com/transparency"],
   "serverNetwork": {
-    "serverCount": 3200,
+    "serverCount": 4500,
     "countryCount": 100,
-    "countries": [
-      "US",
-      "GB",
-      "DE",
-      "FR",
-      "NL",
-      "CA",
-      "AU",
-      "JP",
-      "SG",
-      "CH",
-      "SE",
-      "NO",
-      "DK",
-      "FI",
-      "IT",
-      "ES",
-      "BR",
-      "MX",
-      "IN",
-      "HK",
-      "KR",
-      "TW",
-      "NZ",
-      "ZA",
-      "IL",
-      "AE",
-      "PL",
-      "AT",
-      "BE",
-      "IE",
-      "PT",
-      "GR",
-      "CZ",
-      "HU",
-      "RO",
-      "TR",
-      "AR",
-      "CL",
-      "CO",
-      "MY",
-      "TH",
-      "ID"
-    ],
-    "virtualLocations": true
+    "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","EG","ES","FI","FR","GB","GE","GR","GT","HK","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LB","LK","LT","LU","LV","MA","MD","ME","MK","MT","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
+    "virtualLocations": true,
+    "ownedInfrastructure": false
   },
-  "protocols": [
-    "openvpn",
-    "wireguard",
-    "ikev2"
-  ],
-  "platforms": [
-    "windows",
-    "macos",
-    "linux",
-    "android",
-    "ios",
-    "android-tv",
-    "fire-tv",
-    "chromebook",
-    "router",
-    "browser-extension"
-  ],
-  "features": [
-    "kill-switch",
-    "split-tunneling",
-    "multi-hop",
-    "obfuscation",
-    "ad-blocker",
-    "no-logs",
-    "port-forwarding"
-  ],
+  "protocols": ["wireguard", "openvpn", "ikev2"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension", "fire-tv"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "multi-hop", "ad-blocker", "obfuscation", "dedicated-ip"],
   "streaming": [
-    {
-      "service": "netflix",
-      "support": "verified",
-      "verifiedAt": "2025-11-15"
-    },
-    {
-      "service": "prime-video",
-      "support": "verified",
-      "verifiedAt": "2025-11-01"
-    },
-    {
-      "service": "disney-plus",
-      "support": "verified",
-      "verifiedAt": "2025-10-20"
-    },
-    {
-      "service": "hbo-max",
-      "support": "partial",
-      "verifiedAt": "2025-09-15"
-    },
-    {
-      "service": "hulu",
-      "support": "verified",
-      "verifiedAt": "2025-10-01"
-    },
-    {
-      "service": "bbc-iplayer",
-      "support": "verified",
-      "verifiedAt": "2025-11-25"
-    }
+    { "service": "netflix", "support": "verified", "verifiedAt": "2026-05-20", "notes": "Accesses Netflix US, UK, CA, JP and other major libraries. NoBorders mode helps in restricted regions.", "regionsTested": ["US","GB","CA","JP"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-05-20", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US","GB","DE"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
+    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-04-01", "regionsTested": ["GB"] }
   ],
   "torrenting": {
     "supported": true,
-    "labeledServers": false,
-    "rating": 8.0
+    "labeledServers": true,
+    "portForwarding": false,
+    "rating": 7,
+    "notes": "P2P allowed on all servers via WireGuard and OpenVPN. No port forwarding available."
   },
   "loggingPolicy": "no-logs",
+  "dnsHandling": "Private DNS servers. DNS queries routed through encrypted tunnel. CleanWeb adds DNS-level ad and tracker blocking.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all platforms. Bypasser feature for split tunneling.",
+  "obfuscationType": "no-borders",
+  "postQuantum": false,
   "killSwitch": true,
   "splitTunneling": true,
   "adBlocker": true,
   "multiHop": true,
-  "dedicatedIp": false,
+  "dedicatedIp": true,
   "simultaneousConnections": 0,
   "pricing": {
     "currency": "USD",
     "plans": [
-      {
-        "cycle": "monthly",
-        "price": 15.45,
-        "currency": "USD",
-        "effectiveMonthly": 15.45,
-        "featured": false
-      },
-      {
-        "cycle": "yearly",
-        "price": 47.76,
-        "currency": "USD",
-        "effectiveMonthly": 3.98,
-        "featured": false
-      },
-      {
-        "cycle": "biennially",
-        "price": 59.76,
-        "currency": "USD",
-        "effectiveMonthly": 2.49,
-        "featured": true
-      }
+      { "cycle": "monthly", "price": 16.45, "currency": "USD", "effectiveMonthly": 16.45 },
+      { "cycle": "yearly", "price": 40.68, "currency": "USD", "effectiveMonthly": 3.39 },
+      { "cycle": "biennially", "price": 53.73, "currency": "USD", "effectiveMonthly": 2.49, "featured": true }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": [
-      "card",
-      "paypal",
-      "crypto",
-      "google-pay"
-    ],
+    "paymentMethods": ["credit-card", "paypal", "google-pay", "bitcoin"],
     "freeTier": false
+  },
+  "support": {
+    "liveChat": true,
+    "email": true,
+    "knowledgeBase": true,
+    "averageResponseTime": "Within 1 minute (live chat)"
   },
   "audits": [
     {
       "auditor": "Deloitte",
-      "date": "2024-07-01",
-      "scope": "No-logs policy audit",
-      "reportUrl": "https://surfshark.com/blog/surfshark-no-logs-audit",
+      "date": "2025-06-01",
+      "scope": "No-logs policy audit and infrastructure security assessment.",
+      "reportUrl": "https://surfshark.com/blog/deloitte-audit-nologs",
       "independent": true
     },
     {
       "auditor": "Cure53",
-      "date": "2024-02-10",
-      "scope": "Browser extension security audit",
-      "independent": true
-    },
-    {
-      "auditor": "NCC Group",
-      "date": "2023-04-20",
-      "scope": "Infrastructure penetration test",
+      "date": "2023-09-01",
+      "scope": "Security audit of Surfshark server infrastructure and VPN applications.",
+      "reportUrl": "https://surfshark.com/blog/surfshark-server-infrastructure-undergoes-independent-audit",
       "independent": true
     }
   ],
-  "updatedAt": "2025-12-08",
+  "updatedAt": "2026-06-20",
   "sources": [
-    "https://surfshark.com/features"
+    "https://surfshark.com/servers",
+    "https://surfshark.com/features",
+    "https://surfshark.com/blog/deloitte-audit-nologs",
+    "https://surfshark.com/features/noborders"
   ]
 }

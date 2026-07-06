@@ -1,1 +1,19 @@
-{"id":"netflix","slug":"netflix","name":"Netflix","icon":"play","regions":["US","GB","CA","AU","DE","FR","NL","JP","BR","MX","IN"]}
+{
+  "id": "netflix",
+  "slug": "netflix",
+  "name": "Netflix",
+  "icon": "play",
+  "regions": ["US", "GB", "CA", "AU", "DE", "FR", "NL", "JP", "BR", "MX", "IN"],
+  "websiteUrl": "https://www.netflix.com",
+  "category": "entertainment",
+  "vpnDetectionDifficulty": "difficult",
+  "reliabilityNotes": "Netflix aggressively blocks VPN connections and continuously updates its blacklist of known VPN IP ranges. Only premium VPNs with dedicated obfuscated servers tend to work, and success varies by region.",
+  "troubleshootingTips": [
+    "Use a premium VPN with dedicated streaming/obfuscated servers",
+    "Connect to a server in your target region before opening Netflix",
+    "Clear browser cache and cookies before each session",
+    "Try multiple server locations within the same region if one is blocked",
+    "Contact your VPN provider's support for recommended servers",
+    "Consider using a residential IP or dedicated IP service"
+  ]
+}

@@ -1,1 +1,17 @@
-{"id":"hbo-max","slug":"hbo-max","name":"HBO Max","icon":"monitor","regions":["US","GB","CA","BR","MX"]}
+{
+  "id": "hbo-max",
+  "slug": "hbo-max",
+  "name": "HBO Max",
+  "icon": "monitor",
+  "regions": ["US", "GB", "CA", "BR", "MX"],
+  "websiteUrl": "https://www.max.com",
+  "category": "entertainment",
+  "vpnDetectionDifficulty": "moderate",
+  "reliabilityNotes": "HBO Max (now Max) blocks many known VPN IP ranges, especially in the US. Some premium VPN providers work reliably with dedicated streaming servers.",
+  "troubleshootingTips": [
+    "Use a VPN server in the US specifically optimized for streaming",
+    "Log out of HBO Max, reconnect your VPN, then log back in",
+    "Try connecting to a different US server if blocked",
+    "Clear browser cache or use a different browser profile"
+  ]
+}

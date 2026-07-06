@@ -1,1 +1,29 @@
-{"id":"kill-switch","slug":"kill-switch","name":"Kill Switch","category":"security","description":"Automatically cuts traffic if the VPN drops, preventing data leaks."}
+{
+  "id": "kill-switch",
+  "slug": "kill-switch",
+  "name": "Kill Switch",
+  "category": "security",
+  "description": "Automatically cuts traffic if the VPN drops, preventing data leaks.",
+  "technicalExplanation": "The VPN client monitors the tunnel state by checking keepalive packets and interface status. If the tunnel drops unexpectedly, the client activates OS-level firewall rules (iptables/nftables on Linux, Windows Filtering Platform on Windows, pf on macOS) that block all traffic except traffic destined for the VPN server. Only when the tunnel is re-established are the restrictive rules removed, ensuring no data travels over the unencrypted connection.",
+  "advantages": [
+    "Prevents IP address exposure during brief VPN disconnections that users may not notice",
+    "Protects applications that do not handle network interruptions gracefully (torrent clients, streaming apps)",
+    "Operates automatically without requiring user intervention when the VPN drops",
+    "Network-level protection applies to all applications simultaneously, unlike application-level timeouts"
+  ],
+  "disadvantages": [
+    "Can cause complete internet outage if the VPN is unstable, making troubleshooting difficult",
+    "Some implementations do not protect against IPv6 traffic leakage — requires separate IPv6 kill switch",
+    "May interfere with split-tunneling configurations if both features share the same firewall rules",
+    "Persistent kill switch rules can survive VPN client crashes or improper shutdowns, leaving the device offline until manually reset"
+  ],
+  "idealUsers": [
+    "Users who leave VPN connected for extended periods and need guaranteed protection during brief disconnections",
+    "Torrent users who cannot risk their real IP being exposed in peer lists",
+    "Journalists and activists operating in environments where any IP exposure carries safety risks",
+    "Users on unstable network connections where temporary VPN drops are frequent"
+  ],
+  "securityImpact": "Critical — the kill switch is the last line of defense against IP leaks. Without it, a VPN disconnection of even a few milliseconds can expose the user's real IP address to visited websites or P2P peers.",
+  "performanceImpact": "None when the VPN connection is stable. During reconnection events, internet access is blocked for the duration of the tunnel re-establishment, typically 1-5 seconds.",
+  "importance": "essential"
+}

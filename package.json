@@ -1,9 +1,9 @@
 {
-  "name": "networkshome",
+  "name": "freevpn4usa",
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "NetworksHome — a static-first VPN Intelligence Platform built with Astro.",
+  "description": "FreeVPN4USA — a static-first VPN Intelligence Platform built with Astro.",
   "engines": {
     "node": ">=22.12.0"
   },

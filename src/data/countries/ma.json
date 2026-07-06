@@ -1,1 +1,16 @@
-{"code":"MA","slug":"ma","name":"Morocco","region":"africa","flagEmoji":"ma","privacyFriendly":false}
+{
+  "code": "MA",
+  "slug": "ma",
+  "name": "Morocco",
+  "region": "africa",
+  "flagEmoji": "🇲🇦",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 64,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn"
+  ]
+}

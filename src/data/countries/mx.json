@@ -1,1 +1,15 @@
-{"code":"MX","slug":"mx","name":"Mexico","region":"north-america","flagEmoji":"mx","privacyFriendly":false}
+{
+  "code": "MX",
+  "slug": "mx",
+  "name": "Mexico",
+  "region": "north-america",
+  "flagEmoji": "🇲🇽",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 76,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

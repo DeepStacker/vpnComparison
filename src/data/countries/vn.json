@@ -1,1 +1,17 @@
-{"code":"VN","slug":"vn","name":"Vietnam","region":"asia","flagEmoji":"vn","privacyFriendly":false}
+{
+  "code": "VN",
+  "slug": "vn",
+  "name": "Vietnam",
+  "region": "asia",
+  "flagEmoji": "🇻🇳",
+  "privacyFriendly": false,
+  "censorshipLevel": "high",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 74,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn",
+    "obfuscation"
+  ]
+}

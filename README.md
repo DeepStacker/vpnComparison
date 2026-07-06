@@ -1,8 +1,8 @@
-# NetworksHome
+# FreeVPN4USA
 
 **A static-first VPN Intelligence Platform built entirely with Astro.**
 
-NetworksHome helps users confidently choose the right VPN through transparent
+FreeVPN4USA helps users confidently choose the right VPN through transparent
 information, structured comparisons, educational content, and interactive
 decision-making tools. It is a knowledge platform and decision-support system —
 not a blog, not an affiliate landing page, not a generic review site.
@@ -49,7 +49,7 @@ npm run check      # typecheck (astro check)
 
 | Variable   | Default                      | Purpose                                  |
 | ---------- | ---------------------------- | ---------------------------------------- |
-| `SITE_URL` | `https://networkshome.com`   | Canonical origin for SEO, sitemap, OG.   |
+| `SITE_URL` | `https://freevpn4usa.com`   | Canonical origin for SEO, sitemap, OG.   |
 
 ## Folder structure
 

@@ -1,1 +1,34 @@
-{"id":"l2tp","slug":"l2tp","name":"L2TP/IPsec","category":"l2tp","description":"Layer 2 Tunneling Protocol paired with IPsec for encryption. Older but widely compatible. Generally slower than modern alternatives due to double encapsulation.","encryption":"AES-256 / IPsec","transport":"udp","openSource":false,"strengths":["Wide compatibility","Built into most OSes","Stable"]}
+{
+  "id": "l2tp",
+  "slug": "l2tp",
+  "name": "L2TP/IPsec",
+  "category": "l2tp",
+  "description": "Layer 2 Tunneling Protocol paired with IPsec for encryption. Older but widely compatible. Generally slower than modern alternatives due to double encapsulation.",
+  "encryption": "AES-256 / IPsec",
+  "transport": "udp",
+  "openSource": false,
+  "port": 1701,
+  "creator": "Microsoft, Cisco, and IETF",
+  "releaseYear": 1999,
+  "speedRating": "slow",
+  "securityRating": "adequate",
+  "strengths": [
+    "Wide compatibility",
+    "Built into most OSes",
+    "Stable"
+  ],
+  "weaknesses": [
+    "Slow due to double encapsulation",
+    "Lowest speed among major protocols",
+    "Can be blocked by firewalls",
+    "Legacy protocol with dated cryptography options"
+  ],
+  "platformSupport": [
+    "Windows",
+    "macOS",
+    "Linux",
+    "Android",
+    "iOS",
+    "Router"
+  ]
+}

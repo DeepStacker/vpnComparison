@@ -1,1 +1,16 @@
-{"code":"TH","slug":"th","name":"Thailand","region":"asia","flagEmoji":"th","privacyFriendly":false}
+{
+  "code": "TH",
+  "slug": "th",
+  "name": "Thailand",
+  "region": "asia",
+  "flagEmoji": "🇹🇭",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 78,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn"
+  ]
+}

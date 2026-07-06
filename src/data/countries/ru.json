@@ -1,1 +1,17 @@
-{"code":"RU","slug":"ru","name":"Russia","region":"europe","flagEmoji":"ru","privacyFriendly":false}
+{
+  "code": "RU",
+  "slug": "ru",
+  "name": "Russia",
+  "region": "europe",
+  "flagEmoji": "🇷🇺",
+  "privacyFriendly": false,
+  "censorshipLevel": "extreme",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 88,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn",
+    "obfuscation"
+  ]
+}

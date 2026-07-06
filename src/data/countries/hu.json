@@ -1,1 +1,15 @@
-{"code":"HU","slug":"hu","name":"Hungary","region":"europe","flagEmoji":"hu","privacyFriendly":false}
+{
+  "code": "HU",
+  "slug": "hu",
+  "name": "Hungary",
+  "region": "europe",
+  "flagEmoji": "🇭🇺",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 89,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

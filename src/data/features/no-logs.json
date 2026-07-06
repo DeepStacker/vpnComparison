@@ -1,1 +1,30 @@
-{"id":"no-logs","slug":"no-logs","name":"No-Logs Policy","category":"privacy","description":"The provider does not collect, store, or share any information about your online activity while connected."}
+{
+  "id": "no-logs",
+  "slug": "no-logs",
+  "name": "No-Logs Policy",
+  "category": "privacy",
+  "description": "The provider does not collect, store, or share any information about your online activity while connected.",
+  "technicalExplanation": "The VPN infrastructure is architected to minimize data retention at every layer. VPN servers run on RAM-only disks that wipe all data on reboot. Connection metadata (session start/end timestamps, source IPs, bandwidth usage, destination IPs) is either never recorded or aggregated to non-identifiable levels. Authentication systems are decoupled from VPN gateway logs. Independent third-party auditors review the implementation and publish reports verifying the no-logs claim.",
+  "advantages": [
+    "No activity records exist that could be subpoenaed, seized, or compelled by governments or law enforcement",
+    "Even if the VPN provider is hacked or served with a warrant, there is no historical data to disclose",
+    "A provable no-logs policy is the strongest privacy guarantee a VPN provider can offer",
+    "Annual third-party audits provide verifiable assurance that the policy is technically enforced, not just a marketing claim"
+  ],
+  "disadvantages": [
+    "Cannot be fully verified by end users — trust in the provider and the auditor's competence is still required",
+    "Some providers have been caught logging despite claiming a no-logs policy, making provider selection critical",
+    "Makes customer support harder — without logs, the provider cannot investigate connectivity issues or account problems",
+    "Payment information and signup metadata (email, billing info) may still be retained even if VPN usage is not logged",
+    "Jurisdiction matters — a no-logs policy offers limited protection if the provider must retain data under local data retention laws"
+  ],
+  "idealUsers": [
+    "Privacy advocates who want zero data trail of their internet activity",
+    "Journalists, activists, and whistleblowers who could face legal consequences if their browsing history were disclosed",
+    "Users in jurisdictions with aggressive data retention and surveillance laws",
+    "Anyone who wants to minimize their digital footprint regardless of activity"
+  ],
+  "securityImpact": "Critical for privacy — a genuine no-logs policy ensures that no metadata exists that could be used to reconstruct a user's activity, even under legal compulsion. It is the foundation of VPN anonymity.",
+  "performanceImpact": "None — logging or not logging has zero impact on throughput, latency, or connection stability.",
+  "importance": "essential"
+}

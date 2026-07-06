@@ -1,1 +1,15 @@
-{"code":"FI","slug":"fi","name":"Finland","region":"europe","flagEmoji":"fi","privacyFriendly":true}
+{
+  "code": "FI",
+  "slug": "fi",
+  "name": "Finland",
+  "region": "europe",
+  "flagEmoji": "🇫🇮",
+  "privacyFriendly": true,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 94,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

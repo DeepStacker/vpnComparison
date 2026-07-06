@@ -1,1 +1,16 @@
-{"code":"KE","slug":"ke","name":"Kenya","region":"africa","flagEmoji":"ke","privacyFriendly":false}
+{
+  "code": "KE",
+  "slug": "ke",
+  "name": "Kenya",
+  "region": "africa",
+  "flagEmoji": "🇰🇪",
+  "privacyFriendly": false,
+  "censorshipLevel": "moderate",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 32,
+  "recommendedProtocols": [
+    "wireguard",
+    "openvpn"
+  ]
+}

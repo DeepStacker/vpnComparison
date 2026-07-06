@@ -1,1 +1,15 @@
-{"code":"US","slug":"us","name":"United States","region":"north-america","flagEmoji":"us","privacyFriendly":false}
+{
+  "code": "US",
+  "slug": "us",
+  "name": "United States",
+  "region": "north-america",
+  "flagEmoji": "🇺🇸",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "five-eyes",
+  "dataRetentionLaw": false,
+  "internetPenetration": 92,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

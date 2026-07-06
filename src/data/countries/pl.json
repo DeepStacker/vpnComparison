@@ -1,1 +1,15 @@
-{"code":"PL","slug":"pl","name":"Poland","region":"europe","flagEmoji":"pl","privacyFriendly":false}
+{
+  "code": "PL",
+  "slug": "pl",
+  "name": "Poland",
+  "region": "europe",
+  "flagEmoji": "🇵🇱",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 85,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

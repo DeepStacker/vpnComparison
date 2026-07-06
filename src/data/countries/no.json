@@ -1,1 +1,15 @@
-{"code":"NO","slug":"no","name":"Norway","region":"europe","flagEmoji":"no","privacyFriendly":true}
+{
+  "code": "NO",
+  "slug": "no",
+  "name": "Norway",
+  "region": "europe",
+  "flagEmoji": "🇳🇴",
+  "privacyFriendly": true,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "nine-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 97,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

@@ -1,5 +1,5 @@
 /**
- * NetworksHome — Content Collections configuration.
+ * FreeVPN4USA — Content Collections configuration.
  *
  * Objective vs editorial separation is enforced at the collection level:
  *   - `providers`            → JSON structured specs (objective facts)
@@ -51,11 +51,17 @@ const providers = defineCollection({
     foundedYear: z.number().int().min(1990),
     jurisdiction: countryCodeSchema,
     hqCountry: countryCodeSchema,
+    parentCompany: nonEmptyString.optional(),
+    ownership: z.enum(["public", "private", "subsidiary"]).optional(),
+    warrantCanary: z.boolean().optional(),
+    ramOnlyServers: z.boolean().optional(),
+    transparencyReports: z.array(urlSchema).optional(),
     serverNetwork: z.object({
       serverCount: z.number().int().nonnegative(),
       countryCount: z.number().int().nonnegative(),
       countries: z.array(countryCodeSchema),
       virtualLocations: z.boolean(),
+      ownedInfrastructure: z.boolean().optional(),
     }),
     protocols: z.array(idSchema),
     platforms: z.array(idSchema),
@@ -65,12 +71,16 @@ const providers = defineCollection({
         service: idSchema,
         support: z.enum(["verified", "partial", "unsupported", "unknown"]),
         verifiedAt: isoDateSchema.optional(),
+        notes: z.string().optional(),
+        regionsTested: z.array(countryCodeSchema).optional(),
       }),
     ),
     torrenting: z.object({
       supported: z.boolean(),
       labeledServers: z.boolean(),
+      portForwarding: z.boolean().optional(),
       rating: z.number().min(0).max(10).optional(),
+      notes: z.string().optional(),
     }),
     loggingPolicy: z.enum([
       "no-logs",
@@ -79,6 +89,10 @@ const providers = defineCollection({
       "usage-only",
       "unknown",
     ]),
+    dnsHandling: nonEmptyString.optional(),
+    leakProtection: nonEmptyString.optional(),
+    obfuscationType: z.enum(["stealth", "no-borders", "scramble", "multi-hop", "none", "other"]).optional(),
+    postQuantum: z.boolean().optional(),
     killSwitch: z.boolean(),
     splitTunneling: z.boolean(),
     adBlocker: z.boolean(),
@@ -93,6 +107,12 @@ const providers = defineCollection({
       freeTier: z.boolean(),
       freeTierNotes: z.string().optional(),
     }),
+    support: z.object({
+      liveChat: z.boolean().optional(),
+      email: z.boolean().optional(),
+      knowledgeBase: z.boolean().optional(),
+      averageResponseTime: z.string().optional(),
+    }).optional(),
     audits: z.array(auditRecordSchema).default([]),
     updatedAt: isoDateSchema,
     sources: z.array(urlSchema).optional(),
@@ -135,6 +155,13 @@ const protocols = defineCollection({
     transport: z.enum(["udp", "tcp", "both"]).optional(),
     openSource: z.boolean(),
     strengths: stringList,
+    weaknesses: z.array(nonEmptyString).optional(),
+    creator: nonEmptyString.optional(),
+    releaseYear: z.number().int().min(1980).max(2030).optional(),
+    speedRating: z.enum(["slow", "moderate", "fast", "very-fast"]).optional(),
+    securityRating: z.enum(["weak", "adequate", "strong", "very-strong"]).optional(),
+    platformSupport: stringList.optional(),
+    port: z.number().int().min(1).max(65535).optional(),
   }),
 });
 
@@ -146,6 +173,12 @@ const platforms = defineCollection({
     name: nonEmptyString,
     icon: nonEmptyString,
     official: z.boolean(),
+    category: z.enum(["desktop", "mobile", "tv", "browser", "router", "other"]).optional(),
+    minOsVersion: nonEmptyString.optional(),
+    limitations: z.array(nonEmptyString).optional(),
+    commonIssues: z.array(nonEmptyString).optional(),
+    storeUrl: urlSchema.optional(),
+    setupGuideUrl: urlSchema.optional(),
   }),
 });
 
@@ -167,6 +200,11 @@ const countries = defineCollection({
     flagEmoji: z.string().min(1),
     privacyFriendly: z.boolean(),
     jurisdictionNote: z.string().optional(),
+    censorshipLevel: z.enum(["low", "moderate", "high", "extreme", "unknown"]).optional(),
+    surveillanceAlliance: z.enum(["five-eyes", "nine-eyes", "fourteen-eyes", "none", "unknown"]).optional(),
+    dataRetentionLaw: z.boolean().optional(),
+    internetPenetration: z.number().min(0).max(100).optional(),
+    recommendedProtocols: z.array(idSchema).optional(),
   }),
 });
 
@@ -187,6 +225,13 @@ const features = defineCollection({
       "pricing",
     ]),
     description: nonEmptyString,
+    technicalExplanation: z.string().optional(),
+    advantages: z.array(nonEmptyString).optional(),
+    disadvantages: z.array(nonEmptyString).optional(),
+    idealUsers: z.array(nonEmptyString).optional(),
+    securityImpact: z.string().optional(),
+    performanceImpact: z.string().optional(),
+    importance: z.enum(["essential", "important", "nice-to-have", "specialized"]).optional(),
   }),
 });
 
@@ -198,6 +243,11 @@ const streamingServices = defineCollection({
     name: nonEmptyString,
     icon: nonEmptyString,
     regions: z.array(countryCodeSchema),
+    websiteUrl: urlSchema.optional(),
+    category: z.enum(["entertainment", "sports", "news", "anime", "live-tv", "other"]).optional(),
+    vpnDetectionDifficulty: z.enum(["easy", "moderate", "difficult", "unknown"]).optional(),
+    reliabilityNotes: z.string().optional(),
+    troubleshootingTips: z.array(nonEmptyString).optional(),
   }),
 });
 

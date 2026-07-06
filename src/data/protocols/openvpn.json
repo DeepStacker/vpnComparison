@@ -7,5 +7,30 @@
   "encryption": "AES-256-GCM / TLS 1.3",
   "transport": "both",
   "openSource": true,
-  "strengths": ["Industry-standard security", "Highly configurable", "Difficult to block", "Available on all platforms"]
+  "port": 1194,
+  "creator": "James Yonan",
+  "releaseYear": 2001,
+  "speedRating": "moderate",
+  "securityRating": "strong",
+  "strengths": [
+    "Industry-standard security",
+    "Highly configurable",
+    "Difficult to block",
+    "Available on all platforms"
+  ],
+  "weaknesses": [
+    "Slower than WireGuard due to userspace operation",
+    "Complex configuration",
+    "Larger attack surface than minimal protocols",
+    "Can be CPU-intensive at high throughput"
+  ],
+  "platformSupport": [
+    "Windows",
+    "macOS",
+    "Linux",
+    "Android",
+    "iOS",
+    "Router",
+    "FreeBSD"
+  ]
 }

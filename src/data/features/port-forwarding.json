@@ -1,1 +1,29 @@
-{"id":"port-forwarding","slug":"port-forwarding","name":"Port Forwarding","category":"advanced","description":"Opens specific ports on the VPN connection for peer-to-peer file sharing or self-hosted services."}
+{
+  "id": "port-forwarding",
+  "slug": "port-forwarding",
+  "name": "Port Forwarding",
+  "category": "advanced",
+  "description": "Opens specific ports on the VPN connection for peer-to-peer file sharing or self-hosted services.",
+  "technicalExplanation": "The VPN provider assigns a dedicated public port on the VPN exit server's external IP address. Incoming packets sent to that IP:port combination are forwarded through the VPN tunnel to the user's device via NAT rules. The mapping is typically configured through a web interface or API where the user specifies the external port and the internal destination IP:port on their local network. The VPN gateway maintains the stateful NAT entry for the duration of the VPN session.",
+  "advantages": [
+    "Enables seeding in BitTorrent when the user is behind CGNAT (Carrier-Grade NAT) or a firewall that blocks inbound connections",
+    "Improves BitTorrent download speeds and swarm health by making the peer connectable from the public internet",
+    "Allows self-hosted services (Plex, HTTP servers, SSH) to be reachable without exposing the user's real home IP address",
+    "Bypasses ISP-level port blocking for specific applications (gaming consoles, VoIP)"
+  ],
+  "disadvantages": [
+    "Reduces anonymity by associating a persistent public-facing port with a single user's account over extended periods",
+    "Opens an inbound network path to the user's device; any service listening on the forwarded port must be properly secured",
+    "Requires the user to understand port numbers, TCP/UDP protocols, and application-level configuration",
+    "Not all VPN providers offer port forwarding due to operational complexity and abuse potential"
+  ],
+  "idealUsers": [
+    "Torrent users who want better seeding ratios and faster downloads by being connectable",
+    "Users who self-host services (Plex, game servers, home automation) and need inbound access without exposing their home IP",
+    "Gamers who need specific ports open for console or PC game hosting",
+    "VoIP and video conferencing users behind restrictive NATs that interfere with peer-to-peer media streams"
+  ],
+  "securityImpact": "Moderate negative impact; port forwarding opens an inbound path through the VPN tunnel to the user's device. The forwarded application must be properly secured, and the feature reduces anonymity by creating a persistent association between the user's account and a public port.",
+  "performanceImpact": "Negligible; NAT-based port forwarding is simple packet header rewriting performed by the VPN gateway's kernel and adds no measurable latency or throughput reduction.",
+  "importance": "specialized"
+}

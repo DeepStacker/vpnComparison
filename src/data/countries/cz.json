@@ -1,1 +1,15 @@
-{"code":"CZ","slug":"cz","name":"Czech Republic","region":"europe","flagEmoji":"cz","privacyFriendly":false}
+{
+  "code": "CZ",
+  "slug": "cz",
+  "name": "Czech Republic",
+  "region": "europe",
+  "flagEmoji": "🇨🇿",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 86,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

@@ -12,7 +12,7 @@
 
 `astro.config.mjs`:
 
-- `site` sourced from `SITE_URL` env (default `https://networkshome.com`) so
+- `site` sourced from `SITE_URL` env (default `https://freevpn4usa.com`) so
   canonical URLs, sitemap, and OG stay correct across environments.
 - `trailingSlash: "ignore"`, `prefetch: { prefetchAll: true, defaultStrategy: "viewport" }`.
 - Integrations: `@astrojs/mdx`, `@astrojs/sitemap`, `astro-icon` (Lucide set,

@@ -1,1 +1,29 @@
-{"id":"split-tunneling","slug":"split-tunneling","name":"Split Tunneling","category":"usability","description":"Route some apps or websites through the VPN while others use the direct connection."}
+{
+  "id": "split-tunneling",
+  "slug": "split-tunneling",
+  "name": "Split Tunneling",
+  "category": "usability",
+  "description": "Route some apps or websites through the VPN while others use the direct connection.",
+  "technicalExplanation": "The VPN client creates a virtual network adapter with a custom routing table. For IP-based split tunneling, routes for specific destinations are added to the main routing table with a lower metric than the VPN's default route, causing those destinations to bypass the tunnel. For application-based split tunneling (available on Windows, Android, and some third-party clients), the client hooks into OS process creation events and applies routing policy per executable using Windows Filtering Platform or Linux cgroups/network namespaces, redirecting only the selected applications' traffic into the VPN interface.",
+  "advantages": [
+    "Preserves direct local network access (printers, NAS, Chromecast, smart home devices) while the VPN is active for other traffic",
+    "Reduces VPN bandwidth usage and server load by routing local/regional services through the direct connection",
+    "Allows simultaneous access to region-locked streaming services through the user's local ISP connection and privacy-sensitive traffic through the VPN",
+    "Improves performance for latency-sensitive applications (gaming, VoIP) that may suffer from VPN routing overhead"
+  ],
+  "disadvantages": [
+    "Misconfigured split tunneling can leak the user's real IP address if traffic expected to go through the VPN takes the direct route",
+    "DNS queries for split-tunneled traffic may leak DNS information to the ISP if not carefully routed",
+    "Application-based split tunneling has limited OS support; it works reliably on Windows and Android but is unavailable on iOS and limited on macOS",
+    "Increases configuration complexity; users must understand which applications or destinations should or should not use the VPN"
+  ],
+  "idealUsers": [
+    "Users who need local network access (printing, file sharing, media streaming to local devices) while the VPN is connected",
+    "Gamers who want VPN protection for browsing while maintaining low-latency direct connections for online gaming",
+    "Users who want to stream local region-locked content (local Netflix library, local news sites) through their ISP while using the VPN for other traffic",
+    "Bandwidth-conscious users who do not want to waste VPN data cap on high-bandwidth local services"
+  ],
+  "securityImpact": "Moderate negative risk; split tunnels create a path where traffic bypasses VPN encryption. If misconfigured, they can expose the user's real IP address and DNS queries. The feature requires careful configuration to maintain the intended security posture.",
+  "performanceImpact": "Positive for split traffic, which uses the direct connection at full ISP speed. VPN traffic is unaffected and experiences normal VPN overhead. Overall effective throughput improves since only selected traffic is encrypted and routed.",
+  "importance": "important"
+}

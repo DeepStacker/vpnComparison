@@ -1,1 +1,15 @@
-{"code":"IL","slug":"il","name":"Israel","region":"asia","flagEmoji":"il","privacyFriendly":false}
+{
+  "code": "IL",
+  "slug": "il",
+  "name": "Israel",
+  "region": "asia",
+  "flagEmoji": "🇮🇱",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": true,
+  "internetPenetration": 87,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

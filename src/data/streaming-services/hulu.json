@@ -1,1 +1,18 @@
-{"id":"hulu","slug":"hulu","name":"Hulu","icon":"monitor","regions":["US"]}
+{
+  "id": "hulu",
+  "slug": "hulu",
+  "name": "Hulu",
+  "icon": "monitor",
+  "regions": ["US"],
+  "websiteUrl": "https://www.hulu.com",
+  "category": "entertainment",
+  "vpnDetectionDifficulty": "moderate",
+  "reliabilityNotes": "Hulu blocks many known VPN IP addresses. It is US-only, and most premium VPNs with dedicated streaming servers work reliably.",
+  "troubleshootingTips": [
+    "Use a VPN server physically located in the US",
+    "Try a dedicated streaming IP from your VPN provider",
+    "Clear browser cookies and cache, or use incognito mode",
+    "Restart your browser after connecting to the VPN",
+    "Disable location services in your browser settings"
+  ]
+}

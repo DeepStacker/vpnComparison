@@ -1,1 +1,31 @@
-{"id":"ad-blocker","slug":"ad-blocker","name":"Ad Blocker","category":"usability","description":"Blocks ads, trackers, and malicious websites at the DNS level without browser extensions."}
+{
+  "id": "ad-blocker",
+  "slug": "ad-blocker",
+  "name": "Ad Blocker",
+  "category": "usability",
+  "description": "Blocks ads, trackers, and malicious websites at the DNS level without browser extensions.",
+  "technicalExplanation": "The VPN's DNS resolver maintains blocklists for known advertising domains, tracking domains, and malware domains. When a DNS query matches a blocked domain, the resolver returns a null response (NXDOMAIN or a sinkhole IP) instead of the real IP address, preventing the client device from connecting to the unwanted resource. This operates at the network layer and applies to all applications on the device, not just the browser.",
+  "advantages": [
+    "Eliminates ads across all apps and browsers without installing per-application extensions",
+    "Reduces bandwidth usage and page load times by blocking ad content servers",
+    "Prevents connections to known malware and phishing domains at the network level",
+    "Privacy-preserving since blocklists are maintained server-side with no per-user browsing data collected",
+    "Cannot be bypassed or detected by anti-adblock scripts since blocking occurs before the HTTP request"
+  ],
+  "disadvantages": [
+    "Cannot block ads served from the same domain as legitimate content (e.g., YouTube preroll ads, Twitch overlays)",
+    "May break websites that rely on specific ad networks for login or functionality",
+    "Limited visibility and control compared to browser extensions — users cannot selectively whitelist elements on a page",
+    "DNS-level blocking cannot remove layout gaps left by blocked ad placeholders",
+    "Blocklist updates depend on the VPN provider's maintenance cadence"
+  ],
+  "idealUsers": [
+    "Users who want system-wide ad blocking without configuring browser extensions on every device",
+    "Parents seeking simple content filtering for children's devices",
+    "Users concerned about malvertising and drive-by download attacks",
+    "Users who frequently use browsers or apps that do not support ad-blocking extensions"
+  ],
+  "securityImpact": "Moderate — reduces attack surface by blocking connections to known malware and phishing domains, but is not a substitute for endpoint security software or safe browsing practices.",
+  "performanceImpact": "Positive — reduces page load times and bandwidth consumption by preventing ad content from being downloaded. DNS query latency may increase marginally depending on the VPN resolver's geographic distribution.",
+  "importance": "nice-to-have"
+}

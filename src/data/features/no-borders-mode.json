@@ -1,1 +1,30 @@
-{"id":"no-borders-mode","slug":"no-borders-mode","name":"No Borders Mode","category":"privacy","description":"Special obfuscation techniques to bypass VPN blocking in restrictive regions like China, UAE, and Iran."}
+{
+  "id": "no-borders-mode",
+  "slug": "no-borders-mode",
+  "name": "No Borders Mode",
+  "category": "privacy",
+  "description": "Special obfuscation techniques to bypass VPN blocking in restrictive regions like China, UAE, and Iran.",
+  "technicalExplanation": "When activated, the VPN client modifies the protocol handshake and packet structure to evade deep packet inspection (DPI) systems. Techniques include wrapping OpenVPN inside TLS on port 443 (making it indistinguishable from HTTPS), using random packet padding to defeat size-based fingerprinting, fragmenting TLS handshake records, and rotating protocol parameters (cipher, port, handshake pattern) on each connection to prevent signature-based blocking.",
+  "advantages": [
+    "Restores internet access and privacy in countries with sophisticated DPI-based VPN blocking and the Great Firewall",
+    "Enables a working VPN connection on networks where standard VPN protocols are immediately blocked",
+    "Multiple obfuscation methods provide redundancy — if one method is detected, another may still work",
+    "Does not require the user to understand which blocking technique their network uses — the client auto-detects and adapts"
+  ],
+  "disadvantages": [
+    "Throughput is significantly lower due to protocol overhead of wrapping and padding (typically 40-60% of normal VPN speeds)",
+    "Increased latency from the additional protocol layers and potential routing through intermediate reflectors",
+    "The cat-and-mouse nature with censors means effectiveness varies over time as blocking techniques evolve",
+    "Not all VPN servers support obfuscation modes — server choices are more limited",
+    "May still be detected by advanced behavioral analysis (packet timing, connection patterns) even if packet structure is obfuscated"
+  ],
+  "idealUsers": [
+    "Users living in or traveling to countries with nation-state-level internet censorship (China, UAE, Iran, Russia, Turkmenistan)",
+    "Expatriates and foreign workers in restrictive regions who need access to global internet services",
+    "Journalists reporting from countries where VPN use is monitored or blocked",
+    "Users in enterprise or educational networks that implement commercial DPI systems to block VPNs"
+  ],
+  "securityImpact": "Moderate — obfuscation protects against DPI-based traffic analysis and blocking but does not strengthen the underlying encryption. The security properties (confidentiality, integrity) remain those of the VPN protocol being obfuscated.",
+  "performanceImpact": "Negative — protocol wrapping, packet padding, and intermediate relays introduce 40-60% throughput reduction and increased latency compared to standard VPN connections.",
+  "importance": "specialized"
+}

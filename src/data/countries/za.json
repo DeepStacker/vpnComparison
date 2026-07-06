@@ -1,1 +1,15 @@
-{"code":"ZA","slug":"za","name":"South Africa","region":"africa","flagEmoji":"za","privacyFriendly":false}
+{
+  "code": "ZA",
+  "slug": "za",
+  "name": "South Africa",
+  "region": "africa",
+  "flagEmoji": "🇿🇦",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "none",
+  "dataRetentionLaw": false,
+  "internetPenetration": 72,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}

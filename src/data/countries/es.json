@@ -1,1 +1,15 @@
-{"code":"ES","slug":"es","name":"Spain","region":"europe","flagEmoji":"es","privacyFriendly":false}
+{
+  "code": "ES",
+  "slug": "es",
+  "name": "Spain",
+  "region": "europe",
+  "flagEmoji": "🇪🇸",
+  "privacyFriendly": false,
+  "censorshipLevel": "low",
+  "surveillanceAlliance": "fourteen-eyes",
+  "dataRetentionLaw": true,
+  "internetPenetration": 93,
+  "recommendedProtocols": [
+    "wireguard"
+  ]
+}
