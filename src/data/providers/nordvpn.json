@@ -1,0 +1,200 @@
+{
+  "id": "nordvpn",
+  "slug": "nordvpn",
+  "name": "NordVPN",
+  "tagline": "Feature-rich VPN with a massive server network and strong security",
+  "websiteUrl": "https://nordvpn.com",
+  "foundedYear": 2012,
+  "jurisdiction": "PA",
+  "hqCountry": "PA",
+  "serverNetwork": {
+    "serverCount": 6400,
+    "countryCount": 111,
+    "countries": [
+      "US",
+      "GB",
+      "DE",
+      "FR",
+      "NL",
+      "CA",
+      "AU",
+      "JP",
+      "SG",
+      "CH",
+      "SE",
+      "NO",
+      "DK",
+      "FI",
+      "IT",
+      "ES",
+      "BR",
+      "MX",
+      "IN",
+      "HK",
+      "KR",
+      "TW",
+      "NZ",
+      "ZA",
+      "IL",
+      "AE",
+      "PL",
+      "AT",
+      "BE",
+      "IE",
+      "PT",
+      "GR",
+      "CZ",
+      "HU",
+      "RO",
+      "RU",
+      "TR",
+      "AR",
+      "CL",
+      "CO",
+      "PH",
+      "MY",
+      "TH",
+      "ID",
+      "VN",
+      "EG",
+      "KE",
+      "NG",
+      "MA"
+    ],
+    "virtualLocations": true
+  },
+  "protocols": [
+    "openvpn",
+    "wireguard",
+    "ikev2"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "android-tv",
+    "fire-tv",
+    "chromebook",
+    "router",
+    "browser-extension"
+  ],
+  "features": [
+    "kill-switch",
+    "split-tunneling",
+    "multi-hop",
+    "obfuscation",
+    "ad-blocker",
+    "dedicated-ip",
+    "tor-over-vpn",
+    "no-logs"
+  ],
+  "streaming": [
+    {
+      "service": "netflix",
+      "support": "verified",
+      "verifiedAt": "2025-12-01"
+    },
+    {
+      "service": "prime-video",
+      "support": "verified",
+      "verifiedAt": "2025-11-15"
+    },
+    {
+      "service": "disney-plus",
+      "support": "verified",
+      "verifiedAt": "2025-11-20"
+    },
+    {
+      "service": "hbo-max",
+      "support": "verified",
+      "verifiedAt": "2025-10-10"
+    },
+    {
+      "service": "hulu",
+      "support": "partial",
+      "verifiedAt": "2025-09-01"
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-12-05"
+    }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": true,
+    "rating": 9.0
+  },
+  "loggingPolicy": "no-logs",
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": true,
+  "multiHop": true,
+  "dedicatedIp": true,
+  "simultaneousConnections": 10,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      {
+        "cycle": "monthly",
+        "price": 12.99,
+        "currency": "USD",
+        "effectiveMonthly": 12.99,
+        "featured": false
+      },
+      {
+        "cycle": "yearly",
+        "price": 59.88,
+        "currency": "USD",
+        "effectiveMonthly": 4.99,
+        "featured": true
+      },
+      {
+        "cycle": "biennially",
+        "price": 83.76,
+        "currency": "USD",
+        "effectiveMonthly": 3.49,
+        "featured": false
+      }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": [
+      "card",
+      "paypal",
+      "crypto",
+      "google-pay",
+      "amazon-pay"
+    ],
+    "freeTier": false
+  },
+  "audits": [
+    {
+      "auditor": "PwC",
+      "date": "2024-06-15",
+      "scope": "No-logs policy audit \u2014 infrastructure and logging systems",
+      "reportUrl": "https://nordvpn.com/blog/nordvpn-no-log-audit/",
+      "independent": true
+    },
+    {
+      "auditor": "Deloitte",
+      "date": "2023-09-20",
+      "scope": "Privacy policy and data handling practices",
+      "independent": true
+    },
+    {
+      "auditor": "Cure53",
+      "date": "2023-03-10",
+      "scope": "Penetration testing of NordVPN apps and infrastructure",
+      "reportUrl": "https://cure53.de/pentest-report_nordvpn.pdf",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-15",
+  "sources": [
+    "https://nordvpn.com/features/",
+    "https://nordvpn.com/servers/",
+    "https://nordvpn.com/privacy-policy/"
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "id": "surfshark",
+  "slug": "surfshark",
+  "name": "Surfshark",
+  "tagline": "Budget-friendly VPN packed with advanced features and unlimited devices",
+  "websiteUrl": "https://surfshark.com",
+  "foundedYear": 2018,
+  "jurisdiction": "NL",
+  "hqCountry": "NL",
+  "serverNetwork": {
+    "serverCount": 3200,
+    "countryCount": 100,
+    "countries": [
+      "US",
+      "GB",
+      "DE",
+      "FR",
+      "NL",
+      "CA",
+      "AU",
+      "JP",
+      "SG",
+      "CH",
+      "SE",
+      "NO",
+      "DK",
+      "FI",
+      "IT",
+      "ES",
+      "BR",
+      "MX",
+      "IN",
+      "HK",
+      "KR",
+      "TW",
+      "NZ",
+      "ZA",
+      "IL",
+      "AE",
+      "PL",
+      "AT",
+      "BE",
+      "IE",
+      "PT",
+      "GR",
+      "CZ",
+      "HU",
+      "RO",
+      "TR",
+      "AR",
+      "CL",
+      "CO",
+      "MY",
+      "TH",
+      "ID"
+    ],
+    "virtualLocations": true
+  },
+  "protocols": [
+    "openvpn",
+    "wireguard",
+    "ikev2"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "android-tv",
+    "fire-tv",
+    "chromebook",
+    "router",
+    "browser-extension"
+  ],
+  "features": [
+    "kill-switch",
+    "split-tunneling",
+    "multi-hop",
+    "obfuscation",
+    "ad-blocker",
+    "no-logs",
+    "port-forwarding"
+  ],
+  "streaming": [
+    {
+      "service": "netflix",
+      "support": "verified",
+      "verifiedAt": "2025-11-15"
+    },
+    {
+      "service": "prime-video",
+      "support": "verified",
+      "verifiedAt": "2025-11-01"
+    },
+    {
+      "service": "disney-plus",
+      "support": "verified",
+      "verifiedAt": "2025-10-20"
+    },
+    {
+      "service": "hbo-max",
+      "support": "partial",
+      "verifiedAt": "2025-09-15"
+    },
+    {
+      "service": "hulu",
+      "support": "verified",
+      "verifiedAt": "2025-10-01"
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-11-25"
+    }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": false,
+    "rating": 8.0
+  },
+  "loggingPolicy": "no-logs",
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": true,
+  "multiHop": true,
+  "dedicatedIp": false,
+  "simultaneousConnections": 0,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      {
+        "cycle": "monthly",
+        "price": 15.45,
+        "currency": "USD",
+        "effectiveMonthly": 15.45,
+        "featured": false
+      },
+      {
+        "cycle": "yearly",
+        "price": 47.76,
+        "currency": "USD",
+        "effectiveMonthly": 3.98,
+        "featured": false
+      },
+      {
+        "cycle": "biennially",
+        "price": 59.76,
+        "currency": "USD",
+        "effectiveMonthly": 2.49,
+        "featured": true
+      }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": [
+      "card",
+      "paypal",
+      "crypto",
+      "google-pay"
+    ],
+    "freeTier": false
+  },
+  "audits": [
+    {
+      "auditor": "Deloitte",
+      "date": "2024-07-01",
+      "scope": "No-logs policy audit",
+      "reportUrl": "https://surfshark.com/blog/surfshark-no-logs-audit",
+      "independent": true
+    },
+    {
+      "auditor": "Cure53",
+      "date": "2024-02-10",
+      "scope": "Browser extension security audit",
+      "independent": true
+    },
+    {
+      "auditor": "NCC Group",
+      "date": "2023-04-20",
+      "scope": "Infrastructure penetration test",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-08",
+  "sources": [
+    "https://surfshark.com/features"
+  ]
+}

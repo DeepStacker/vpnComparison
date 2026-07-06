@@ -1,0 +1,1 @@
+{"id":"l2tp","slug":"l2tp","name":"L2TP/IPsec","category":"l2tp","description":"Layer 2 Tunneling Protocol paired with IPsec for encryption. Older but widely compatible. Generally slower than modern alternatives due to double encapsulation.","encryption":"AES-256 / IPsec","transport":"udp","openSource":false,"strengths":["Wide compatibility","Built into most OSes","Stable"]}

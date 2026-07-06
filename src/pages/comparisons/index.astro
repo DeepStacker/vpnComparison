@@ -1,0 +1,77 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const allComparisons = await getCollection("comparisons");
+const allProviders = await getCollection("providers");
+const providerNameMap = new Map(allProviders.map((p) => [p.data.id, p.data.name]));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("VPN Comparisons — Side-by-Side Analysis"),
+  description: "Head-to-head VPN comparisons. See how top services stack up across speed, privacy, streaming, pricing, and features.",
+  canonical: canonicalUrl("/comparisons/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Comparisons", href: "/comparisons/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>VPN Comparisons</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Side-by-side analysis of top VPN services. We compare speed, privacy, streaming, pricing, and features.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      {allComparisons.length === 0 && (
+        <div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+          <Text tone="muted">No comparisons published yet.</Text>
+        </div>
+      )}
+      <Grid cols={1} colsMd={2} colsLg={3} gap={6}>
+        {allComparisons.map((c) => (
+          <Card variant="raised" padding="md">
+            <div class="flex items-center justify-between gap-2">
+              <Heading level={2} class="text-xl">{c.data.title}</Heading>
+              {c.data.winner && (
+                <Badge tone="success" size="sm">
+                  {providerNameMap.get(c.data.winner.id) ?? c.data.winner.id} Wins
+                </Badge>
+              )}
+            </div>
+            <Text size="sm" tone="muted" class="mt-2">{c.data.summary}</Text>
+            <div class="mt-3 flex flex-wrap gap-1.5">
+              {c.data.providers.map((ref) => {
+                const name = providerNameMap.get(ref.id);
+                return <Badge tone="neutral">{name ?? ref.id}</Badge>;
+              })}
+            </div>
+            <div class="mt-4">
+              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>
+                Read Comparison
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </Grid>
+    </Container>
+  </Section>
+</SeoLayout>

@@ -1,0 +1,115 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import { formatDate } from "@/lib/utils/date";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const bestLists = await getCollection("best-lists");
+  return bestLists.map((bl) => ({ params: { slug: bl.id } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry("best-lists", slug);
+if (!entry) return Astro.redirect("/404");
+
+const bestList = entry.data;
+const { Content } = await render(entry);
+
+const [authorEntry, allProviders] = await Promise.all([
+  getEntry("authors", bestList.author.id),
+  getCollection("providers"),
+]);
+const authorName = authorEntry?.data.name ?? bestList.author.id;
+const providerMap = new Map(allProviders.map((p) => [p.data.id, p.data]));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle(bestList.title),
+  description: bestList.summary,
+  canonical: canonicalUrl(`/best-lists/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Best VPN Lists", href: "/best-lists/" },
+  { label: bestList.title, href: `/best-lists/${slug}/` },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <Badge tone="primary" size="md" class="mb-3">{bestList.category}</Badge>
+        <Heading level={1}>{bestList.title}</Heading>
+        <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{bestList.summary}</Text>
+        <div class="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
+          {authorName && <span>By {authorName}</span>}
+          <span>Published {formatDate(bestList.publishedAt)}</span>
+          {bestList.updatedAt && <span>· Updated {formatDate(bestList.updatedAt)}</span>}
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Heading level={2}>Selection Criteria</Heading>
+      <Text tone="muted" class="mt-2">Transparent criteria used to evaluate and rank providers in this list.</Text>
+      <ul class="mt-4 space-y-2">
+        {bestList.criteria.map((criterion) => (
+          <li class="flex items-start gap-2 text-sm text-foreground">
+            <span class="mt-0.5 text-primary">&#10003;</span>
+            <span>{criterion}</span>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <Heading level={2}>Rankings</Heading>
+      <div class="mt-6 space-y-4">
+        {bestList.entries
+          .sort((a, b) => a.rank - b.rank)
+          .map((entry) => {
+            const provider = providerMap.get(entry.provider.id);
+            return (
+              <Card variant="raised" padding="md" class="flex flex-col gap-3 sm:flex-row sm:items-start">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                  {entry.rank}
+                </div>
+                <div class="min-w-0 flex-1">
+                  <Heading level={3} size="lg">
+                    {provider?.name ?? entry.provider.id}
+                  </Heading>
+                  <Text size="sm" tone="muted" class="mt-1">{entry.rationale}</Text>
+                  <div class="mt-3">
+                    <Button variant="outline" size="sm" href={`/vpn/${provider?.slug ?? entry.provider.id}/`}>
+                      Read Review
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container size="prose">
+      <div class="mt-6">
+        <Content />
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

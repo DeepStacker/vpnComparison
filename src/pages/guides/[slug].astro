@@ -1,0 +1,120 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import { formatDate } from "@/lib/utils/date";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides");
+  return guides.map((g) => ({ params: { slug: g.id } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry("guides", slug);
+if (!entry) return Astro.redirect("/404");
+
+const guide = entry.data;
+const { Content } = await render(entry);
+
+const [authorEntry, allProviders] = await Promise.all([
+  getEntry("authors", guide.author.id),
+  getCollection("providers"),
+]);
+const authorName = authorEntry?.data.name ?? guide.author.id;
+const providerMap = new Map(allProviders.map((p) => [p.data.id, p.data]));
+
+const relatedGuides = guide.relatedGuides?.length
+  ? await Promise.all(
+      guide.relatedGuides.map((ref) => getEntry("guides", ref.id)),
+    )
+  : [];
+const resolvedRelatedGuides = relatedGuides.filter(Boolean);
+
+const relatedProviders = guide.relatedProviders?.length
+  ? guide.relatedProviders
+      .map((ref) => providerMap.get(ref.id))
+      .filter(Boolean)
+  : [];
+
+const difficultyTone: Record<string, string> = {
+  beginner: "success",
+  intermediate: "primary",
+  advanced: "warning",
+};
+
+const seo = normalizeSeoMeta({
+  title: buildTitle(guide.title),
+  description: guide.summary,
+  canonical: canonicalUrl(`/guides/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Guides", href: "/guides/" },
+  { label: guide.title, href: `/guides/${slug}/` },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        <div class="flex flex-wrap gap-2 mb-3">
+          <Badge tone={difficultyTone[guide.difficulty] as any} size="md">
+            {guide.difficulty.charAt(0).toUpperCase() + guide.difficulty.slice(1)}
+          </Badge>
+          <Badge tone="neutral" size="md">{guide.category}</Badge>
+        </div>
+        <Heading level={1}>{guide.title}</Heading>
+        <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{guide.summary}</Text>
+        <div class="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
+          {authorName && <span>By {authorName}</span>}
+          <span>Published {formatDate(guide.publishedAt)}</span>
+          {guide.updatedAt && <span>· Updated {formatDate(guide.updatedAt)}</span>}
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container size="prose">
+      <Content />
+    </Container>
+  </Section>
+
+  {(resolvedRelatedGuides.length > 0 || relatedProviders.length > 0) && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Related Content</Heading>
+        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
+          {resolvedRelatedGuides.map((rg) => (
+            <Card>
+              <Heading level={3}>{rg!.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{rg!.data.summary}</Text>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${rg!.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+          {relatedProviders.map((p) => (
+            <Card>
+              <Heading level={3}>{p!.name}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{p!.tagline}</Text>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/vpn/${p!.slug}/`}>View Details</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+</SeoLayout>

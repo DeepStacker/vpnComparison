@@ -1,0 +1,1 @@
+{"id":"sstp","slug":"sstp","name":"SSTP","category":"sstp","description":"Secure Socket Tunneling Protocol developed by Microsoft. Uses SSL/TLS over port 443, making it very difficult to block as traffic appears as standard HTTPS.","encryption":"AES-256 / SSL 3.0","transport":"tcp","openSource":false,"strengths":["Hard to block","Uses port 443","Good Windows support"]}

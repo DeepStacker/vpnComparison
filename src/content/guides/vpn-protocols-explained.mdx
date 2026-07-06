@@ -1,0 +1,36 @@
+---
+title: VPN Protocols Explained — WireGuard vs OpenVPN vs IKEv2
+summary: "WireGuard, OpenVPN, IKEv2 — what's the difference? We explain how each protocol works and which one you should use."
+category: guides
+difficulty: intermediate
+author: alex-chen
+publishedAt: '2025-10-10'
+relatedGuides: [what-is-a-vpn]
+---
+
+## WireGuard
+
+WireGuard is the newest major VPN protocol, first included in the Linux kernel in 2020. It uses state-of-the-art cryptography (Curve25519, ChaCha20, Poly1305) and is designed for simplicity and performance.
+
+**Pros:** Extremely fast, minimal codebase (easier to audit), built into modern kernels, low latency.
+**Cons:** Static IP assignment can be a privacy concern, fewer obfuscation features, limited built-in roaming support.
+
+**Best for:** Speed-critical applications — gaming, 4K streaming, large downloads.
+
+## OpenVPN
+
+OpenVPN has been the gold standard for over a decade. It uses OpenSSL for encryption and supports both TCP and UDP transport. OpenVPN is highly configurable and available on virtually every platform.
+
+**Pros:** Battle-tested security, extensive configuration options, strong obfuscation, broad platform support.
+**Cons:** Slower than WireGuard, more complex setup, older codebase can be harder to audit.
+
+**Best for:** Maximum compatibility and configuration flexibility.
+
+## IKEv2/IPsec
+
+IKEv2 is a protocol developed by Microsoft and Cisco, paired with IPsec for encryption. It's known for excellent stability when switching networks (Wi-Fi to mobile data).
+
+**Pros:** Excellent network switching (Mobile IP), good speeds, built into most OSes.
+**Cons:** Proprietary nature raises some concerns, less auditable than open-source alternatives.
+
+**Best for:** Mobile users who frequently switch between Wi-Fi and cellular networks.

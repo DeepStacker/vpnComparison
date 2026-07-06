@@ -1,0 +1,1 @@
+{"id":"dns-leak-protection","slug":"dns-leak-protection","name":"DNS Leak Protection","category":"security","description":"Ensures DNS queries are routed through the encrypted tunnel and never exposed to your ISP."}

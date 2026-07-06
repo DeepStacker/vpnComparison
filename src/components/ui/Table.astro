@@ -35,14 +35,7 @@ const alignClass: Record<string, string> = {
   right: "text-right",
 };
 
-function renderCell(value: string | number | boolean | null | undefined) {
-  if (typeof value === "boolean") {
-    return value
-      ? <Icon name="check" size={16} class="text-success inline-block" />
-      : <Icon name="minus" size={16} class="text-muted-foreground inline-block" />;
-  }
-  return String(value ?? "");
-}
+
 ---
 
 <div class={cx("w-full overflow-x-auto", className)}>
@@ -82,7 +75,13 @@ function renderCell(value: string | number | boolean | null | undefined) {
                     "sticky left-0 bg-inherit",
                 )}
               >
-                {renderCell(row[col.key])}
+                {
+                  typeof row[col.key] === "boolean"
+                    ? row[col.key]
+                      ? <Icon name="check" size={16} class="text-success inline-block" />
+                      : <Icon name="minus" size={16} class="text-muted-foreground inline-block" />
+                    : String(row[col.key] ?? "")
+                }
               </td>
             ))}
           </tr>

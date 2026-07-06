@@ -1,0 +1,103 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Accordion from "@/components/ui/Accordion.astro";
+import AccordionItem from "@/components/ui/AccordionItem.astro";
+import Button from "@/components/ui/Button.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const allFaqs = await getCollection("faqs");
+const [allProviders, allGuides] = await Promise.all([
+  getCollection("providers"),
+  getCollection("guides"),
+]);
+const providerMap = new Map(allProviders.map((p) => [p.id, p]));
+const guideMap = new Map(allGuides.map((g) => [g.id, g]));
+
+const grouped = allFaqs.reduce<Record<string, typeof allFaqs>>((acc, faq) => {
+  const cat = faq.data.category;
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(faq);
+  return acc;
+}, {});
+
+const categoryNames: Record<string, string> = {
+  general: "General Questions",
+  security: "Security & Privacy",
+  streaming: "Streaming & Torrenting",
+  setup: "Setup & Configuration",
+  troubleshooting: "Troubleshooting",
+};
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("VPN FAQ — Frequently Asked Questions"),
+  description: "Answers to the most common VPN questions. Learn about privacy, security, streaming, torrenting, and how VPNs work.",
+  canonical: canonicalUrl("/faq/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN FAQ", href: "/faq/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>Frequently Asked Questions</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Answers to the most common questions about VPNs, privacy, streaming, and how to get the most out of your VPN service.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      {allFaqs.length === 0 && (
+        <div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+          <Text tone="muted">No FAQs published yet.</Text>
+        </div>
+      )}
+      {Object.entries(grouped).map(([category, faqs]) => (
+        <div class="mb-10 last:mb-0">
+          <Heading level={2} class="mb-4">{categoryNames[category] ?? category}</Heading>
+          <Accordion>
+            {faqs.map((faq) => {
+              const relatedProvider = faq.data.relatedProvider
+                ? providerMap.get(faq.data.relatedProvider.id)
+                : null;
+              const relatedGuide = faq.data.relatedGuide
+                ? guideMap.get(faq.data.relatedGuide.id)
+                : null;
+              return (
+                <AccordionItem summary={faq.data.question} id={faq.id}>
+                  <div class="space-y-3">
+                    <Text size="sm">{faq.data.answer}</Text>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                      {relatedProvider && (
+                        <Button variant="outline" size="sm" href={`/vpn/${relatedProvider.data.slug}/`}>
+                          {relatedProvider.data.name}
+                        </Button>
+                      )}
+                      {relatedGuide && (
+                        <Button variant="outline" size="sm" href={`/guides/${relatedGuide.id}/`}>
+                          {relatedGuide.data.title}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        </div>
+      ))}
+    </Container>
+  </Section>
+</SeoLayout>

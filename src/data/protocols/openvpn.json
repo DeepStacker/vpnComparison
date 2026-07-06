@@ -1,0 +1,11 @@
+{
+  "id": "openvpn",
+  "slug": "openvpn",
+  "name": "OpenVPN",
+  "category": "openvpn",
+  "description": "Open-source VPN protocol widely considered the industry standard for security. Uses SSL/TLS for key exchange and can run on any port, making it difficult to block.",
+  "encryption": "AES-256-GCM / TLS 1.3",
+  "transport": "both",
+  "openSource": true,
+  "strengths": ["Industry-standard security", "Highly configurable", "Difficult to block", "Available on all platforms"]
+}

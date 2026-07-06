@@ -1,0 +1,178 @@
+{
+  "id": "protonvpn",
+  "slug": "protonvpn",
+  "name": "Proton VPN",
+  "tagline": "Trusted VPN from the makers of Proton Mail, with a genuine free tier",
+  "websiteUrl": "https://protonvpn.com",
+  "foundedYear": 2017,
+  "jurisdiction": "CH",
+  "hqCountry": "CH",
+  "serverNetwork": {
+    "serverCount": 2900,
+    "countryCount": 69,
+    "countries": [
+      "US",
+      "GB",
+      "DE",
+      "FR",
+      "NL",
+      "CA",
+      "AU",
+      "JP",
+      "SG",
+      "CH",
+      "SE",
+      "NO",
+      "DK",
+      "FI",
+      "IT",
+      "ES",
+      "BR",
+      "MX",
+      "IN",
+      "HK",
+      "KR",
+      "TW",
+      "NZ",
+      "ZA",
+      "IL",
+      "AE",
+      "PL",
+      "AT",
+      "BE",
+      "IE",
+      "PT",
+      "GR",
+      "CZ",
+      "HU",
+      "RO"
+    ],
+    "virtualLocations": false
+  },
+  "protocols": [
+    "openvpn",
+    "wireguard",
+    "ikev2"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "android-tv",
+    "fire-tv",
+    "chromebook"
+  ],
+  "features": [
+    "kill-switch",
+    "split-tunneling",
+    "obfuscation",
+    "ad-blocker",
+    "tor-over-vpn",
+    "dns-leak-protection",
+    "no-logs",
+    "port-forwarding"
+  ],
+  "streaming": [
+    {
+      "service": "netflix",
+      "support": "partial",
+      "verifiedAt": "2025-11-10"
+    },
+    {
+      "service": "prime-video",
+      "support": "verified",
+      "verifiedAt": "2025-10-20"
+    },
+    {
+      "service": "disney-plus",
+      "support": "partial",
+      "verifiedAt": "2025-09-15"
+    },
+    {
+      "service": "hbo-max",
+      "support": "unsupported",
+      "verifiedAt": "2025-08-01"
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-11-05"
+    }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": false,
+    "rating": 7.5
+  },
+  "loggingPolicy": "no-logs",
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": true,
+  "multiHop": false,
+  "dedicatedIp": false,
+  "simultaneousConnections": 10,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      {
+        "cycle": "monthly",
+        "price": 9.99,
+        "currency": "USD",
+        "effectiveMonthly": 9.99,
+        "featured": false
+      },
+      {
+        "cycle": "yearly",
+        "price": 71.88,
+        "currency": "USD",
+        "effectiveMonthly": 5.99,
+        "featured": false
+      },
+      {
+        "cycle": "biennially",
+        "price": 107.76,
+        "currency": "USD",
+        "effectiveMonthly": 4.49,
+        "featured": true
+      }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": [
+      "card",
+      "paypal",
+      "crypto"
+    ],
+    "freeTier": true,
+    "freeTierNotes": "Free plan includes 3 countries, limited speeds, single device \u2014 speeds capped to 2 Mbps."
+  },
+  "audits": [
+    {
+      "auditor": "Securitum",
+      "date": "2024-10-15",
+      "scope": "Security audit of Proton VPN apps",
+      "reportUrl": "https://protonvpn.com/blog/security-audit/",
+      "independent": true
+    },
+    {
+      "auditor": "SEC Consult",
+      "date": "2024-03-05",
+      "scope": "No-logs policy verification",
+      "reportUrl": "https://protonvpn.com/blog/no-logs-audit/",
+      "independent": true
+    },
+    {
+      "auditor": "Cure53",
+      "date": "2023-07-20",
+      "scope": "Penetration testing of infrastructure",
+      "reportUrl": "https://cure53.de/pentest-report_protonvpn.pdf",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-12",
+  "sources": [
+    "https://protonvpn.com/features",
+    "https://protonvpn.com/privacy-policy"
+  ]
+}

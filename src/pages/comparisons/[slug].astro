@@ -1,0 +1,212 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Rating from "@/components/ui/Rating.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Chip from "@/components/ui/Chip.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const comparisons = await getCollection("comparisons");
+  return comparisons.map((c) => ({ params: { slug: c.id } }));
+}
+
+const { slug } = Astro.params;
+const comparisonEntry = await getEntry("comparisons", slug);
+if (!comparisonEntry) return Astro.redirect("/404");
+
+const comparison = comparisonEntry.data;
+const { Content } = await render(comparisonEntry);
+
+const providerEntries = await Promise.all(
+  comparison.providers.map((ref) => getEntry("providers", ref.id)),
+);
+const providers = providerEntries.filter(Boolean).map((e) => e!.data);
+
+const providerMap = new Map(providers.map((p) => [p.id, p]));
+
+const allReviews = await getCollection("reviews");
+const reviewMap = new Map(allReviews.map((r) => [r.data.provider.id, r.data]));
+
+const [allCountries] = await Promise.all([
+  getCollection("countries"),
+]);
+const countryMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+
+const allBestLists = await getCollection("best-lists");
+const relatedBestLists = allBestLists.filter((bl) =>
+  bl.data.entries.some((e) => comparison.providers.some((ref) => ref.id === e.provider.id)),
+);
+
+const allGuides = await getCollection("guides");
+const relatedGuides = allGuides.filter((g) =>
+  g.data.relatedProviders?.some((ref) =>
+    comparison.providers.some((cp) => cp.id === ref.id),
+  ),
+);
+
+const winnerEntry = comparison.winner ? providerMap.get(comparison.winner.id) : null;
+
+const seo = normalizeSeoMeta({
+  title: buildTitle(comparison.title),
+  description: comparison.summary,
+  canonical: canonicalUrl(`/comparisons/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Comparisons", href: "/comparisons/" },
+  { label: comparison.title, href: `/comparisons/${slug}/` },
+];
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function humanizeAttr(key: string): string {
+  return key.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase());
+}
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-3xl">
+        {winnerEntry && (
+          <Badge tone="success" size="md" class="mb-3">
+            <Icon name="trophy" size={14} class="mr-1" />
+            Winner: {winnerEntry.name}
+          </Badge>
+        )}
+        <Heading level={1}>{comparison.title}</Heading>
+        <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{comparison.summary}</Text>
+        <div class="mt-4 flex flex-wrap gap-3">
+          {comparison.publishedAt && (
+            <Text size="sm" tone="muted" element="span">Published {comparison.publishedAt}</Text>
+          )}
+          {comparison.updatedAt && (
+            <Text size="sm" tone="muted" element="span">· Updated {comparison.updatedAt}</Text>
+          )}
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Grid cols={1} colsMd={comparison.providers.length} gap={6}>
+        {providers.map((p) => {
+          const score = reviewMap.get(p.id)?.scores.overall;
+          return (
+            <Card variant="raised" class="flex flex-col">
+              <Heading level={3}>{p.name}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{p.tagline}</Text>
+              {score != null && (
+                <Rating value={score} label={`${p.name} overall score`} size={14} class="mt-2" />
+              )}
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                <Chip>{countryMap.get(p.jurisdiction) ?? p.jurisdiction}</Chip>
+                <Chip>{p.serverNetwork.serverCount.toLocaleString()} servers</Chip>
+                <Chip>{p.pricing.plans.find((pl) => pl.featured)?.effectiveMonthly ?? p.pricing.plans[0]?.effectiveMonthly ?? "?"}/mo</Chip>
+              </div>
+              <div class="mt-auto pt-4">
+                <Button variant="outline" size="sm" href={`/vpn/${p.slug}/`}>View Details</Button>
+              </div>
+            </Card>
+          );
+        })}
+      </Grid>
+    </Container>
+  </Section>
+
+  {comparison.sections.length > 0 && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Comparison Overview</Heading>
+        <div class="mt-6 space-y-4">
+          {comparison.sections.map((section) => (
+            <Card padding="md">
+              <Heading level={3}>{section.title}</Heading>
+              {section.attributes && section.attributes.length > 0 && (
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  {section.attributes.map((attr) => (
+                    <Badge tone="neutral" size="sm">{humanizeAttr(attr)}</Badge>
+                  ))}
+                </div>
+              )}
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <Section>
+    <Container size="prose">
+      <div class="prose max-w-none">
+        <Content />
+      </div>
+    </Container>
+  </Section>
+
+  {winnerEntry && (
+    <Section background>
+      <Container>
+        <Card variant="raised" padding="lg">
+          <div class="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-success-surface text-success">
+              <Icon name="trophy" size={28} />
+            </div>
+            <div>
+              <Badge tone="success" size="md">Our Pick</Badge>
+              <Heading level={2} class="mt-2">{winnerEntry.name}</Heading>
+              <Text tone="muted" class="mt-1 max-w-xl">
+                {reviewMap.get(winnerEntry.id)?.verdict.headline ?? `${winnerEntry.name} wins this comparison based on our analysis.`}
+              </Text>
+              <div class="mt-4">
+                <Button href={`/vpn/${winnerEntry.slug}/`}>Read Full Review</Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Container>
+    </Section>
+  )}
+
+  {(relatedBestLists.length > 0 || relatedGuides.length > 0) && (
+    <Section>
+      <Container>
+        <Heading level={2}>Related Content</Heading>
+        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
+          {relatedBestLists.map((bl) => (
+            <Card>
+              <Heading level={3}>{bl.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{bl.data.summary}</Text>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/best-lists/${bl.id}/`}>View List</Button>
+              </div>
+            </Card>
+          ))}
+          {relatedGuides.map((g) => (
+            <Card>
+              <Heading level={3}>{g.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
+              <Badge tone="neutral" class="mt-2">{capitalize(g.data.difficulty)}</Badge>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+</SeoLayout>

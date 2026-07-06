@@ -14,18 +14,18 @@ import type { NavItem, NavSection } from "@/types/site";
  */
 export const PRIMARY_NAV: NavItem[] = [
   {
-    label: "Providers",
-    href: "/providers/",
-    description: "Browse every VPN provider with objective, structured specs.",
+    label: "Reviews",
+    href: "/",
+    description: "In-depth VPN reviews with real test data and scores.",
   },
   {
     label: "Compare",
-    href: "/compare/",
+    href: "/comparisons/",
     description: "Side-by-side comparisons across features, price, and privacy.",
   },
   {
     label: "Best VPNs",
-    href: "/best/",
+    href: "/best-lists/",
     description: "Curated shortlists by use case, with transparent criteria.",
   },
   {
@@ -47,36 +47,27 @@ export const FOOTER_NAV: NavSection[] = [
   {
     title: "Discover",
     links: [
-      { label: "All providers", href: "/providers/" },
-      { label: "Best VPNs", href: "/best/" },
-      { label: "By country", href: "/countries/" },
-      { label: "By platform", href: "/platforms/" },
+      { label: "All providers", href: "/#providers" },
+      { label: "Best VPNs", href: "/best-lists/" },
+      { label: "Comparisons", href: "/comparisons/" },
+      { label: "Reviews", href: "/" },
     ],
   },
   {
-    title: "Compare",
-    links: [
-      { label: "Comparisons", href: "/compare/" },
-      { label: "By feature", href: "/features/" },
-      { label: "By streaming", href: "/streaming/" },
-      { label: "Pricing", href: "/pricing/" },
-    ],
-  },
-  {
-    title: "Understand",
+    title: "Learn",
     links: [
       { label: "Guides", href: "/guides/" },
-      { label: "Protocols", href: "/protocols/" },
-      { label: "Glossary", href: "/glossary/" },
       { label: "FAQ", href: "/faq/" },
+      { label: "Methodology", href: "/methodology/" },
+      { label: "Search", href: "/search/" },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About", href: "/about/" },
-      { label: "Methodology", href: "/methodology/" },
-      { label: "Editorial policy", href: "/editorial-policy/" },
+      { label: "Privacy", href: "/privacy/" },
+      { label: "Terms", href: "/terms/" },
       { label: "Contact", href: "/contact/" },
     ],
   },
@@ -86,6 +77,5 @@ export const FOOTER_NAV: NavSection[] = [
 export const UTILITY_NAV: NavItem[] = [
   { label: "Privacy", href: "/privacy/" },
   { label: "Terms", href: "/terms/" },
-  { label: "Affiliate disclosure", href: "/affiliate-disclosure/" },
   { label: "Sitemap", href: "/sitemap-index.xml" },
 ];

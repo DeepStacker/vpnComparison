@@ -1,0 +1,132 @@
+---
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import { SITE, copyrightYears } from "@/constants/site";
+import type { Breadcrumb } from "@/types/site";
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("Privacy Policy"),
+  description: `NetworksHome privacy policy — how we collect, use, and protect your personal information.`,
+  canonical: canonicalUrl("/privacy/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Privacy Policy", href: "/privacy/" },
+];
+
+const yearRange = copyrightYears();
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>Privacy Policy</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Last updated: January 1, 2025
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container size="prose">
+      <Heading level={2}>Introduction</Heading>
+      <Text tone="muted" class="mt-2">
+        NetworksHome ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains
+        how we collect, use, disclose, and safeguard your information when you visit our website at {SITE.url}.
+      </Text>
+      <Text tone="muted" class="mt-3">
+        By using our website, you agree to the collection and use of information in accordance with this policy.
+      </Text>
+
+      <Heading level={2} class="mt-10">Information We Collect</Heading>
+      <Heading level={3} class="mt-6">Personal Data</Heading>
+      <Text tone="muted" class="mt-2">
+        We may collect personally identifiable information such as your name and email address when you voluntarily
+        submit it through contact forms, newsletter sign-ups, or comment sections.
+      </Text>
+      <Heading level={3} class="mt-6">Usage Data</Heading>
+      <Text tone="muted" class="mt-2">
+        We automatically collect certain information when you visit our website, including your IP address,
+        browser type, operating system, referring URLs, pages viewed, and the dates/times of your visits.
+        This data is collected using cookies and similar tracking technologies.
+      </Text>
+
+      <Heading level={2} class="mt-10">Cookies</Heading>
+      <Text tone="muted" class="mt-2">
+        We use cookies and similar tracking technologies to track activity on our website and improve your experience.
+        Cookies are small data files stored on your device. You can instruct your browser to refuse all cookies
+        or to indicate when a cookie is being sent.
+      </Text>
+      <Text tone="muted" class="mt-3">
+        We use the following types of cookies:
+      </Text>
+      <ul class="mt-2 space-y-1 text-sm text-muted-foreground">
+        <li><strong>Essential cookies</strong> — Required for the website to function properly.</li>
+        <li><strong>Analytics cookies</strong> — Help us understand how visitors interact with our site.</li>
+        <li><strong>Affiliate cookies</strong> — Track referrals to VPN provider websites for commission purposes.</li>
+      </ul>
+
+      <Heading level={2} class="mt-10">How We Use Your Information</Heading>
+      <Text tone="muted" class="mt-2">We use the collected data for the following purposes:</Text>
+      <ul class="mt-2 space-y-1 text-sm text-muted-foreground">
+        <li>To provide and maintain our website</li>
+        <li>To notify you about changes to our website</li>
+        <li>To provide customer support</li>
+        <li>To gather analysis or valuable information to improve our service</li>
+        <li>To detect, prevent, and address technical issues</li>
+        <li>To send newsletters or marketing communications (with your consent)</li>
+      </ul>
+
+      <Heading level={2} class="mt-10">Third-Party Services</Heading>
+      <Text tone="muted" class="mt-2">
+        We may employ third-party companies and individuals to facilitate our website, provide analytics services,
+        or assist with affiliate marketing. These third parties have access to your personal data only to perform
+        these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
+      </Text>
+      <Text tone="muted" class="mt-3">
+        We use affiliate links to VPN provider websites. When you click on an affiliate link and make a purchase,
+        we may receive a commission. These affiliate relationships do not affect our editorial content or rankings.
+      </Text>
+
+      <Heading level={2} class="mt-10">Data Security</Heading>
+      <Text tone="muted" class="mt-2">
+        We implement appropriate technical and organizational measures to protect your personal data against
+        unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over
+        the Internet is 100% secure, and we cannot guarantee absolute security.
+      </Text>
+
+      <Heading level={2} class="mt-10">Your Rights</Heading>
+      <Text tone="muted" class="mt-2">
+        Depending on your location, you may have the following rights regarding your personal data:
+      </Text>
+      <ul class="mt-2 space-y-1 text-sm text-muted-foreground">
+        <li><strong>Access</strong> — Request a copy of the data we hold about you.</li>
+        <li><strong>Correction</strong> — Request that we correct inaccurate data.</li>
+        <li><strong>Deletion</strong> — Request that we delete your personal data.</li>
+        <li><strong>Objection</strong> — Object to our processing of your personal data.</li>
+        <li><strong>Data portability</strong> — Request transfer of your data to another service.</li>
+      </ul>
+
+      <Heading level={2} class="mt-10">Changes to This Privacy Policy</Heading>
+      <Text tone="muted" class="mt-2">
+        We may update our Privacy Policy from time to time. We will notify you of any changes by posting the
+        new Privacy Policy on this page and updating the "Last updated" date at the top.
+      </Text>
+
+      <Heading level={2} class="mt-10">Contact Us</Heading>
+      <Text tone="muted" class="mt-2">
+        If you have any questions about this Privacy Policy, please contact us at {SITE.contactEmail}.
+      </Text>
+
+      <div class="mt-10 border-t border-border pt-6">
+        <Text size="sm" tone="muted">&copy; {yearRange} {SITE.name}. All rights reserved.</Text>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

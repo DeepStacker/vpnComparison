@@ -10,13 +10,14 @@ import { sectionPadClass } from "./maps";
 
 interface Props {
   padding?: keyof typeof sectionPadClass;
+  background?: boolean;
   element?: "section" | "div" | "main" | "article";
   id?: string;
   class?: string;
 }
 
-const { padding = "default", element: Tag = "section", id, class: className } = Astro.props;
-const classes = cx(sectionPadClass[padding], className);
+const { padding = "default", background = false, element: Tag = "section", id, class: className } = Astro.props;
+const classes = cx(sectionPadClass[padding], background && "bg-surface-sunken", className);
 ---
 
 <Tag id={id} class={classes}>

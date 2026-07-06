@@ -1,0 +1,456 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Rating from "@/components/ui/Rating.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Table from "@/components/ui/Table.astro";
+import Chip from "@/components/ui/Chip.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const providers = await getCollection("providers");
+  return providers.map((p) => ({ params: { slug: p.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const providerEntry = await getEntry("providers", slug);
+if (!providerEntry) return Astro.redirect("/404");
+
+const provider = providerEntry.data;
+const overviewEntry = await getEntry("provider-overviews", slug);
+const OverviewContent = overviewEntry ? (await render(overviewEntry)).Content : null;
+
+const allReviews = await getCollection("reviews");
+const review = allReviews.find((r) => r.data.provider.id === slug);
+const reviewData = review?.data;
+
+const [allFeatures, allProtocols, allPlatforms, allStreamingSvcs, allCountries, allComparisons, allGuides] =
+  await Promise.all([
+    getCollection("features"),
+    getCollection("protocols"),
+    getCollection("platforms"),
+    getCollection("streaming-services"),
+    getCollection("countries"),
+    getCollection("comparisons"),
+    getCollection("guides"),
+  ]);
+
+const featureMap = new Map(allFeatures.map((f) => [f.data.id, f.data.name]));
+const protocolMap = new Map(allProtocols.map((p) => [p.data.id, p.data.name]));
+const platformMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.name]));
+const streamingNameMap = new Map(allStreamingSvcs.map((s) => [s.data.id, s.data.name]));
+const countryMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+
+const allScores = reviewData?.scores;
+
+const relatedComparisons = allComparisons.filter((c) =>
+  c.data.providers.some((ref) => ref.id === provider.id),
+);
+const relatedGuides = allGuides.filter((g) =>
+  g.data.relatedProviders?.some((ref) => ref.id === provider.id),
+);
+
+const pageTitle = reviewData?.title
+  ? buildTitle(reviewData.title)
+  : buildTitle(`${provider.name} Review`);
+const seo = normalizeSeoMeta({
+  title: pageTitle,
+  description: reviewData?.summary ?? `${provider.name} overview with specs, features, pricing, and scores.`,
+  canonical: canonicalUrl(`/vpn/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Reviews", href: "/" },
+  { label: provider.name, href: `/vpn/${slug}/` },
+];
+
+const loggingPolicyBadge: Record<string, string> = {
+  "no-logs": "success",
+  minimal: "info",
+  "connection-only": "warning",
+  "usage-only": "warning",
+  unknown: "neutral",
+};
+
+const streamingSupportBadge: Record<string, string> = {
+  verified: "success",
+  partial: "warning",
+  unsupported: "danger",
+  unknown: "neutral",
+};
+
+const scoreLabels: Record<string, string> = {
+  overall: "Overall",
+  performance: "Performance",
+  privacy: "Privacy",
+  security: "Security",
+  streaming: "Streaming",
+  torrenting: "Torrenting",
+  easeOfUse: "Ease of Use",
+  value: "Value",
+};
+
+const plansColumns = [
+  { key: "cycle", label: "Plan" },
+  { key: "price", label: "Price", align: "right" as const },
+  { key: "effectiveMonthly", label: "Effective Monthly", align: "right" as const },
+];
+
+const plansRows = provider.pricing.plans.map((plan) => ({
+  cycle: plan.cycle.charAt(0).toUpperCase() + plan.cycle.slice(1),
+  price: `$${plan.price.toFixed(2)}`,
+  effectiveMonthly: `$${plan.effectiveMonthly.toFixed(2)}`,
+}));
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Badge class="mb-2">{countryMap.get(provider.jurisdiction) ?? provider.jurisdiction} Jurisdiction</Badge>
+          <Heading level={1}>{provider.name}</Heading>
+          <Text size="lg" tone="muted" class="mt-1 max-w-2xl">{provider.tagline}</Text>
+          {allScores && (
+            <div class="mt-3">
+              <Rating value={allScores.overall} label="Overall score" size={20} />
+            </div>
+          )}
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <Button href={provider.websiteUrl} variant="outline" size="sm" target="_blank" rel="noopener noreferrer">
+            Visit Website
+          </Button>
+          {review && (
+            <Button href={`/vpn/${slug}/#review`} size="sm">
+              Read Review
+            </Button>
+          )}
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Grid cols={1} colsMd={2} colsLg={4} gap={6}>
+        <Card padding="md">
+          <div class="flex items-center gap-2">
+            <Icon name="server" size={18} class="text-primary" />
+            <Text weight="semibold">Server Network</Text>
+          </div>
+          <Text size="xl" weight="semibold" class="mt-2">{provider.serverNetwork.serverCount.toLocaleString()}</Text>
+          <Text size="sm" tone="muted">servers in {provider.serverNetwork.countryCount} countries</Text>
+        </Card>
+        <Card padding="md">
+          <div class="flex items-center gap-2">
+            <Icon name="shield" size={18} class="text-primary" />
+            <Text weight="semibold">Logging Policy</Text>
+          </div>
+          <div class="mt-2">
+            <Badge tone={loggingPolicyBadge[provider.loggingPolicy] as any}>
+              {capitalize(provider.loggingPolicy.replace(/-/g, " "))}
+            </Badge>
+          </div>
+          <Text size="sm" tone="muted" class="mt-1">
+            {provider.killSwitch ? "Kill switch included" : "No kill switch"}
+          </Text>
+        </Card>
+        <Card padding="md">
+          <div class="flex items-center gap-2">
+            <Icon name="globe" size={18} class="text-primary" />
+            <Text weight="semibold">Jurisdiction</Text>
+          </div>
+          <Text size="xl" weight="semibold" class="mt-2">{countryMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
+          <Text size="sm" tone="muted">Headquarters</Text>
+        </Card>
+        <Card padding="md">
+          <div class="flex items-center gap-2">
+            <Icon name="monitor-smartphone" size={18} class="text-primary" />
+            <Text weight="semibold">Connections</Text>
+          </div>
+          <Text size="xl" weight="semibold" class="mt-2">
+            {provider.simultaneousConnections === 0 ? "Unlimited" : provider.simultaneousConnections}
+          </Text>
+          <Text size="sm" tone="muted">Simultaneous devices</Text>
+        </Card>
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <Heading level={2}>Pricing Plans</Heading>
+      <Text tone="muted" class="mt-2">
+        {provider.pricing.moneyBackGuaranteeDays}-day money-back guarantee
+        {provider.pricing.freeTier ? " · Free tier available" : ""}
+      </Text>
+      <div class="mt-6">
+        <Table columns={plansColumns} rows={plansRows} caption={`${provider.name} pricing plans`} zebra firstColumnSticky />
+      </div>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <Text size="sm" tone="muted" element="span" class="mr-1">Payment: </Text>
+        {provider.pricing.paymentMethods.map((m) => <Chip>{m}</Chip>)}
+      </div>
+      {provider.pricing.freeTierNotes && (
+        <Text size="sm" tone="info" class="mt-2">{provider.pricing.freeTierNotes}</Text>
+      )}
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Heading level={2}>Features</Heading>
+      <Text tone="muted" class="mt-2">What {provider.name} offers out of the box</Text>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {provider.features.map((fid) => {
+          const name = featureMap.get(fid);
+          return name ? <Badge>{name}</Badge> : null;
+        })}
+      </div>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <Heading level={2}>Server Network</Heading>
+      <Text tone="muted" class="mt-2">
+        {provider.serverNetwork.serverCount.toLocaleString()} servers across {provider.serverNetwork.countryCount} countries
+        {provider.serverNetwork.virtualLocations ? " (includes virtual locations)" : ""}
+      </Text>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {provider.serverNetwork.countries.map((code) => {
+          const name = countryMap.get(code);
+          return <Chip>{name ?? code} ({code})</Chip>;
+        })}
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Heading level={2}>Protocols</Heading>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {provider.protocols.map((pid) => {
+          const name = protocolMap.get(pid);
+          return name ? <Badge tone="neutral">{name}</Badge> : null;
+        })}
+      </div>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <Heading level={2}>Platform Support</Heading>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {provider.platforms.map((pid) => {
+          const name = platformMap.get(pid);
+          return name ? <Chip>{name}</Chip> : null;
+        })}
+      </div>
+    </Container>
+  </Section>
+
+  {allScores && (
+    <Section>
+      <Container>
+        <Heading level={2} id="review">Review Scores</Heading>
+        <Text tone="muted" class="mt-2">
+          {reviewData?.title ?? `${provider.name} review scores`}
+          {reviewData?.testDate && <span> · Tested {reviewData.testDate}</span>}
+        </Text>
+        <Grid cols={2} colsMd={4} gap={4} class="mt-6">
+          {Object.entries(scoreLabels).map(([key, label]) => {
+            const value = allScores[key as keyof typeof allScores];
+            if (value == null) return null;
+            return (
+              <Card padding="sm">
+                <Text size="sm" tone="muted">{label}</Text>
+                <Rating value={value} size={14} showValue={false} class="mt-1" />
+                <Text weight="semibold" class="mt-1">{value.toFixed(1)}</Text>
+              </Card>
+            );
+          })}
+        </Grid>
+        {reviewData?.verdict && (
+          <Card variant="raised" class="mt-6">
+            <div class="flex items-start gap-3">
+              <div>
+                <Badge
+                  tone={
+                    reviewData.verdict.recommendation === "recommended"
+                      ? "success"
+                      : reviewData.verdict.recommendation === "conditional"
+                        ? "warning"
+                        : "danger"
+                    }
+                >
+                  {reviewData.verdict.recommendation === "recommended"
+                    ? "Recommended"
+                    : reviewData.verdict.recommendation === "conditional"
+                      ? "Conditional"
+                      : "Not Recommended"}
+                </Badge>
+                <Heading level={3} class="mt-2">{reviewData.verdict.headline}</Heading>
+                <Text tone="muted" class="mt-1">{reviewData.verdict.summary}</Text>
+              </div>
+            </div>
+          </Card>
+        )}
+      </Container>
+    </Section>
+  )}
+
+  {reviewData && (reviewData.pros.length > 0 || reviewData.cons.length > 0) && (
+    <Section background>
+      <Container>
+        <Grid cols={1} colsMd={2} gap={6}>
+          {reviewData.pros.length > 0 && (
+            <div>
+              <Heading level={3}>
+                <span class="flex items-center gap-2">
+                  <Icon name="circle-check" size={20} class="text-success" />
+                  Pros
+                </span>
+              </Heading>
+              <ul class="mt-3 space-y-2">
+                {reviewData.pros.map((pro) => (
+                  <li class="flex items-start gap-2">
+                    <Icon name="check" size={16} class="mt-0.5 shrink-0 text-success" />
+                    <Text size="sm">{pro}</Text>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {reviewData.cons.length > 0 && (
+            <div>
+              <Heading level={3}>
+                <span class="flex items-center gap-2">
+                  <Icon name="circle-x" size={20} class="text-danger" />
+                  Cons
+                </span>
+              </Heading>
+              <ul class="mt-3 space-y-2">
+                {reviewData.cons.map((con) => (
+                  <li class="flex items-start gap-2">
+                    <Icon name="x" size={16} class="mt-0.5 shrink-0 text-danger" />
+                    <Text size="sm">{con}</Text>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  {provider.streaming.length > 0 && (
+    <Section>
+      <Container>
+        <Heading level={2}>Streaming Support</Heading>
+        <Text tone="muted" class="mt-2">Verified streaming compatibility for major platforms</Text>
+        <Grid cols={2} colsMd={3} colsLg={4} gap={3} class="mt-6">
+          {provider.streaming.map((s) => (
+            <Card padding="sm" variant="outline">
+              <div class="flex items-center justify-between">
+                <Text weight="semibold" size="sm">{streamingNameMap.get(s.service) ?? s.service}</Text>
+                <Badge tone={streamingSupportBadge[s.support] as any} size="sm">
+                  {capitalize(s.support)}
+                </Badge>
+              </div>
+              {s.verifiedAt && <Text size="xs" tone="muted" class="mt-1">Verified {s.verifiedAt}</Text>}
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  {provider.torrenting.supported && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Torrenting</Heading>
+        <div class="mt-4 flex flex-wrap gap-4">
+          <Badge tone="success">P2P Supported</Badge>
+          {provider.torrenting.labeledServers && <Badge tone="info">Labeled P2P Servers</Badge>}
+          {provider.torrenting.rating != null && (
+            <Rating value={provider.torrenting.rating} label="Torrenting rating" size={14} />
+          )}
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  {OverviewContent && (
+    <Section>
+      <Container size="prose">
+        <Heading level={2}>Overview</Heading>
+        <div class="mt-4">
+          <OverviewContent />
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  {(relatedComparisons.length > 0 || relatedGuides.length > 0) && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Related Content</Heading>
+        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
+          {relatedComparisons.map((c) => (
+            <Card>
+              <Heading level={3}>{c.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{c.data.summary}</Text>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>Read Comparison</Button>
+              </div>
+            </Card>
+          ))}
+          {relatedGuides.map((g) => (
+            <Card>
+              <Heading level={3}>{g.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
+              <Badge tone="neutral" class="mt-2">{capitalize(g.data.difficulty)}</Badge>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  <Section padding="tight">
+    <Container>
+      <div class="flex flex-wrap gap-3">
+        <Text size="sm" tone="muted" element="span">Founded: {provider.foundedYear}</Text>
+        <Text size="sm" tone="muted" element="span">·</Text>
+        <Text size="sm" tone="muted" element="span">Updated: {provider.updatedAt}</Text>
+        {provider.audits.length > 0 && (
+          <>
+            <Text size="sm" tone="muted" element="span">·</Text>
+            <Text size="sm" tone="muted" element="span">
+              {provider.audits.length} independent audit{provider.audits.length !== 1 ? "s" : ""}
+            </Text>
+          </>
+        )}
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

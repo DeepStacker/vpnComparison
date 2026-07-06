@@ -1,0 +1,40 @@
+---
+title: How We Test VPN Speeds — Our Methodology
+summary: "Transparency matters. Here's exactly how we measure VPN speeds, including our testing equipment, locations, and analysis methods."
+category: methodology
+difficulty: advanced
+author: alex-chen
+publishedAt: '2025-10-20'
+---
+
+## Testing Environment
+
+All speed tests are conducted from dedicated testing locations:
+- **Primary:** 1 Gbps fiber connection in Dallas, Texas
+- **Secondary:** 500 Mbps fiber connection in New York City
+- **European:** 500 Mbps fiber connection in Frankfurt, Germany
+
+## Testing Equipment
+
+- Dell XPS 15 running Windows 11 Pro (latest updates)
+- Custom Linux testing rig running Ubuntu 24.04 LTS
+- WireGuard, OpenVPN, and proprietary protocol clients at latest stable versions
+
+## Testing Protocol
+
+1. Establish baseline speed without VPN (5 consecutive tests)
+2. Connect to nearest available server on each protocol
+3. Run 5 speed tests at 30-second intervals
+4. Repeat at peak (8 PM local) and off-peak (6 AM local) hours
+5. Test at least 3 different server locations per provider
+
+## Latency Testing
+
+Latency is measured using ICMP ping and TCP handshake timing. We record both average ping and jitter (ping variance) which affects gaming performance.
+
+## Variables Controlled
+
+- All tests run on wired Ethernet connections
+- No other network activity during testing
+- Same time windows used across all providers
+- Multiple tests per session to account for normal variance

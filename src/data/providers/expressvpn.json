@@ -1,0 +1,186 @@
+{
+  "id": "expressvpn",
+  "slug": "expressvpn",
+  "name": "ExpressVPN",
+  "tagline": "Premium VPN with blazing speeds and a proven no-logs record",
+  "websiteUrl": "https://expressvpn.com",
+  "foundedYear": 2009,
+  "jurisdiction": "VG",
+  "hqCountry": "VG",
+  "serverNetwork": {
+    "serverCount": 3000,
+    "countryCount": 105,
+    "countries": [
+      "US",
+      "GB",
+      "DE",
+      "FR",
+      "NL",
+      "CA",
+      "AU",
+      "JP",
+      "SG",
+      "HK",
+      "CH",
+      "SE",
+      "NO",
+      "DK",
+      "FI",
+      "IT",
+      "ES",
+      "BR",
+      "MX",
+      "IN",
+      "KR",
+      "TW",
+      "NZ",
+      "ZA",
+      "AE",
+      "PL",
+      "AT",
+      "BE",
+      "IE",
+      "PT",
+      "GR",
+      "HU",
+      "RO",
+      "TR",
+      "AR",
+      "CL",
+      "CO",
+      "MY",
+      "TH",
+      "ID",
+      "VN"
+    ],
+    "virtualLocations": true
+  },
+  "protocols": [
+    "openvpn",
+    "wireguard",
+    "ikev2",
+    "l2tp"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "android-tv",
+    "fire-tv",
+    "chromebook",
+    "router"
+  ],
+  "features": [
+    "kill-switch",
+    "split-tunneling",
+    "no-logs"
+  ],
+  "streaming": [
+    {
+      "service": "netflix",
+      "support": "verified",
+      "verifiedAt": "2025-12-05"
+    },
+    {
+      "service": "prime-video",
+      "support": "verified",
+      "verifiedAt": "2025-11-20"
+    },
+    {
+      "service": "disney-plus",
+      "support": "verified",
+      "verifiedAt": "2025-12-01"
+    },
+    {
+      "service": "hbo-max",
+      "support": "verified",
+      "verifiedAt": "2025-10-15"
+    },
+    {
+      "service": "hulu",
+      "support": "verified",
+      "verifiedAt": "2025-09-20"
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-11-10"
+    }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": true,
+    "rating": 8.5
+  },
+  "loggingPolicy": "no-logs",
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": false,
+  "multiHop": false,
+  "dedicatedIp": false,
+  "simultaneousConnections": 8,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      {
+        "cycle": "monthly",
+        "price": 12.95,
+        "currency": "USD",
+        "effectiveMonthly": 12.95,
+        "featured": false
+      },
+      {
+        "cycle": "quarterly",
+        "price": 38.85,
+        "currency": "USD",
+        "effectiveMonthly": 12.95,
+        "featured": false
+      },
+      {
+        "cycle": "biennially",
+        "price": 99.95,
+        "currency": "USD",
+        "effectiveMonthly": 4.16,
+        "featured": true
+      }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": [
+      "card",
+      "paypal",
+      "crypto",
+      "google-pay",
+      "apple-pay"
+    ],
+    "freeTier": false
+  },
+  "audits": [
+    {
+      "auditor": "PwC",
+      "date": "2024-05-20",
+      "scope": "No-logs policy audit \u2014 TrustedServer technology",
+      "reportUrl": "https://www.expressvpn.com/blog/expressvpn-pwc-audit/",
+      "independent": true
+    },
+    {
+      "auditor": "Cure53",
+      "date": "2023-08-15",
+      "scope": "Security audit of Lightway protocol and apps",
+      "reportUrl": "https://cure53.de/pentest-report_expressvpn.pdf",
+      "independent": true
+    },
+    {
+      "auditor": "KPMG",
+      "date": "2022-11-10",
+      "scope": "Privacy policy compliance audit",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-10",
+  "sources": [
+    "https://expressvpn.com/features",
+    "https://expressvpn.com/what-is-vpn"
+  ]
+}

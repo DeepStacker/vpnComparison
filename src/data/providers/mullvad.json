@@ -1,0 +1,161 @@
+{
+  "id": "mullvad",
+  "slug": "mullvad",
+  "name": "Mullvad",
+  "tagline": "Privacy-first VPN with a flat monthly price and verified no-logs policy",
+  "websiteUrl": "https://mullvad.net",
+  "foundedYear": 2009,
+  "jurisdiction": "SE",
+  "hqCountry": "SE",
+  "serverNetwork": {
+    "serverCount": 500,
+    "countryCount": 38,
+    "countries": [
+      "US",
+      "GB",
+      "DE",
+      "FR",
+      "NL",
+      "CA",
+      "AU",
+      "JP",
+      "SG",
+      "CH",
+      "SE",
+      "NO",
+      "DK",
+      "FI",
+      "IT",
+      "ES",
+      "BR",
+      "MX",
+      "HK",
+      "NZ",
+      "PL",
+      "AT",
+      "BE",
+      "IE",
+      "PT",
+      "GR",
+      "CZ",
+      "HU",
+      "RO",
+      "TR",
+      "AR",
+      "CL",
+      "CO",
+      "MY",
+      "TH",
+      "ID",
+      "ZA",
+      "AE"
+    ],
+    "virtualLocations": false
+  },
+  "protocols": [
+    "openvpn",
+    "wireguard"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "fire-tv",
+    "router"
+  ],
+  "features": [
+    "kill-switch",
+    "split-tunneling",
+    "dns-leak-protection",
+    "port-forwarding",
+    "no-logs"
+  ],
+  "streaming": [
+    {
+      "service": "netflix",
+      "support": "unsupported",
+      "verifiedAt": "2025-10-01"
+    },
+    {
+      "service": "prime-video",
+      "support": "unsupported",
+      "verifiedAt": "2025-10-01"
+    },
+    {
+      "service": "disney-plus",
+      "support": "unsupported",
+      "verifiedAt": "2025-10-01"
+    },
+    {
+      "service": "hbo-max",
+      "support": "unsupported",
+      "verifiedAt": "2025-10-01"
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-11-01"
+    }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": false,
+    "rating": 8.0
+  },
+  "loggingPolicy": "no-logs",
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": false,
+  "multiHop": false,
+  "dedicatedIp": false,
+  "simultaneousConnections": 5,
+  "pricing": {
+    "currency": "EUR",
+    "plans": [
+      {
+        "cycle": "monthly",
+        "price": 5.0,
+        "currency": "EUR",
+        "effectiveMonthly": 5.0,
+        "featured": true
+      }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": [
+      "card",
+      "paypal",
+      "crypto",
+      "cash"
+    ],
+    "freeTier": false
+  },
+  "audits": [
+    {
+      "auditor": "Assured AB",
+      "date": "2024-11-01",
+      "scope": "Complete no-logs policy audit",
+      "reportUrl": "https://mullvad.net/en/blog/assured-ab-audit/",
+      "independent": true
+    },
+    {
+      "auditor": "Cure53",
+      "date": "2024-06-20",
+      "scope": "Infrastructure penetration test",
+      "reportUrl": "https://cure53.de/pentest-report_mullvad.pdf",
+      "independent": true
+    },
+    {
+      "auditor": "RISE",
+      "date": "2023-12-05",
+      "scope": "WireGuard applet security assessment",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-01",
+  "sources": [
+    "https://mullvad.net/en/help/",
+    "https://mullvad.net/en/no-logging-data-policy/"
+  ]
+}

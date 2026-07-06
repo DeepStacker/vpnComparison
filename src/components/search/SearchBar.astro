@@ -1,0 +1,474 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { cx } from "@/lib/utils";
+---
+
+<div
+  id="search-root"
+  class="relative mx-auto w-full max-w-2xl"
+>
+  <div class="relative">
+    <Icon
+      name="search"
+      size={20}
+      class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+    />
+    <input
+      type="search"
+      id="search-input"
+      placeholder="Search reviews, guides, comparisons…"
+      autocomplete="off"
+      role="combobox"
+      aria-haspopup="listbox"
+      aria-expanded="false"
+      aria-controls="search-results-listbox"
+      aria-activedescendant=""
+      class="w-full rounded-lg border border-border bg-surface py-3 pl-10 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+    />
+    <button
+      id="search-clear"
+      type="button"
+      aria-label="Clear search"
+      class="absolute right-3 top-1/2 hidden -translate-y-1/2 items-center justify-center text-muted-foreground hover:text-foreground"
+      tabindex="-1"
+    >
+      <span aria-hidden="true" class="text-xl leading-none">&times;</span>
+    </button>
+    <div
+      id="search-spinner"
+      class="absolute right-3 top-1/2 hidden -translate-y-1/2"
+    >
+      <span class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
+    </div>
+  </div>
+
+  <div
+    id="search-results-listbox"
+    role="listbox"
+    aria-label="Search results"
+    class="absolute left-0 right-0 top-full z-50 mt-2 hidden"
+  >
+    <div id="search-recent" class="hidden">
+      <div class="rounded-lg border border-border bg-surface shadow-lg">
+        <div class="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Recent searches
+        </div>
+        <div id="search-recent-list" class="divide-y divide-border"></div>
+      </div>
+    </div>
+    <div id="search-results" class="hidden">
+      <div class="max-h-96 overflow-y-auto rounded-lg border border-border bg-surface shadow-lg">
+        <div id="search-results-inner"></div>
+      </div>
+    </div>
+    <div id="search-empty" class="hidden">
+      <div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+        <Icon name="search-x" size={28} class="text-muted-foreground" />
+        <p class="mt-3 text-base font-semibold text-foreground">No results found</p>
+        <p class="mt-1 max-w-sm text-sm text-muted-foreground">
+          Try a different search term.
+        </p>
+      </div>
+    </div>
+    <div id="search-error" class="hidden">
+      <div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+        <p class="text-base font-semibold text-foreground">Something went wrong</p>
+        <p class="mt-1 max-w-sm text-sm text-muted-foreground">
+          Search is temporarily unavailable.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import Fuse from "fuse.js";
+
+  interface SearchEntry {
+    id: string;
+    title: string;
+    summary: string;
+    url: string;
+    type: string;
+    content: string;
+  }
+
+  interface FuseResult {
+    item: SearchEntry;
+    refIndex: number;
+    score?: number;
+  }
+
+  const TYPE_LABELS: Record<string, string> = {
+    review: "Review",
+    guide: "Guide",
+    "best-list": "Best List",
+    comparison: "Comparison",
+    faq: "FAQ",
+    provider: "Provider",
+  };
+
+  const TYPE_ORDER: Record<string, number> = {
+    review: 0,
+    guide: 1,
+    "best-list": 2,
+    comparison: 3,
+    faq: 4,
+    provider: 5,
+  };
+
+  const DEBOUNCE_MS = 300;
+  const MIN_QUERY = 2;
+  const MAX_RESULTS = 20;
+  const RECENT_KEY = "nh-recent-searches";
+  const MAX_RECENT = 5;
+
+  /* ---------- DOM refs ---------- */
+  const input = document.getElementById("search-input") as HTMLInputElement | null;
+  const listbox = document.getElementById("search-results-listbox")!;
+  const resultsOuter = document.getElementById("search-results")!;
+  const resultsInner = document.getElementById("search-results-inner")!;
+  const recentOuter = document.getElementById("search-recent")!;
+  const recentList = document.getElementById("search-recent-list")!;
+  const emptyEl = document.getElementById("search-empty")!;
+  const errorEl = document.getElementById("search-error")!;
+  const clearBtn = document.getElementById("search-clear") as HTMLButtonElement | null;
+  const spinner = document.getElementById("search-spinner")!;
+
+  /* ---------- State ---------- */
+  let fuse: Fuse<SearchEntry> | null = null;
+  let fuseReady = false;
+  let currentResults: FuseResult[] = [];
+  let activeIndex = -1;
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  let isOpen = false;
+
+  /* ---------- Helpers ---------- */
+  function escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function highlightText(text: string, query: string): string {
+    const escaped = escapeHtml(text);
+    if (!query || query.length < MIN_QUERY) return escaped;
+    const pattern = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return escaped.replace(
+      new RegExp(`(${pattern})`, "gi"),
+      '<mark class="bg-primary/20 text-foreground rounded-sm px-0.5">$1</mark>',
+    );
+  }
+
+  function getRecentSearches(): string[] {
+    try {
+      const raw = localStorage.getItem(RECENT_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.slice(0, MAX_RECENT) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveRecentSearch(query: string): void {
+    const recent = getRecentSearches().filter((s) => s !== query);
+    recent.unshift(query);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
+  }
+
+  /* ---------- UI state ---------- */
+  function hideAll(): void {
+    resultsOuter.classList.add("hidden");
+    recentOuter.classList.add("hidden");
+    emptyEl.classList.add("hidden");
+    errorEl.classList.add("hidden");
+  }
+
+  function openResults(): void {
+    isOpen = true;
+    listbox.classList.remove("hidden");
+    input?.setAttribute("aria-expanded", "true");
+  }
+
+  function closeResults(): void {
+    isOpen = false;
+    activeIndex = -1;
+    listbox.classList.add("hidden");
+    hideAll();
+    input?.setAttribute("aria-expanded", "false");
+    input?.setAttribute("aria-activedescendant", "");
+  }
+
+  function showLoading(): void {
+    spinner.classList.remove("hidden");
+    clearBtn?.classList.add("hidden");
+  }
+
+  function hideLoading(): void {
+    spinner.classList.add("hidden");
+  }
+
+  function showClearButton(): void {
+    if (input?.value.trim()) {
+      clearBtn?.classList.remove("hidden");
+    } else {
+      clearBtn?.classList.add("hidden");
+    }
+  }
+
+  function showError(message?: string): void {
+    hideAll();
+    hideLoading();
+    errorEl.querySelector("p:last-child")!.textContent =
+      message ?? "Search is temporarily unavailable.";
+    errorEl.classList.remove("hidden");
+    openResults();
+  }
+
+  function showEmpty(query: string): void {
+    hideAll();
+    hideLoading();
+    const title = emptyEl.querySelector("p:first-of-type")!;
+    if (query.length < MIN_QUERY) {
+      title.textContent = "Enter a search term to begin";
+    } else {
+      title.textContent = "No results found";
+    }
+    emptyEl.classList.remove("hidden");
+    openResults();
+  }
+
+  function showRecent(): void {
+    hideAll();
+    hideLoading();
+    const recents = getRecentSearches();
+    if (recents.length === 0) {
+      showEmpty("");
+      return;
+    }
+      recentList.innerHTML = recents
+      .map(
+        (q, i) =>
+          `<button type="button" role="option" tabindex="-1" data-recent="${i}" data-query="${escapeHtml(q)}" class="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-colors hover:bg-surface-sunken focus-visible:outline-none focus-visible:bg-surface-sunken"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-muted-foreground"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span>${escapeHtml(q)}</span></button>`,
+      )
+      .join("");
+    recentOuter.classList.remove("hidden");
+    openResults();
+  }
+
+  /* ---------- Render results ---------- */
+  function renderResults(query: string): void {
+    hideAll();
+    hideLoading();
+
+    if (!currentResults.length) {
+      showEmpty(query);
+      return;
+    }
+
+    const grouped: Record<string, FuseResult[]> = {};
+    for (const r of currentResults) {
+      const t = r.item.type;
+      if (!grouped[t]) grouped[t] = [];
+      grouped[t].push(r);
+    }
+
+    const sortedTypes = Object.keys(grouped).sort(
+      (a, b) => (TYPE_ORDER[a] ?? 99) - (TYPE_ORDER[b] ?? 99),
+    );
+
+    let html = "";
+    let optionIndex = 0;
+
+    for (const type of sortedTypes) {
+      const items = grouped[type]!;
+      const label = TYPE_LABELS[type] ?? type;
+      html += `<div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">${label}</div>`;
+      for (const r of items) {
+        html += `<a href="${escapeHtml(r.item.url)}" role="option" id="search-option-${optionIndex}" aria-selected="false" class="flex flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-surface-sunken focus-visible:outline-none focus-visible:bg-surface-sunken [&:last-child]:rounded-b-lg">`;
+        html += `<span class="text-sm font-medium text-foreground">${highlightText(r.item.title, query)}</span>`;
+        if (r.item.summary) {
+          html += `<span class="line-clamp-1 text-xs text-muted-foreground">${highlightText(r.item.summary, query)}</span>`;
+        }
+        html += `</a>`;
+        optionIndex++;
+      }
+    }
+
+    resultsInner.innerHTML = html;
+    resultsOuter.classList.remove("hidden");
+    openResults();
+
+    activeIndex = -1;
+    input?.setAttribute("aria-activedescendant", "");
+  }
+
+  /* ---------- Keyboard navigation ---------- */
+  function navigateIndex(direction: 1 | -1): void {
+    if (!isOpen) return;
+    const options = resultsInner.querySelectorAll<HTMLElement>("[role='option']");
+    if (!options.length) return;
+
+    if (activeIndex >= 0) {
+      options[activeIndex]?.removeAttribute("aria-selected");
+      options[activeIndex]?.classList.remove("bg-surface-sunken");
+    }
+
+    activeIndex = Math.min(Math.max(activeIndex + direction, 0), options.length - 1);
+
+    options[activeIndex]?.setAttribute("aria-selected", "true");
+    options[activeIndex]?.classList.add("bg-surface-sunken");
+    options[activeIndex]?.scrollIntoView({ block: "nearest" });
+
+    const id = options[activeIndex]?.id ?? "";
+    input?.setAttribute("aria-activedescendant", id);
+  }
+
+  function selectActive(): void {
+    if (!isOpen || activeIndex < 0) return;
+    const options = resultsInner.querySelectorAll<HTMLElement>("[role='option']");
+    const active = options[activeIndex] as HTMLAnchorElement | null;
+    if (active?.href) {
+      saveRecentSearch(input?.value.trim() ?? "");
+      window.location.href = active.href;
+    }
+  }
+
+  /* ---------- Event handlers ---------- */
+  function handleInput(): void {
+    const query = input?.value.trim() ?? "";
+    showClearButton();
+
+    if (debounceTimer) clearTimeout(debounceTimer);
+
+    if (query.length < MIN_QUERY) {
+      hideLoading();
+      if (input === document.activeElement) {
+        showRecent();
+      } else {
+        closeResults();
+      }
+      return;
+    }
+
+    showLoading();
+    debounceTimer = setTimeout(() => {
+      performSearch(query);
+    }, DEBOUNCE_MS);
+  }
+
+  function performSearch(query: string): void {
+    if (!fuse) {
+      if (!fuseReady) {
+        showLoading();
+      } else {
+        showError("Search library not loaded.");
+      }
+      return;
+    }
+
+    currentResults = fuse.search(query).slice(0, MAX_RESULTS) as FuseResult[];
+    renderResults(query);
+  }
+
+  function handleKeydown(e: KeyboardEvent): void {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      navigateIndex(1);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      navigateIndex(-1);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (activeIndex >= 0) {
+        selectActive();
+      } else if (currentResults.length === 1) {
+        saveRecentSearch(input?.value.trim() ?? "");
+        window.location.href = currentResults[0]!.item.url;
+      }
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      if (input?.value) {
+        input.value = "";
+        handleInput();
+      }
+      closeResults();
+      input?.blur();
+    }
+  }
+
+  function handleClear(): void {
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+    handleInput();
+    closeResults();
+  }
+
+  function handleBlur(): void {
+    setTimeout(() => {
+      if (document.activeElement !== input) {
+        closeResults();
+      }
+    }, 200);
+  }
+
+  function handleRecentClick(e: Event): void {
+    const target = e.target as HTMLElement;
+    const btn = target.closest<HTMLButtonElement>("[data-query]");
+    if (!btn) return;
+    const query = btn.dataset.query ?? "";
+    if (input) {
+      input.value = query;
+      handleInput();
+      performSearch(query);
+    }
+  }
+
+  /* ---------- Init ---------- */
+  async function init(): Promise<void> {
+    if (!input) return;
+
+    try {
+      const res = await fetch("/search-index.json");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data: SearchEntry[] = await res.json();
+      fuse = new Fuse(data, {
+        keys: [
+          { name: "title", weight: 2 },
+          { name: "summary", weight: 1.5 },
+          { name: "content", weight: 1 },
+        ],
+        threshold: 0.4,
+        minMatchCharLength: 2,
+        includeScore: true,
+      });
+      fuseReady = true;
+      hideLoading();
+    } catch {
+      fuseReady = true;
+      showError("Search index not available. Please try again later.");
+    }
+
+    input.addEventListener("input", handleInput);
+    input.addEventListener("keydown", handleKeydown);
+    input.addEventListener("blur", handleBlur);
+    input.addEventListener("focus", () => {
+      const query = input.value.trim();
+      if (query.length < MIN_QUERY) {
+        showRecent();
+      }
+    });
+    clearBtn?.addEventListener("click", handleClear);
+    recentList.addEventListener("click", handleRecentClick);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    void init();
+  });
+</script>

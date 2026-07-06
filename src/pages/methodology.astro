@@ -1,0 +1,152 @@
+---
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("Testing Methodology — How We Review VPNs"),
+  description: "Learn how NetworksHome tests and reviews VPN services. Our methodology covers speed testing, privacy verification, streaming support, and security audits.",
+  canonical: canonicalUrl("/methodology/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Methodology", href: "/methodology/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>How We Test VPNs</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Transparent, consistent, and reproducible — our testing methodology ensures every VPN review is fair, accurate, and useful.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container size="prose">
+      <Heading level={2}>Testing Environment</Heading>
+      <Text tone="muted" class="mt-2">
+        All VPN tests are conducted from multiple geographic locations using standardized hardware and connection types.
+        Our primary test bench uses a 1 Gbps fiber connection in North America, supplemented by 100 Mbps connections
+        in Europe and Asia-Pacific regions. Tests run on Windows, macOS, iOS, and Android to ensure cross-platform accuracy.
+      </Text>
+      <ul class="mt-4 space-y-2">
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Clean test environment with no other VPN software installed</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Baseline speed measured before each test session</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Multiple server locations tested per provider</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Tests performed at different times of day to account for network congestion</span>
+        </li>
+      </ul>
+
+      <Heading level={2} class="mt-10">Speed Testing</Heading>
+      <Text tone="muted" class="mt-2">
+        Speed tests measure download speed, upload speed, and latency (ping) for each VPN connection.
+        We use a custom script that runs multiple speed tests via Speedtest.net's CLI tool and averages the results.
+        Each provider is tested across at least three different server locations, with five runs per location.
+      </Text>
+      <ul class="mt-4 space-y-2">
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Download speed reduction percentage compared to baseline</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Upload speed impact for streaming and torrenting</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Latency increase for real-time applications like gaming and video calls</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Connection stability and consistency across multiple tests</span>
+        </li>
+      </ul>
+
+      <Heading level={2} class="mt-10">Privacy & Security Testing</Heading>
+      <Text tone="muted" class="mt-2">
+        Privacy and security are verified through multiple independent tests. We check for DNS leaks, IPv6 leaks,
+        WebRTC leaks, and verify that the kill switch functions correctly under various failure scenarios.
+        Logging policies are evaluated against the provider's published privacy policy and independent audit reports.
+      </Text>
+      <ul class="mt-4 space-y-2">
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>DNS leak testing across multiple server connections</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>IPv6 and WebRTC leak detection</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Kill switch verification through simulated connection drops</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Encryption protocol verification (WireGuard, OpenVPN, IKEv2)</span>
+        </li>
+        <li class="flex items-start gap-2 text-sm text-foreground">
+          <span class="mt-0.5 text-primary">&#10003;</span>
+          <span>Review of independent audit reports and warrant canaries</span>
+        </li>
+      </ul>
+
+      <Heading level={2} class="mt-10">Streaming & Torrenting</Heading>
+      <Text tone="muted" class="mt-2">
+        Streaming support is verified by testing each VPN's ability to access major streaming platforms
+        including Netflix, Hulu, BBC iPlayer, Disney+, Amazon Prime Video, and HBO Max. We test across
+        multiple server locations and report which libraries are accessible. Torrenting support is evaluated
+        based on P2P server availability, download speeds, and port forwarding support.
+      </Text>
+
+      <Heading level={2} class="mt-10">Scoring System</Heading>
+      <Text tone="muted" class="mt-2">
+        Each VPN is scored on eight dimensions: Privacy, Security, Performance, Streaming, Torrenting,
+        Ease of Use, Value, and an Overall score. Every sub-score uses a 0-10 scale derived from
+        quantitative test data. The Overall score is a weighted average designed to reflect real-world
+        usage patterns rather than lab conditions.
+      </Text>
+
+      <Heading level={2} class="mt-10">Updates & Re-testing</Heading>
+      <Text tone="muted" class="mt-2">
+        VPN services change over time — servers are added, features are removed, and privacy policies are updated.
+        We re-test providers at least every six months or whenever significant changes are announced.
+        Each review includes the date of the most recent test, and scores are adjusted as new data becomes available.
+        Readers are encouraged to check the test date and look for updated reviews when making purchasing decisions.
+      </Text>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <Card variant="raised" padding="lg" class="mx-auto max-w-2xl text-center">
+        <Heading level={2}>Have Questions About Our Process?</Heading>
+        <Text tone="muted" class="mt-2">
+          We believe in full transparency. If you have questions about how we test or score VPN services,
+          please reach out to us at our contact page.
+        </Text>
+      </Card>
+    </Container>
+  </Section>
+</SeoLayout>

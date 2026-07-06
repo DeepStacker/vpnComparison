@@ -1,0 +1,48 @@
+---
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import { SITE } from "@/constants/site";
+import { buildSeoMeta } from "@/lib/seo/meta";
+
+const seo = buildSeoMeta({
+  title: "Contact Us",
+  description: `Get in touch with the ${SITE.name} team. Review inquiries, feedback, or press: we'd love to hear from you.`,
+  canonical: "/contact/",
+});
+---
+
+<SeoLayout seo={seo}>
+  <Section>
+    <Container size="prose">
+      <Heading level={1}>Contact Us</Heading>
+      <Text tone="muted" size="lg" class="mt-2">
+        Have a question, feedback, or press inquiry? We'd love to hear from you.
+      </Text>
+
+      <div class="mt-8 space-y-6">
+        <div>
+          <Heading level={2}>General Inquiries</Heading>
+          <Text>For general questions about our reviews, methodology, or the site, email us at <a href="mailto:hello@networkshome.com" class="text-primary underline">hello@networkshome.com</a>.</Text>
+        </div>
+
+        <div>
+          <Heading level={2}>Review Requests</Heading>
+          <Text>VPN providers interested in having their service reviewed can reach out to <a href="mailto:reviews@networkshome.com" class="text-primary underline">reviews@networkshome.com</a>. Note that we maintain full editorial independence — a review request does not guarantee coverage or a positive rating.</Text>
+        </div>
+
+        <div>
+          <Heading level={2}>Press & Media</Heading>
+          <Text>Members of the press can contact us at <a href="mailto:press@networkshome.com" class="text-primary underline">press@networkshome.com</a> for interview requests, data citations, or expert commentary.</Text>
+        </div>
+
+        <div>
+          <Heading level={2}>Corrections</Heading>
+          <Text>If you've spotted an error in our content, please email <a href="mailto:corrections@networkshome.com" class="text-primary underline">corrections@networkshome.com</a> with the page URL and the correction needed.</Text>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

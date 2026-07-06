@@ -1,0 +1,90 @@
+---
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import { SITE } from "@/constants/site";
+import type { Breadcrumb } from "@/types/site";
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("About NetworksHome — VPN Intelligence Platform"),
+  description: "NetworksHome helps you choose the right VPN through transparent information, structured comparisons, educational content, and interactive decision-making tools.",
+  canonical: canonicalUrl("/about/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "About", href: "/about/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>About {SITE.name}</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          {SITE.description}
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container size="prose">
+      <Heading level={2}>Our Mission</Heading>
+      <Text tone="muted" class="mt-2">
+        The VPN industry is filled with conflicting claims, affiliate-driven endorsements, and opaque testing practices.
+        NetworksHome was founded to cut through the noise. We believe that choosing a VPN should be an informed decision
+        backed by transparent data, not marketing hype.
+      </Text>
+      <Text tone="muted" class="mt-3">
+        Our mission is to provide unbiased, data-driven VPN reviews and comparisons that help people make the right choice
+        for their specific needs — whether that's streaming, privacy, torrenting, or simply browsing the web securely.
+      </Text>
+
+      <Heading level={2} class="mt-10">Editorial Independence</Heading>
+      <Text tone="muted" class="mt-2">
+        We maintain strict editorial independence. No VPN provider can pay for a favorable review, influence our rankings,
+        or review content before publication. Our revenue comes from affiliate commissions when readers purchase through
+        our links, but this never affects our ratings or editorial decisions.
+      </Text>
+      <Text tone="muted" class="mt-3">
+        Every review clearly discloses whether we have affiliate relationships with the provider being reviewed.
+        Our scoring methodology is published and auditable — readers can verify our claims and understand exactly
+        how each score is derived.
+      </Text>
+
+      <Heading level={2} class="mt-10">How We Test</Heading>
+      <Text tone="muted" class="mt-2">
+        All VPNs are tested in-house using a standardized methodology that covers speed, privacy, security, streaming,
+        torrenting, and ease of use. We purchase our own subscriptions — no free trials or review accounts that might
+        skew the experience. Each test is documented and reproducible.
+      </Text>
+      <Text tone="muted" class="mt-3">
+        For a detailed breakdown of our testing process, visit our methodology page.
+      </Text>
+
+      <Heading level={2} class="mt-10">Our Team</Heading>
+      <Text tone="muted" class="mt-2">
+        NetworksHome is built by a small team of privacy advocates, security researchers, and tech journalists.
+        Our contributors have backgrounds in cybersecurity, networking, and digital rights, and are united by
+        a commitment to honest, transparent VPN analysis.
+      </Text>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <Card variant="raised" padding="lg" class="mx-auto max-w-2xl text-center">
+        <Heading level={2}>Get in Touch</Heading>
+        <Text tone="muted" class="mt-2">
+          Have a question, suggestion, or correction? We'd love to hear from you.
+          Reach out to us at {SITE.contactEmail}.
+        </Text>
+      </Card>
+    </Container>
+  </Section>
+</SeoLayout>
