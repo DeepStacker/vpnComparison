@@ -43,6 +43,14 @@ const isActive = (href: string) =>
     </nav>
 
     <div class="flex items-center gap-2">
+      <a
+        href="/search/"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-surface-raised focus-visible:outline-none"
+        aria-label="Search"
+        title="Search (⌘K)"
+      >
+        <Icon name="search" size={18} />
+      </a>
       <ThemeToggle />
       <details class="group relative md:hidden">
         <summary

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://networkshome.com/sitemap-index.xml

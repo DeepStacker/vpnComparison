@@ -18,44 +18,134 @@ const allReviews = await getCollection("reviews");
 const allBestLists = await getCollection("best-lists");
 const allGuides = await getCollection("guides");
 const allComparisons = await getCollection("comparisons");
+const allFeatures = await getCollection("features");
+const allProtocols = await getCollection("protocols");
+const allPlatforms = await getCollection("platforms");
+const allCountries = await getCollection("countries");
+const allStreaming = await getCollection("streaming-services");
 
-const providers = allProviders.map((e) => e.data).slice(0, 5);
 const reviewMap = new Map(allReviews.map((r) => [r.data.provider.id, r.data]));
-
 const avgScore =
   allReviews.reduce((sum, r) => sum + r.data.scores.overall, 0) / allReviews.length;
 
 const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.description, canonical: canonicalUrl("/") });
+
+interface ExplorerEntry {
+  href: string;
+  icon: string;
+  title: string;
+  count: number;
+  desc: string;
+}
+
+const explorers: ExplorerEntry[] = [
+  { href: "/countries/", icon: "globe", title: "Countries", count: allCountries.length, desc: "Server locations & jurisdiction notes" },
+  { href: "/features/", icon: "list-checks", title: "Features", count: allFeatures.length, desc: "Security, privacy & advanced features" },
+  { href: "/protocols/", icon: "terminal", title: "Protocols", count: allProtocols.length, desc: "Encryption, transport & performance" },
+  { href: "/platforms/", icon: "laptop", title: "Platforms", count: allPlatforms.length, desc: "Desktop, mobile, router & TV apps" },
+  { href: "/streaming/", icon: "play", title: "Streaming Services", count: allStreaming.length, desc: "Verified unblocking per service" },
+];
 ---
 
 <SeoLayout seo={seo}>
   <Section background>
     <Container>
       <div class="mx-auto max-w-2xl text-center">
-        <Badge tone="primary">Independent VPN Reviews Since 2025</Badge>
-        <Heading level={1} class="mt-5 text-balance leading-tight">{SITE.name}</Heading>
-        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto leading-relaxed">{SITE.description}</Text>
+        <Badge tone="primary">VPN Intelligence Platform</Badge>
+        <Heading level={1} class="mt-5 text-balance leading-tight">VPN Intelligence, Not Noise</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto leading-relaxed">
+          Discover, explore, and compare VPN services through structured data, interactive tools, and unbiased analysis — no affiliate filler, just facts.
+        </Text>
         <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <Button href="/best-lists/">Browse Best VPNs</Button>
-          <Button variant="outline" href="/comparisons/">Compare Services</Button>
+          <Button href="/tools/finder/">Find Your VPN</Button>
+          <Button variant="outline" href="/tools/compare/">Compare VPNs</Button>
+          <Button variant="outline" href="/best-lists/">Browse Lists</Button>
         </div>
       </div>
     </Container>
   </Section>
 
+  <Section id="explore">
+    <Container>
+      <div class="mx-auto mb-2 max-w-xl text-center">
+        <Badge tone="primary" size="sm">Explore by dimension</Badge>
+      </div>
+      <Heading level={2} class="text-center">Explore VPN Intelligence</Heading>
+      <Text tone="muted" class="mx-auto mt-2 max-w-xl text-center">
+        Browse our structured VPN database through any dimension — every page connects to related intelligence.
+      </Text>
+      <Grid cols={5} class="mt-8" colsSm={2} colsMd={3} colsLg={5}>
+        {explorers.map((ex) => (
+          <a
+            href={ex.href}
+            class="group flex flex-col items-center rounded-xl border border-border bg-surface p-6 text-center no-underline transition-all hover:border-primary hover:shadow-md"
+          >
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <Icon name={ex.icon} size={22} />
+            </div>
+            <Heading level={3} class="mt-4 text-sm font-semibold">{ex.title}</Heading>
+            <Text size="xs" tone="muted" class="mt-1">{ex.count} entries</Text>
+            <Text size="xs" tone="muted" class="mt-1 leading-snug">{ex.desc}</Text>
+          </a>
+        ))}
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section background id="tools">
+    <Container>
+      <div class="mx-auto mb-2 max-w-xl text-center">
+        <Badge tone="primary" size="sm">Interactive tools</Badge>
+      </div>
+      <Heading level={2} class="text-center">Decision Support Tools</Heading>
+      <Text tone="muted" class="mx-auto mt-2 max-w-xl text-center">
+        Not sure which VPN is right for you? Try our interactive tools — every recommendation is explained, not guessed.
+      </Text>
+      <Grid cols={2} class="mt-8" colsSm={1}>
+        <a href="/tools/finder/" class="group rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-md">
+          <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <Icon name="wand-2" size={26} />
+            </div>
+            <div class="min-w-0">
+              <Heading level={3} class="text-base font-semibold">VPN Recommender</Heading>
+              <Text size="sm" tone="muted" class="mt-1 leading-snug">Answer a few questions and get a personalized recommendation with full transparency on how each score is calculated.</Text>
+            </div>
+          </div>
+        </a>
+        <a href="/tools/compare/" class="group rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-md">
+          <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <Icon name="arrow-left-right" size={26} />
+            </div>
+            <div class="min-w-0">
+              <Heading level={3} class="text-base font-semibold">Comparison Builder</Heading>
+              <Text size="sm" tone="muted" class="mt-1 leading-snug">Select any providers to compare side by side across pricing, privacy, network size, features, and more.</Text>
+            </div>
+          </div>
+        </a>
+      </Grid>
+    </Container>
+  </Section>
+
   <Section id="providers">
     <Container>
-      <div class="mb-2">
-        <Badge tone="primary" size="sm">Hands-on testing</Badge>
+      <div class="flex items-center justify-between">
+        <div>
+          <Badge tone="primary" size="sm">Reviewed providers</Badge>
+          <Heading level={2} class="mt-2">Tested VPN Services</Heading>
+        </div>
+        <Button variant="ghost" size="sm" href="/vpn/">View all →</Button>
       </div>
-      <Heading level={2}>Reviewed VPN Services</Heading>
       <Text tone="muted" class="mt-2 max-w-xl">
         Every VPN on this site has been independently tested. We measure speed, verify privacy claims, and assess real-world streaming performance.
       </Text>
-      <Grid cols={3} class="mt-8">
-        {providers.map((p) => {
+      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
+        {allProviders.slice(0, 5).map((e) => {
+          const p = e.data;
           const review = reviewMap.get(p.id);
           const score = review?.scores.overall;
+          const cheapest = p.pricing.plans.find((pl) => pl.featured)?.effectiveMonthly ?? p.pricing.plans[0]?.effectiveMonthly;
           return (
             <Card class="flex flex-col">
               <div class="flex items-start justify-between">
@@ -66,7 +156,14 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
                   </Badge>
                 )}
               </div>
-              <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{p.tagline}</Text>
+              <Text size="sm" tone="muted" class="mt-1 leading-relaxed line-clamp-2">{p.tagline}</Text>
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                <Badge tone="neutral" size="sm">{p.serverNetwork.countryCount} countries</Badge>
+                {cheapest != null && (
+                  <Badge tone="neutral" size="sm">from ${cheapest.toFixed(2)}/mo</Badge>
+                )}
+                <Badge tone="neutral" size="sm">{p.jurisdiction}</Badge>
+              </div>
               <div class="mt-auto pt-4">
                 <Button variant="outline" size="sm" href={`/vpn/${p.slug}/`}>
                   Read Review <Icon name="arrow-right" size={14} class="ml-1" />
@@ -81,13 +178,16 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
 
   <Section background>
     <Container>
-      <div class="mb-2">
-        <Badge tone="primary" size="sm">Curated recommendations</Badge>
+      <div class="flex items-center justify-between">
+        <div>
+          <Badge tone="primary" size="sm">Curated recommendations</Badge>
+          <Heading level={2} class="mt-2">Best VPN Lists</Heading>
+        </div>
+        <Button variant="ghost" size="sm" href="/best-lists/">View all →</Button>
       </div>
-      <Heading level={2}>Best VPN Lists</Heading>
       <Text tone="muted" class="mt-2 max-w-xl">Shortlists for every need — streaming, privacy, speed, and budget — ranked by transparent criteria.</Text>
-      <Grid cols={3} class="mt-8">
-        {allBestLists.slice(0, 6).map((bl) => (
+      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
+        {allBestLists.slice(0, 3).map((bl) => (
           <Card class="flex flex-col">
             <Heading level={3}>{bl.data.title}</Heading>
             <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{bl.data.summary}</Text>
@@ -107,13 +207,48 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
 
   <Section>
     <Container>
-      <div class="mb-2">
-        <Badge tone="primary" size="sm">Educational resources</Badge>
+      <div class="flex items-center justify-between">
+        <div>
+          <Badge tone="primary" size="sm">Head-to-head</Badge>
+          <Heading level={2} class="mt-2">VPN Comparisons</Heading>
+        </div>
+        <Button variant="ghost" size="sm" href="/comparisons/">View all →</Button>
       </div>
-      <Heading level={2}>Latest Guides</Heading>
-      <Text tone="muted" class="mt-2 max-w-xl">Learn how VPNs work, how to choose one, and how to set it up — written for beginners and experts alike.</Text>
-      <Grid cols={3} class="mt-8">
-        {allGuides.slice(0, 6).map((g) => (
+      <Text tone="muted" class="mt-2 max-w-xl">Side-by-side matchups across speed, privacy, features, and value.</Text>
+      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
+        {allComparisons.map((c) => (
+          <Card class="flex flex-col">
+            {c.data.winner && (
+              <Badge tone="success" size="sm" class="mb-2 self-start">
+                <Icon name="trophy" size={12} class="mr-1" />
+                Winner
+              </Badge>
+            )}
+            <Heading level={3}>{c.data.title}</Heading>
+            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{c.data.summary}</Text>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>
+                Read Comparison <Icon name="arrow-right" size={14} class="ml-1" />
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section background>
+    <Container>
+      <div class="flex items-center justify-between">
+        <div>
+          <Badge tone="primary" size="sm">Educational resources</Badge>
+          <Heading level={2} class="mt-2">Latest Guides</Heading>
+        </div>
+        <Button variant="ghost" size="sm" href="/guides/">View all →</Button>
+      </div>
+      <Text tone="muted" class="mt-2 max-w-xl">Learn how VPNs work, how to choose one, and how to set it up.</Text>
+      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
+        {allGuides.slice(0, 3).map((g) => (
           <Card class="flex flex-col">
             <Heading level={3}>{g.data.title}</Heading>
             <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{g.data.summary}</Text>
@@ -136,59 +271,35 @@ const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.descriptio
     </Container>
   </Section>
 
-  <Section background>
-    <Container>
-      <div class="mb-2">
-        <Badge tone="primary" size="sm">Head-to-head</Badge>
-      </div>
-      <Heading level={2}>VPN Comparisons</Heading>
-      <Text tone="muted" class="mt-2 max-w-xl">Side-by-side matchups across speed, privacy, features, and value to help you make an informed choice.</Text>
-      <Grid cols={3} class="mt-8">
-        {allComparisons.map((c) => (
-          <Card class="flex flex-col">
-            {c.data.winner && (
-              <Badge tone="success" size="sm" class="mb-2 self-start">
-                <Icon name="trophy" size={12} class="mr-1" />
-                Winner
-              </Badge>
-            )}
-            <Heading level={3}>{c.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{c.data.summary}</Text>
-            <div class="mt-auto pt-4">
-              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>
-                Read Comparison <Icon name="arrow-right" size={14} class="ml-1" />
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </Grid>
-    </Container>
-  </Section>
-
   <Section padding="loose">
     <Container>
       <div class="mx-auto max-w-xl text-center">
         <Icon name="shield-check" size={32} class="mx-auto text-primary" />
-        <Heading level={2} class="mt-4">Why Trust Our Reviews?</Heading>
+        <Heading level={2} class="mt-4">Why Trust Our Intelligence?</Heading>
         <Text tone="muted" class="mt-3 leading-relaxed">
           Every VPN is tested using a consistent methodology. We measure speeds from multiple locations, verify privacy claims against audit reports, and test streaming unblocking on every major platform. Our editorial team maintains full independence — no payment or partnership influences our scores or recommendations.
         </Text>
         <div class="mt-6 flex flex-wrap justify-center gap-6">
           <div class="text-center">
-            <Text size="xl" weight="semibold">{providers.length}</Text>
-            <Text size="sm" tone="muted">VPNs tested</Text>
+            <Text size="xl" weight="semibold">{allProviders.length}</Text>
+            <Text size="sm" tone="muted">VPNs in database</Text>
           </div>
           <div class="text-center">
             <Text size="xl" weight="semibold">{avgScore.toFixed(1)}</Text>
             <Text size="sm" tone="muted">Avg. score</Text>
           </div>
           <div class="text-center">
-            <Text size="xl" weight="semibold">{allGuides.length}</Text>
-            <Text size="sm" tone="muted">Guides published</Text>
+            <Text size="xl" weight="semibold">{allCountries.length}</Text>
+            <Text size="sm" tone="muted">Countries mapped</Text>
+          </div>
+          <div class="text-center">
+            <Text size="xl" weight="semibold">{allFeatures.length}</Text>
+            <Text size="sm" tone="muted">Features tracked</Text>
           </div>
         </div>
-        <div class="mt-8">
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
           <Button variant="outline" href="/methodology/">View Methodology</Button>
+          <Button variant="outline" href="/tools/finder/">Try VPN Finder</Button>
         </div>
       </div>
     </Container>

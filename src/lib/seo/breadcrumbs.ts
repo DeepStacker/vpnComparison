@@ -23,7 +23,7 @@ function navLabelFor(segment: string): string | undefined {
 
 /**
  * Derive breadcrumbs from a URL path.
- * @param path e.g. "/best/vpn-for-streaming"
+ * @param path e.g. "/best-lists/vpn-for-streaming"
  * @param leafLabel Optional override for the final segment label.
  */
 export function breadcrumbsFromPath(path: string, leafLabel?: string): Breadcrumb[] {

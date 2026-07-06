@@ -12,12 +12,12 @@ const slash = (href: string): string => (href.endsWith("/") ? href : `${href}/`)
 
 /** Provider detail page. */
 export function providerHref(slug: string): string {
-  return slash(`/providers/${slugify(slug)}`);
+  return slash(`/vpn/${slugify(slug)}`);
 }
 
-/** Provider editorial review page. */
+/** Provider editorial review anchor. */
 export function reviewHref(providerSlug: string): string {
-  return slash(`/providers/${slugify(providerSlug)}/review`);
+  return `/vpn/${slugify(providerSlug)}/#review`;
 }
 
 /** Comparison page for a set of provider slugs. */
@@ -28,12 +28,12 @@ export function comparisonHref(...providerSlugs: string[]): string {
 
 /** Editorial comparison article page. */
 export function comparisonArticleHref(slug: string): string {
-  return slash(`/compare/${slugify(slug)}`);
+  return slash(`/comparisons/${slugify(slug)}`);
 }
 
 /** Best-list page by use-case slug. */
 export function bestListHref(slug: string): string {
-  return slash(`/best/${slugify(slug)}`);
+  return slash(`/best-lists/${slugify(slug)}`);
 }
 
 /** Guide page. */

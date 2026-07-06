@@ -1,0 +1,373 @@
+---
+interface VpnCompareProvider {
+  id: string; slug: string; name: string; tagline: string;
+  serverNetwork: { serverCount: number; countryCount: number; countries: string[]; virtualLocations: boolean };
+  protocols: string[]; platforms: string[]; features: string[];
+  streaming: Array<{ service: string; support: string; verifiedAt?: string }>;
+  torrenting: { supported: boolean; labeledServers: boolean; rating?: number };
+  loggingPolicy: string; jurisdiction: string;
+  pricing: { currency: string; plans: Array<{ cycle: string; price: number; effectiveMonthly: number; featured?: boolean }>; moneyBackGuaranteeDays: number; freeTier: boolean };
+  audits: Array<{ auditor: string; independent: boolean }>;
+  killSwitch: boolean; multiHop: boolean; splitTunneling: boolean;
+  adBlocker: boolean; dedicatedIp: boolean; simultaneousConnections: number;
+}
+
+interface VpnCompareReview {
+  providerId: string;
+  scores: {
+    privacy: number; security: number; performance: number; streaming: number;
+    torrenting: number; easeOfUse: number; value: number; overall: number;
+  };
+  verdict: { headline: string; summary: string; recommendation: string };
+}
+
+interface VpnCompareEntry {
+  slug: string;
+  title: string;
+  providerIds: string[];
+}
+
+interface Props {
+  providers: VpnCompareProvider[];
+  reviews: VpnCompareReview[];
+  comparisons: VpnCompareEntry[];
+  countryNames: Record<string, string>;
+}
+
+const { providers, reviews, comparisons, countryNames } = Astro.props;
+---
+
+<div id="vpn-compare-root" class="mx-auto max-w-5xl">
+  <div id="compare-selector" class="mb-8"></div>
+  <div id="compare-matrix"></div>
+</div>
+
+<script is:inline type="application/json" id="compare-data" set:html={JSON.stringify(providers)}></script>
+<script is:inline type="application/json" id="compare-reviews-data" set:html={JSON.stringify(reviews)}></script>
+<script is:inline type="application/json" id="compare-comparisons-data" set:html={JSON.stringify(comparisons)}></script>
+<script is:inline type="application/json" id="compare-country-names" set:html={JSON.stringify(countryNames)}></script>
+
+<script>
+  interface Provider {
+    id: string; slug: string; name: string; tagline: string;
+    serverNetwork: { serverCount: number; countryCount: number; countries: string[]; virtualLocations: boolean };
+    protocols: string[]; platforms: string[]; features: string[];
+    streaming: Array<{ service: string; support: string }>;
+    torrenting: { supported: boolean; labeledServers: boolean; rating?: number };
+    loggingPolicy: string; jurisdiction: string;
+    pricing: { plans: Array<{ effectiveMonthly: number; featured?: boolean }>; moneyBackGuaranteeDays: number; freeTier: boolean };
+    audits: Array<{ auditor: string; independent: boolean }>;
+    killSwitch: boolean; multiHop: boolean; splitTunneling: boolean;
+    adBlocker: boolean; dedicatedIp: boolean; simultaneousConnections: number;
+  }
+
+  interface ReviewData {
+    providerId: string;
+    scores: {
+      privacy: number; security: number; performance: number; streaming: number;
+      torrenting: number; easeOfUse: number; value: number; overall: number;
+    };
+    verdict: { headline: string; summary: string; recommendation: string };
+  }
+
+  interface ComparisonEntry {
+    slug: string;
+    title: string;
+    providerIds: string[];
+  }
+
+  const allProviders: Provider[] = JSON.parse(document.getElementById("compare-data")!.textContent);
+  const allReviews: ReviewData[] = JSON.parse(document.getElementById("compare-reviews-data")!.textContent);
+  const allComparisons: ComparisonEntry[] = JSON.parse(document.getElementById("compare-comparisons-data")!.textContent);
+  const countryNames: Record<string, string> = JSON.parse(document.getElementById("compare-country-names")!.textContent);
+
+  const reviewMap = new Map(allReviews.map((r) => [r.providerId, r]));
+  const providerMap = new Map(allProviders.map((p) => [p.id, p]));
+
+  let selectedIds: string[] = [];
+
+  const selector = document.getElementById("compare-selector")!;
+  const matrix = document.getElementById("compare-matrix")!;
+
+  function render() {
+    renderSelector();
+    renderMatrix();
+  }
+
+  function renderSelector() {
+    selector.innerHTML = "";
+
+    const label = document.createElement("p");
+    label.className = "text-sm font-medium mb-3";
+    label.textContent = "Select 2–4 providers to compare:";
+    selector.appendChild(label);
+
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5";
+
+    for (const p of allProviders) {
+      const isSelected = selectedIds.includes(p.id);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className =
+        "rounded-lg border px-3 py-2 text-sm font-medium transition-all text-left " +
+        (isSelected
+          ? "border-primary bg-primary/10 text-primary shadow-sm"
+          : "border-border bg-surface text-foreground hover:border-primary/50 hover:bg-surface-raised");
+
+      btn.textContent = p.name;
+
+      btn.addEventListener("click", () => {
+        if (isSelected) {
+          selectedIds = selectedIds.filter((id) => id !== p.id);
+        } else {
+          if (selectedIds.length >= 4) return;
+          selectedIds.push(p.id);
+        }
+        render();
+      });
+
+      grid.appendChild(btn);
+    }
+
+    selector.appendChild(grid);
+
+    if (selectedIds.length < 2) {
+      const hint = document.createElement("p");
+      hint.className = "mt-2 text-xs text-muted-foreground";
+      hint.textContent = `Select ${2 - selectedIds.length} more provider${2 - selectedIds.length !== 1 ? "s" : ""} to see a comparison.`;
+      selector.appendChild(hint);
+    }
+  }
+
+  /* ---------- Comparison Matrix ---------- */
+  interface ComparisonRow {
+    attribute: string;
+    label: string;
+    values: Record<string, string>;
+    higherIsBetter?: boolean;
+  }
+
+  function buildMatrix(): ComparisonRow[] {
+    const selected = selectedIds.map((id) => providerMap.get(id)!).filter(Boolean);
+    if (selected.length < 2) return [];
+
+    const row = (
+      attribute: string,
+      label: string,
+      pick: (p: Provider) => string,
+      higherIsBetter?: boolean,
+    ): ComparisonRow => ({
+      attribute,
+      label,
+      higherIsBetter,
+      values: Object.fromEntries(selected.map((p) => [p.id, pick(p)])),
+    });
+
+    return [
+      row("price", "Starting price", (p) => {
+        const min = Math.min(...p.pricing.plans.map((pl) => pl.effectiveMonthly));
+        return `$${min.toFixed(2)}/mo`;
+      }, false),
+      row("money-back", "Money-back guarantee", (p) =>
+        p.pricing.moneyBackGuaranteeDays > 0 ? `${p.pricing.moneyBackGuaranteeDays} days` : "None"),
+      row("free-tier", "Free tier", (p) => p.pricing.freeTier ? "Yes" : "No"),
+      row("jurisdiction", "Jurisdiction", (p) => countryNames[p.jurisdiction] ?? p.jurisdiction),
+      row("logging", "Logging policy", (p) => p.loggingPolicy.replace(/-/g, " ")),
+      row("audits", "Audits", (p) => String(p.audits.length), true),
+      row("servers", "Servers", (p) => p.serverNetwork.serverCount.toLocaleString(), true),
+      row("countries", "Countries", (p) => String(p.serverNetwork.countryCount), true),
+      row("connections", "Devices", (p) =>
+        p.simultaneousConnections === 0 ? "Unlimited" : String(p.simultaneousConnections), true),
+      row("kill-switch", "Kill switch", (p) => p.killSwitch ? "Yes" : "No"),
+      row("split-tunneling", "Split tunneling", (p) => p.splitTunneling ? "Yes" : "No"),
+      row("multi-hop", "Multi-hop", (p) => p.multiHop ? "Yes" : "No"),
+      row("torrenting", "Torrenting", (p) => p.torrenting.supported ? "Yes" : "No"),
+      row("overall", "Overall score", (p) => {
+        const r = reviewMap.get(p.id);
+        return r ? r.scores.overall.toFixed(1) : "—";
+      }, true),
+    ];
+  }
+
+  function pickWinners(rows: ComparisonRow[]): Record<string, string> {
+    const winners: Record<string, string> = {};
+    for (const row of rows) {
+      if (row.higherIsBetter === undefined) continue;
+      const ids = selectedIds;
+      if (ids.length === 0) continue;
+      let bestId = ids[0]!;
+      let bestVal = -Infinity;
+      for (const id of ids) {
+        const raw = row.values[id] ?? "";
+        const numeric = parseFloat(raw.replace(/[^0-9.]/g, "")) || 0;
+        const adjusted = row.higherIsBetter ? numeric : -numeric;
+        if (adjusted > bestVal) {
+          bestVal = adjusted;
+          bestId = id;
+        }
+      }
+      winners[row.attribute] = bestId;
+    }
+    return winners;
+  }
+
+  /* ---------- Score overview ---------- */
+  function renderScoreCards(providers: Provider[]) {
+    const container = document.createElement("div");
+    container.className = "mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4";
+
+    for (const p of providers) {
+      const review = reviewMap.get(p.id);
+      if (!review) continue;
+
+      const score = review.scores.overall;
+      const card = document.createElement("a");
+      card.href = `/vpn/${p.slug}/#review`;
+      card.className =
+        "rounded-xl border border-border bg-surface p-4 no-underline transition-all hover:shadow-md hover:border-primary/30";
+
+      card.innerHTML = `
+        <div class="text-sm font-medium text-foreground">${escapeHtml(p.name)}</div>
+        <div class="mt-2 flex items-baseline gap-1">
+          <span class="text-2xl font-bold ${score >= 8 ? "text-success" : score >= 6 ? "text-primary" : "text-warning"}">${score.toFixed(1)}</span>
+          <span class="text-xs text-muted-foreground">/ 10</span>
+        </div>
+        <div class="mt-1 h-1.5 w-full rounded-full bg-border overflow-hidden">
+          <div class="h-full rounded-full ${score >= 8 ? "bg-success" : score >= 6 ? "bg-primary" : "bg-warning"}" style="width:${score * 10}%"></div>
+        </div>
+        <p class="mt-1 text-xs text-muted-foreground line-clamp-1">${escapeHtml(review.verdict.headline)}</p>
+      `;
+
+      container.appendChild(card);
+    }
+
+    return container;
+  }
+
+  function renderMatrix() {
+    matrix.innerHTML = "";
+
+    const selected = selectedIds.map((id) => providerMap.get(id)!).filter(Boolean);
+    if (selected.length < 2) return;
+
+    /* Check for existing editorial comparison */
+    const matchingComparison = allComparisons.find((c) =>
+      c.providerIds.length === selectedIds.length &&
+      c.providerIds.every((id) => selectedIds.includes(id)) &&
+      selectedIds.every((id) => c.providerIds.includes(id)),
+    );
+
+    if (matchingComparison) {
+      const banner = document.createElement("div");
+      banner.className =
+        "mb-6 flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 p-4";
+      banner.innerHTML = `
+        <div>
+          <p class="text-sm font-medium text-foreground">Editorial comparison available</p>
+          <p class="text-xs text-muted-foreground mt-0.5">We've written a detailed comparison of these providers.</p>
+        </div>
+        <a href="/comparisons/${matchingComparison.slug}/" class="shrink-0 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline transition-colors hover:bg-primary-hover">Read Analysis</a>
+      `;
+      matrix.appendChild(banner);
+    }
+
+    /* Score cards */
+    const scoreCards = renderScoreCards(selected);
+    if (scoreCards.children.length > 0) {
+      matrix.appendChild(scoreCards);
+    }
+
+    /* Build and render the matrix */
+    const rows = buildMatrix();
+    const winners = pickWinners(rows);
+
+    const table = document.createElement("div");
+    table.className = "overflow-x-auto rounded-xl border border-border";
+
+    const tbl = document.createElement("table");
+    tbl.className = "w-full text-sm";
+
+    /* Header row */
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    headerRow.className = "border-b border-border bg-surface-raised";
+
+    const thLabel = document.createElement("th");
+    thLabel.className = "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground";
+    thLabel.textContent = "Feature";
+    headerRow.appendChild(thLabel);
+
+    for (const p of selected) {
+      const th = document.createElement("th");
+      th.className = "px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground";
+      th.textContent = p.name;
+      headerRow.appendChild(th);
+    }
+
+    thead.appendChild(headerRow);
+    tbl.appendChild(thead);
+
+    /* Body rows */
+    const tbody = document.createElement("tbody");
+    for (const row of rows) {
+      const tr = document.createElement("tr");
+      tr.className = "border-b border-border last:border-0 hover:bg-surface/50";
+
+      const tdLabel = document.createElement("td");
+      tdLabel.className = "px-4 py-3 text-sm font-medium text-foreground whitespace-nowrap";
+      tdLabel.textContent = row.label;
+      tr.appendChild(tdLabel);
+
+      for (const p of selected) {
+        const td = document.createElement("td");
+        const val = row.values[p.id] ?? "—";
+        const isWinner = winners[row.attribute] === p.id;
+        td.className =
+          "px-4 py-3 text-center text-sm whitespace-nowrap " +
+          (isWinner ? "font-semibold text-success" : "text-muted-foreground");
+
+        if (isWinner) {
+          td.innerHTML = `${escapeHtml(val)} <span class="text-xs">★</span>`;
+        } else {
+          td.textContent = val;
+        }
+        tr.appendChild(td);
+      }
+
+      tbody.appendChild(tr);
+    }
+    tbl.appendChild(tbody);
+    table.appendChild(tbl);
+    matrix.appendChild(table);
+
+    const legend = document.createElement("p");
+    legend.className = "mt-2 text-xs text-muted-foreground text-right";
+    legend.innerHTML = '<span class="text-success">★</span> = Best in category';
+    matrix.appendChild(legend);
+
+    /* CTA row */
+    const ctaRow = document.createElement("div");
+    ctaRow.className = "mt-6 flex flex-wrap gap-3";
+
+    for (const p of selected) {
+      const link = document.createElement("a");
+      link.href = `/vpn/${p.slug}/`;
+      link.className =
+        "rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline transition-colors hover:bg-primary-hover";
+      link.textContent = `${p.name} Details`;
+      ctaRow.appendChild(link);
+    }
+
+    matrix.appendChild(ctaRow);
+  }
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Init — select first 2 providers by default */
+  selectedIds = allProviders.slice(0, Math.min(2, allProviders.length)).map((p) => p.id);
+  render();
+</script>

@@ -44,6 +44,7 @@ const pageJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'" />
     <ThemeScript defaultTheme="system" />
     <Meta meta={meta} path={path} />
     <JsonLd data={siteJsonLd} />
@@ -54,3 +55,18 @@ const pageJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <slot />
   </body>
 </html>
+
+<script>
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      const searchHref = "/search/";
+      if (window.location.pathname === searchHref) {
+        const input = document.getElementById("search-input") as HTMLInputElement | null;
+        input?.focus();
+      } else {
+        window.location.href = searchHref;
+      }
+    }
+  });
+</script>

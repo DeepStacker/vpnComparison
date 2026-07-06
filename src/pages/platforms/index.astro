@@ -1,0 +1,90 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { getPlatformCountMap } from "@/lib/content/explorer";
+import { platformHref } from "@/lib/content/links";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const allPlatforms = await getCollection("platforms");
+const countMap = await getPlatformCountMap();
+
+const seo = normalizeSeoMeta({
+  title: "VPN Platform Support — Windows, macOS, Linux, Mobile & More",
+  description: "Compare VPN platform support across Windows, macOS, Linux, Android, iOS, routers, smart TVs, and browser extensions. Find providers with official apps for your devices.",
+  canonical: canonicalUrl("/platforms/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Platforms", href: "/platforms/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>Platform Support</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Not every VPN works on every device. Browse which providers offer official apps for your platform — desktop, mobile, routers, smart TVs, and browser extensions.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Grid cols={1} colsMd={2} colsLg={3} gap={4}>
+        {allPlatforms.map((p) => {
+          const count = countMap.get(p.data.id) ?? 0;
+          return (
+            <Card variant="raised" class="flex flex-col">
+              <div class="flex items-center gap-3">
+                <Icon name={p.data.icon as any} size={24} class="text-primary" />
+                <div>
+                  <Heading level={2} size="lg">{p.data.name}</Heading>
+                  {p.data.official ? (
+                    <Badge tone="success" size="sm">Official app</Badge>
+                  ) : (
+                    <Badge tone="neutral" size="sm">Manual setup</Badge>
+                  )}
+                </div>
+              </div>
+              <div class="mt-2">
+                <Badge tone={count > 0 ? "primary" : "neutral"} size="sm">
+                  {count} {count === 1 ? "provider" : "providers"}
+                </Badge>
+              </div>
+              <div class="mt-auto pt-4">
+                <Button variant="outline" size="sm" href={platformHref(p.data.slug)}>
+                  View Providers
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-xl text-center">
+        <Icon name="monitor-smartphone" size={32} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Cross-Platform Protection</Heading>
+        <Text tone="muted" class="mt-3 leading-relaxed">
+          The best VPNs offer seamless protection across all your devices. Whether you need a VPN for Windows gaming, Linux privacy, or streaming on Android TV, platform support matters more than server count.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

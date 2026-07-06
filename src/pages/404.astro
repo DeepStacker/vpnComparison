@@ -1,0 +1,42 @@
+---
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Button from "@/components/ui/Button.astro";
+import Icon from "@/components/ui/Icon.astro";
+import SearchBar from "@/components/search/SearchBar.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("Page Not Found"),
+  description: "The page you're looking for doesn't exist. Search our VPN reviews, guides, and comparisons.",
+  canonical: canonicalUrl("/404/"),
+});
+---
+
+<SeoLayout seo={seo}>
+  <Section>
+    <Container>
+      <div class="mx-auto flex max-w-lg flex-col items-center text-center">
+        <Icon name="search-x" size={48} class="text-muted-foreground" />
+        <Heading level={1} class="mt-6">Page Not Found</Heading>
+        <Text tone="muted" size="lg" class="mt-3">
+          The page you're looking for doesn't exist or has been moved.
+        </Text>
+        <div class="mt-8 flex w-full max-w-sm flex-col gap-3">
+          <SearchBar />
+        </div>
+        <div class="mt-6 flex flex-wrap justify-center gap-2">
+          <Button variant="outline" size="sm" href="/tools/finder/">VPN Finder</Button>
+          <Button variant="outline" size="sm" href="/tools/compare/">Compare VPNs</Button>
+        </div>
+        <div class="mt-4 flex flex-wrap justify-center gap-3">
+          <Button href="/">Go Home</Button>
+          <Button variant="outline" href="/search/">Search</Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

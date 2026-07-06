@@ -1,0 +1,107 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import Chip from "@/components/ui/Chip.astro";
+import { getProtocolCountMap } from "@/lib/content/explorer";
+import { protocolHref } from "@/lib/content/links";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const allProtocols = await getCollection("protocols");
+const countMap = await getProtocolCountMap();
+
+const seo = normalizeSeoMeta({
+  title: "VPN Protocols Compared — WireGuard, OpenVPN, IKEv2 & More",
+  description: "Compare VPN protocols: WireGuard, OpenVPN, IKEv2, and more. Learn how each protocol works, which providers support it, and which is best for your needs.",
+  canonical: canonicalUrl("/protocols/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Protocols", href: "/protocols/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>VPN Protocols</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Every VPN protocol balances speed, security, and compatibility differently. Browse which providers support each protocol and learn what makes each one unique.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Grid cols={1} colsMd={2} colsLg={3} gap={6}>
+        {allProtocols.map((p) => {
+          const count = countMap.get(p.data.id) ?? 0;
+          return (
+            <Card variant="raised" class="flex flex-col">
+              <div class="flex items-start justify-between">
+                <Heading level={2} size="xl">{p.data.name}</Heading>
+                {p.data.openSource && (
+                  <Badge tone="success" size="sm">Open source</Badge>
+                )}
+              </div>
+              <Text size="sm" tone="muted" class="mt-2">{p.data.description}</Text>
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                {p.data.encryption && <Chip>{p.data.encryption}</Chip>}
+                {p.data.transport && <Chip>{p.data.transport.toUpperCase()}</Chip>}
+              </div>
+              <div class="mt-3">
+                <Badge tone={count > 0 ? "success" : "neutral"} size="sm">
+                  {count} {count === 1 ? "provider" : "providers"}
+                </Badge>
+              </div>
+              {p.data.strengths.length > 0 && (
+                <div class="mt-3">
+                  <Text size="xs" weight="semibold" tone="muted" class="mb-1">Strengths</Text>
+                  <ul class="space-y-0.5">
+                    {p.data.strengths.map((s) => (
+                      <li class="flex items-start gap-1.5 text-xs text-muted-foreground">
+                        <Icon name="check" size={12} class="mt-0.5 shrink-0 text-success" />
+                        <span>{s}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div class="mt-auto pt-4">
+                <Button variant="outline" size="sm" href={protocolHref(p.data.slug)}>
+                  View Providers
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-xl text-center">
+        <Icon name="shuffle" size={32} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Why Protocol Choice Matters</Heading>
+        <Text tone="muted" class="mt-3 leading-relaxed">
+          The VPN protocol determines your connection speed, security level, and ability to bypass restrictions. WireGuard offers exceptional speed, OpenVPN provides proven security, and older protocols may be needed for legacy device compatibility.
+        </Text>
+        <div class="mt-6">
+          <Button variant="outline" href="/guides/vpn-protocols-explained/">Read Protocol Guide</Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

@@ -1,0 +1,119 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { getCountryCountMap } from "@/lib/content/explorer";
+import { countryHref } from "@/lib/content/links";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+import type { Region } from "@/types/provider";
+
+const allCountries = await getCollection("countries");
+const countMap = await getCountryCountMap();
+
+const regionOrder: Region[] = [
+  "north-america", "south-america", "europe", "asia", "africa", "oceania", "middle-east",
+];
+const regionLabels: Record<Region, string> = {
+  "north-america": "North America",
+  "south-america": "South America",
+  europe: "Europe",
+  asia: "Asia",
+  africa: "Africa",
+  oceania: "Oceania",
+  "middle-east": "Middle East",
+};
+
+const grouped = new Map<Region, typeof allCountries>();
+for (const region of regionOrder) {
+  grouped.set(region, []);
+}
+for (const c of allCountries) {
+  const list = grouped.get(c.data.region);
+  if (list) list.push(c);
+}
+
+const seo = normalizeSeoMeta({
+  title: "VPN Server Locations by Country",
+  description: "Browse VPN server locations by country. Find out which VPN providers have servers in each country and compare privacy jurisdictions.",
+  canonical: canonicalUrl("/countries/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Countries", href: "/countries/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>VPN Server Locations</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Browse VPN server availability by country. Each page shows which providers have servers in that location, privacy jurisdiction notes, and related content.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  {regionOrder.map((region) => {
+    const countries = grouped.get(region) ?? [];
+    if (countries.length === 0) return null;
+    return (
+      <Section>
+        <Container>
+          <div class="mb-2">
+            <Badge tone="primary" size="sm">{regionLabels[region]}</Badge>
+          </div>
+          <Heading level={2}>{regionLabels[region]}</Heading>
+          <Grid cols={2} colsMd={3} colsLg={4} gap={3} class="mt-4">
+            {countries
+              .sort((a, b) => a.data.name.localeCompare(b.data.name))
+              .map((c) => {
+                const count = countMap.get(c.data.code) ?? 0;
+                return (
+                  <a
+                    href={countryHref(c.data.slug)}
+                    class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3 no-underline transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-sm motion-safe:duration-150"
+                  >
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-sunken text-lg leading-none">
+                      {c.data.flagEmoji}
+                    </span>
+                    <div class="min-w-0">
+                      <Text weight="semibold" size="sm">{c.data.name}</Text>
+                      <Text size="xs" tone="muted">
+                        {count} {count === 1 ? "provider" : "providers"}
+                        {c.data.privacyFriendly && " · Privacy-friendly"}
+                      </Text>
+                    </div>
+                  </a>
+                );
+              })}
+          </Grid>
+        </Container>
+      </Section>
+    );
+  })}
+
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-xl text-center">
+        <Icon name="globe" size={32} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Why Server Location Matters</Heading>
+        <Text tone="muted" class="mt-3 leading-relaxed">
+          Server location affects connection speed, streaming access, and privacy. Servers in privacy-friendly jurisdictions offer stronger legal protection, while servers in specific countries enable access to regional content.
+        </Text>
+        <div class="mt-6">
+          <Button variant="outline" href="/guides/">Learn More in Our Guides</Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

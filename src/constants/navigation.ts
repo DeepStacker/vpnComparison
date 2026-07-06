@@ -34,6 +34,11 @@ export const PRIMARY_NAV: NavItem[] = [
     description: "Educational explainers to understand how VPNs actually work.",
   },
   {
+    label: "Tools",
+    href: "/tools/",
+    description: "Interactive VPN recommender and comparison builder.",
+  },
+  {
     label: "FAQ",
     href: "/faq/",
     description: "Answers to the most common VPN questions.",
@@ -50,6 +55,7 @@ export const FOOTER_NAV: NavSection[] = [
       { label: "All providers", href: "/#providers" },
       { label: "Best VPNs", href: "/best-lists/" },
       { label: "Comparisons", href: "/comparisons/" },
+      { label: "Tools", href: "/tools/" },
       { label: "Reviews", href: "/" },
     ],
   },

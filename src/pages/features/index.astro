@@ -1,0 +1,113 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { getFeatureCountMap } from "@/lib/content/explorer";
+import { featureHref } from "@/lib/content/links";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+import type { FeatureCategory } from "@/types/provider";
+
+const allFeatures = await getCollection("features");
+const countMap = await getFeatureCountMap();
+
+const catOrder: FeatureCategory[] = [
+  "security", "privacy", "performance", "streaming", "torrenting", "usability", "advanced", "pricing",
+];
+const catLabels: Record<FeatureCategory, string> = {
+  security: "Security",
+  privacy: "Privacy",
+  performance: "Performance",
+  streaming: "Streaming",
+  torrenting: "Torrenting",
+  usability: "Usability",
+  advanced: "Advanced",
+  pricing: "Pricing",
+};
+
+const grouped = new Map<FeatureCategory, typeof allFeatures>();
+for (const cat of catOrder) grouped.set(cat, []);
+for (const f of allFeatures) {
+  const list = grouped.get(f.data.category);
+  if (list) list.push(f);
+}
+
+const seo = normalizeSeoMeta({
+  title: "VPN Features Compared — Kill Switch, Split Tunneling & More",
+  description: "Browse VPN features by category. Compare which providers offer kill switch, split tunneling, RAM-only servers, obfuscation, multi-hop, and more.",
+  canonical: canonicalUrl("/features/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Features", href: "/features/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>VPN Features</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Compare VPN features across providers. Browse by category to find which services offer the features that matter to you.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  {catOrder.map((cat) => {
+    const features = grouped.get(cat) ?? [];
+    if (features.length === 0) return null;
+    return (
+      <Section>
+        <Container>
+          <div class="mb-2">
+            <Badge tone="primary" size="sm">{catLabels[cat]}</Badge>
+          </div>
+          <Heading level={2}>{catLabels[cat]}</Heading>
+          <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-4">
+            {features.map((f) => {
+              const count = countMap.get(f.data.id) ?? 0;
+              return (
+                <Card variant="raised" class="flex flex-col">
+                  <Heading level={3}>{f.data.name}</Heading>
+                  <Text size="sm" tone="muted" class="mt-1">{f.data.description}</Text>
+                  <div class="mt-2">
+                    <Badge tone={count > 0 ? "success" : "neutral"} size="sm">
+                      {count} {count === 1 ? "provider" : "providers"}
+                    </Badge>
+                  </div>
+                  <div class="mt-auto pt-4">
+                    <Button variant="outline" size="sm" href={featureHref(f.data.slug)}>
+                      View Providers
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })}
+          </Grid>
+        </Container>
+      </Section>
+    );
+  })}
+
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-xl text-center">
+        <Icon name="settings-2" size={32} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Not All VPNs Are Equal</Heading>
+        <Text tone="muted" class="mt-3 leading-relaxed">
+          Features like kill switch, split tunneling, and RAM-only servers can make the difference between adequate and excellent protection. Use this explorer to find providers that offer the specific features you need.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

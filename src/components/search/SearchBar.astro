@@ -105,6 +105,12 @@ import Icon from "@/components/ui/Icon.astro";
     comparison: "Comparison",
     faq: "FAQ",
     provider: "Provider",
+    country: "Country",
+    feature: "Feature",
+    protocol: "Protocol",
+    platform: "Platform",
+    streaming: "Streaming",
+    tool: "Tools",
   };
 
   const TYPE_ORDER: Record<string, number> = {
@@ -114,6 +120,12 @@ import Icon from "@/components/ui/Icon.astro";
     comparison: 3,
     faq: 4,
     provider: 5,
+    country: 6,
+    feature: 7,
+    protocol: 8,
+    platform: 9,
+    streaming: 10,
+    tool: 11,
   };
 
   const DEBOUNCE_MS = 300;
@@ -143,23 +155,38 @@ import Icon from "@/components/ui/Icon.astro";
   let isOpen = false;
 
   /* ---------- Helpers ---------- */
-  function escapeHtml(text: string): string {
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  function highlightText(text: string, query: string): string {
-    const escaped = escapeHtml(text);
-    if (!query || query.length < MIN_QUERY) return escaped;
+  function createHighlightedElement(
+    text: string,
+    query: string,
+    tag: "span" | "div" = "span",
+    className = "",
+  ): HTMLElement {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (!query || query.length < MIN_QUERY) {
+      el.textContent = text;
+      return el;
+    }
     const pattern = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return escaped.replace(
-      new RegExp(`(${pattern})`, "gi"),
-      '<mark class="bg-primary/20 text-foreground rounded-sm px-0.5">$1</mark>',
-    );
+    const regex = new RegExp(`(${pattern})`, "gi");
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        el.appendChild(
+          document.createTextNode(text.slice(lastIndex, match.index)),
+        );
+      }
+      const mark = document.createElement("mark");
+      mark.className = "bg-primary/20 text-foreground rounded-sm px-0.5";
+      mark.textContent = match[1]!;
+      el.appendChild(mark);
+      lastIndex = regex.lastIndex;
+    }
+    if (lastIndex < text.length) {
+      el.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+    return el;
   }
 
   function getRecentSearches(): string[] {
@@ -249,12 +276,41 @@ import Icon from "@/components/ui/Icon.astro";
       showEmpty("");
       return;
     }
-      recentList.innerHTML = recents
-      .map(
-        (q, i) =>
-          `<button type="button" role="option" tabindex="-1" data-recent="${i}" data-query="${escapeHtml(q)}" class="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-colors hover:bg-surface-sunken focus-visible:outline-none focus-visible:bg-surface-sunken"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-muted-foreground"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span>${escapeHtml(q)}</span></button>`,
-      )
-      .join("");
+    recentList.textContent = "";
+    for (let i = 0; i < recents.length; i++) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.role = "option";
+      btn.tabIndex = -1;
+      btn.dataset.recent = String(i);
+      btn.dataset.query = recents[i];
+      btn.className =
+        "flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-foreground transition-colors hover:bg-surface-sunken focus-visible:outline-none focus-visible:bg-surface-sunken";
+      const svgNs = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(svgNs, "svg");
+      svg.setAttribute("width", "16");
+      svg.setAttribute("height", "16");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "currentColor");
+      svg.setAttribute("stroke-width", "2");
+      svg.setAttribute("stroke-linecap", "round");
+      svg.setAttribute("stroke-linejoin", "round");
+      svg.classList.add("shrink-0", "text-muted-foreground");
+      const circle = document.createElementNS(svgNs, "circle");
+      circle.setAttribute("cx", "12");
+      circle.setAttribute("cy", "12");
+      circle.setAttribute("r", "10");
+      svg.appendChild(circle);
+      const polyline = document.createElementNS(svgNs, "polyline");
+      polyline.setAttribute("points", "12 6 12 12 16 14");
+      svg.appendChild(polyline);
+      btn.appendChild(svg);
+      const span = document.createElement("span");
+      span.textContent = recents[i] ?? "";
+      btn.appendChild(span);
+      recentList.appendChild(btn);
+    }
     recentOuter.classList.remove("hidden");
     openResults();
   }
@@ -280,25 +336,50 @@ import Icon from "@/components/ui/Icon.astro";
       (a, b) => (TYPE_ORDER[a] ?? 99) - (TYPE_ORDER[b] ?? 99),
     );
 
-    let html = "";
+    resultsInner.textContent = "";
     let optionIndex = 0;
 
     for (const type of sortedTypes) {
       const items = grouped[type]!;
       const label = TYPE_LABELS[type] ?? type;
-      html += `<div class="px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">${label}</div>`;
+
+      const header = document.createElement("div");
+      header.className =
+        "px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground";
+      header.textContent = label;
+      resultsInner.appendChild(header);
+
       for (const r of items) {
-        html += `<a href="${escapeHtml(r.item.url)}" role="option" id="search-option-${optionIndex}" aria-selected="false" class="flex flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-surface-sunken focus-visible:outline-none focus-visible:bg-surface-sunken [&:last-child]:rounded-b-lg">`;
-        html += `<span class="text-sm font-medium text-foreground">${highlightText(r.item.title, query)}</span>`;
+        const link = document.createElement("a");
+        link.href = r.item.url;
+        link.role = "option";
+        link.id = `search-option-${optionIndex}`;
+        link.setAttribute("aria-selected", "false");
+        link.className =
+          "flex flex-col gap-0.5 px-4 py-3 text-left transition-colors hover:bg-surface-sunken focus-visible:outline-none focus-visible:bg-surface-sunken";
+        link.appendChild(
+          createHighlightedElement(
+            r.item.title,
+            query,
+            "span",
+            "text-sm font-medium text-foreground",
+          ),
+        );
         if (r.item.summary) {
-          html += `<span class="line-clamp-1 text-xs text-muted-foreground">${highlightText(r.item.summary, query)}</span>`;
+          link.appendChild(
+            createHighlightedElement(
+              r.item.summary,
+              query,
+              "span",
+              "line-clamp-1 text-xs text-muted-foreground",
+            ),
+          );
         }
-        html += `</a>`;
+        resultsInner.appendChild(link);
         optionIndex++;
       }
     }
 
-    resultsInner.innerHTML = html;
     resultsOuter.classList.remove("hidden");
     openResults();
 

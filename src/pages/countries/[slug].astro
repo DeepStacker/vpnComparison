@@ -1,0 +1,160 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { getProvidersByCountry, getRelatedGuidesForEntity } from "@/lib/content/explorer";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const countries = await getCollection("countries");
+  return countries.map((c) => ({ params: { slug: c.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry("countries", slug);
+if (!entry) return Astro.redirect("/404");
+
+const country = entry.data;
+const matches = await getProvidersByCountry(country.code);
+const relatedGuides = await getRelatedGuidesForEntity(country.slug);
+
+const regionLabels: Record<string, string> = {
+  "north-america": "North America",
+  "south-america": "South America",
+  europe: "Europe",
+  asia: "Asia",
+  africa: "Africa",
+  oceania: "Oceania",
+  "middle-east": "Middle East",
+};
+
+const seo = normalizeSeoMeta({
+  title: `VPNs with Servers in ${country.name} — Providers & Privacy Info`,
+  description: `Find VPN providers with servers in ${country.name}. ${country.jurisdictionNote ? `Privacy note: ${country.jurisdictionNote}` : `Compare ${matches.length} VPNs available in ${country.name}.`}`,
+  canonical: canonicalUrl(`/countries/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Countries", href: "/countries/" },
+  { label: country.name, href: `/countries/${slug}/` },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="flex items-center gap-3">
+            <span class="flex h-12 w-12 items-center justify-center rounded-full bg-surface-sunken text-2xl leading-none">
+              {country.flagEmoji}
+            </span>
+            <div>
+              <Heading level={1}>{country.name}</Heading>
+              {regionLabels[country.region] && (
+                <Badge tone="neutral" size="sm">{regionLabels[country.region]}</Badge>
+              )}
+            </div>
+          </div>
+          {country.jurisdictionNote && (
+            <div class="mt-4 flex items-start gap-2 rounded-lg border border-warning/20 bg-warning-surface/30 p-3 text-sm">
+              <Icon name="info" size={16} class="mt-0.5 shrink-0 text-warning" />
+              <Text size="sm">{country.jurisdictionNote}</Text>
+            </div>
+          )}
+          <div class="mt-4 flex flex-wrap gap-2">
+            {country.privacyFriendly ? (
+              <Badge tone="success" size="sm">
+                <Icon name="shield-check" size={12} class="mr-1" />Privacy-Friendly Jurisdiction
+              </Badge>
+            ) : (
+              <Badge tone="warning" size="sm">
+                <Icon name="alert-triangle" size={12} class="mr-1" />Surveillance Alliance Member
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Heading level={2}>
+        VPNs with Servers in {country.name}
+        <Text element="span" tone="muted" size="sm" class="ml-2">({matches.length})</Text>
+      </Heading>
+      {matches.length === 0 && (
+        <div class="mt-6 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+          <Text tone="muted">No VPN providers currently have servers in {country.name}.</Text>
+        </div>
+      )}
+      <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
+        {matches.map(({ provider }) => (
+          <Card variant="raised" class="flex flex-col">
+            <div class="flex items-start justify-between">
+              <Heading level={3} size="lg">{provider.name}</Heading>
+              <Badge tone="neutral" size="sm">
+                {provider.serverNetwork.serverCount.toLocaleString()} servers
+              </Badge>
+            </div>
+            <Text size="sm" tone="muted" class="mt-1">{provider.tagline}</Text>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              <Badge tone="info" size="sm">{provider.jurisdiction} jurisdiction</Badge>
+              <Badge tone={provider.loggingPolicy === "no-logs" ? "success" : "warning"} size="sm">
+                {provider.loggingPolicy.replace(/-/g, " ")}
+              </Badge>
+            </div>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/vpn/${provider.slug}/`}>
+                View Details
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </Grid>
+    </Container>
+  </Section>
+
+  {relatedGuides.length > 0 && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Related Guides</Heading>
+        <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
+          {relatedGuides.map((g) => (
+            <Card>
+              <Heading level={3} size="lg">{g.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
+              <Badge tone="neutral" size="sm" class="mt-2">{g.data.difficulty}</Badge>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  <Section>
+    <Container>
+      <Heading level={2}>Explore by Other Dimensions</Heading>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <a href="/features/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Features</a>
+        <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
+        <a href="/platforms/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Platforms</a>
+        <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming</a>
+        <a href="/comparisons/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Compare Providers</a>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

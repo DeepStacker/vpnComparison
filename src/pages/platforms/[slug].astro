@@ -1,0 +1,120 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { getProvidersByPlatform, getRelatedGuidesForEntity } from "@/lib/content/explorer";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const platforms = await getCollection("platforms");
+  return platforms.map((p) => ({ params: { slug: p.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry("platforms", slug);
+if (!entry) return Astro.redirect("/404");
+
+const platform = entry.data;
+const matches = await getProvidersByPlatform(platform.id);
+const relatedGuides = await getRelatedGuidesForEntity(platform.slug);
+
+const seo = normalizeSeoMeta({
+  title: `Best VPNs for ${platform.name} — ${platform.official ? "Official App Support" : "Compatible Providers"}`,
+  description: `Find VPN providers with ${platform.official ? "official apps" : "compatible setup"} for ${platform.name}. Compare ${matches.length} VPNs that work on ${platform.name}.`,
+  canonical: canonicalUrl(`/platforms/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Platforms", href: "/platforms/" },
+  { label: platform.name, href: `/platforms/${slug}/` },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="flex items-start gap-4">
+        <Icon name={platform.icon as any} size={40} class="mt-1 shrink-0 text-primary" />
+        <div>
+          <Badge class="mb-2">{platform.official ? "Official app" : "Compatible"}</Badge>
+          <Heading level={1}>{platform.name} VPN</Heading>
+          <Text size="lg" tone="muted" class="mt-2 max-w-2xl">
+            {platform.official
+              ? `VPN providers with official ${platform.name} apps for seamless protection.`
+              : `VPN providers compatible with ${platform.name} setup.`}
+          </Text>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Heading level={2}>
+        VPNs for {platform.name}
+        <Text element="span" tone="muted" size="sm" class="ml-2">({matches.length})</Text>
+      </Heading>
+      {matches.length === 0 && (
+        <div class="mt-6 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+          <Text tone="muted">No VPN providers currently offer {platform.name} support.</Text>
+        </div>
+      )}
+      <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
+        {matches.map(({ provider }) => (
+          <Card variant="raised" class="flex flex-col">
+            <Heading level={3} size="lg">{provider.name}</Heading>
+            <Text size="sm" tone="muted" class="mt-1">{provider.tagline}</Text>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              <Badge tone="neutral" size="sm">{provider.serverNetwork.serverCount.toLocaleString()} servers</Badge>
+              <Badge tone="info" size="sm">{provider.jurisdiction} jurisdiction</Badge>
+            </div>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/vpn/${provider.slug}/`}>View Details</Button>
+            </div>
+          </Card>
+        ))}
+      </Grid>
+    </Container>
+  </Section>
+
+  {relatedGuides.length > 0 && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Related Guides</Heading>
+        <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
+          {relatedGuides.map((g) => (
+            <Card>
+              <Heading level={3} size="lg">{g.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
+              <Badge tone="neutral" size="sm" class="mt-2">{g.data.difficulty}</Badge>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  <Section>
+    <Container>
+      <Heading level={2}>Explore by Other Dimensions</Heading>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <a href="/features/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Features</a>
+        <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
+        <a href="/countries/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Countries</a>
+        <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming</a>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

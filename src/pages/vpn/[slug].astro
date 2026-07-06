@@ -15,6 +15,7 @@ import Chip from "@/components/ui/Chip.astro";
 import Icon from "@/components/ui/Icon.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import { readingTimeLabel } from "@/lib/utils/reading-time";
+import { featureHref, protocolHref, platformHref, countryHref, streamingHref } from "@/lib/content/links";
 import type { Breadcrumb } from "@/types/site";
 import type { ISODateString } from "@/types/common";
 
@@ -46,11 +47,16 @@ const [allFeatures, allProtocols, allPlatforms, allStreamingSvcs, allCountries, 
     getCollection("guides"),
   ]);
 
-const featureMap = new Map(allFeatures.map((f) => [f.data.id, f.data.name]));
-const protocolMap = new Map(allProtocols.map((p) => [p.data.id, p.data.name]));
-const platformMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.name]));
+const featureNameMap = new Map(allFeatures.map((f) => [f.data.id, f.data.name]));
+const featureSlugMap = new Map(allFeatures.map((f) => [f.data.id, f.data.slug]));
+const protocolNameMap = new Map(allProtocols.map((p) => [p.data.id, p.data.name]));
+const protocolSlugMap = new Map(allProtocols.map((p) => [p.data.id, p.data.slug]));
+const platformNameMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.name]));
+const platformSlugMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.slug]));
 const streamingNameMap = new Map(allStreamingSvcs.map((s) => [s.data.id, s.data.name]));
-const countryMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+const streamingSlugMap = new Map(allStreamingSvcs.map((s) => [s.data.id, s.data.slug]));
+const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+const countrySlugMap = new Map(allCountries.map((c) => [c.data.code, c.data.slug]));
 
 const allScores = reviewData?.scores;
 
@@ -83,6 +89,8 @@ const breadcrumbs: Breadcrumb[] = [
   { label: "VPN Reviews", href: "/" },
   { label: provider.name, href: `/vpn/${slug}/` },
 ];
+
+const jurisdictionCountrySlug = countrySlugMap.get(provider.jurisdiction);
 
 const loggingPolicyBadge: Record<string, string> = {
   "no-logs": "success",
@@ -139,7 +147,10 @@ function capitalize(s: string): string {
       <Container>
         <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Badge class="mb-2">{countryMap.get(provider.jurisdiction) ?? provider.jurisdiction} Jurisdiction</Badge>
+            {jurisdictionCountrySlug
+              ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline"><Badge class="mb-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction} Jurisdiction</Badge></a>
+              : <Badge class="mb-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction} Jurisdiction</Badge>
+            }
             <Heading level={1}>{provider.name}</Heading>
             <Text size="lg" tone="muted" class="mt-1 max-w-2xl">{provider.tagline}</Text>
             {allScores && (
@@ -187,14 +198,26 @@ function capitalize(s: string): string {
               {provider.killSwitch ? "Kill switch included" : "No kill switch"}
             </Text>
           </Card>
-          <Card padding="md">
-            <div class="flex items-center gap-2">
-              <Icon name="globe" size={18} class="text-primary" />
-              <Text weight="semibold">Jurisdiction</Text>
-            </div>
-            <Text size="xl" weight="semibold" class="mt-2">{countryMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
-            <Text size="sm" tone="muted">Headquarters</Text>
-          </Card>
+          {jurisdictionCountrySlug
+            ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline">
+                <Card padding="md">
+                  <div class="flex items-center gap-2">
+                    <Icon name="globe" size={18} class="text-primary" />
+                    <Text weight="semibold">Jurisdiction</Text>
+                  </div>
+                  <Text size="xl" weight="semibold" class="mt-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
+                  <Text size="sm" tone="muted">Headquarters</Text>
+                </Card>
+              </a>
+            : <Card padding="md">
+                <div class="flex items-center gap-2">
+                  <Icon name="globe" size={18} class="text-primary" />
+                  <Text weight="semibold">Jurisdiction</Text>
+                </div>
+                <Text size="xl" weight="semibold" class="mt-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
+                <Text size="sm" tone="muted">Headquarters</Text>
+              </Card>
+          }
           <Card padding="md">
             <div class="flex items-center gap-2">
               <Icon name="monitor-smartphone" size={18} class="text-primary" />
@@ -235,8 +258,10 @@ function capitalize(s: string): string {
         <Text tone="muted" class="mt-2">What {provider.name} offers out of the box</Text>
         <div class="mt-4 flex flex-wrap gap-2">
           {provider.features.map((fid) => {
-            const name = featureMap.get(fid);
-            return name ? <Badge>{name}</Badge> : null;
+            const name = featureNameMap.get(fid);
+            const slug = featureSlugMap.get(fid);
+            if (!name || !slug) return null;
+            return <a href={featureHref(slug)} class="no-underline"><Badge>{name}</Badge></a>;
           })}
         </div>
       </Container>
@@ -251,8 +276,10 @@ function capitalize(s: string): string {
         </Text>
         <div class="mt-4 flex flex-wrap gap-2">
           {provider.serverNetwork.countries.map((code) => {
-            const name = countryMap.get(code);
-            return <Chip>{name ?? code} ({code})</Chip>;
+            const name = countryNameMap.get(code);
+            const slug = countrySlugMap.get(code);
+            if (!slug) return <Chip>{name ?? code} ({code})</Chip>;
+            return <a href={countryHref(slug)} class="no-underline"><Chip>{name ?? code} ({code})</Chip></a>;
           })}
         </div>
       </Container>
@@ -263,8 +290,10 @@ function capitalize(s: string): string {
         <Heading level={2}>Protocols</Heading>
         <div class="mt-4 flex flex-wrap gap-2">
           {provider.protocols.map((pid) => {
-            const name = protocolMap.get(pid);
-            return name ? <Badge tone="neutral">{name}</Badge> : null;
+            const name = protocolNameMap.get(pid);
+            const slug = protocolSlugMap.get(pid);
+            if (!name || !slug) return null;
+            return <a href={protocolHref(slug)} class="no-underline"><Badge tone="neutral">{name}</Badge></a>;
           })}
         </div>
       </Container>
@@ -275,8 +304,10 @@ function capitalize(s: string): string {
         <Heading level={2}>Platform Support</Heading>
         <div class="mt-4 flex flex-wrap gap-2">
           {provider.platforms.map((pid) => {
-            const name = platformMap.get(pid);
-            return name ? <Chip>{name}</Chip> : null;
+            const name = platformNameMap.get(pid);
+            const slug = platformSlugMap.get(pid);
+            if (!name || !slug) return null;
+            return <a href={platformHref(slug)} class="no-underline"><Chip>{name}</Chip></a>;
           })}
         </div>
       </Container>
@@ -416,17 +447,23 @@ function capitalize(s: string): string {
           <Heading level={2}>Streaming Support</Heading>
           <Text tone="muted" class="mt-2">Verified streaming compatibility for major platforms</Text>
           <Grid cols={2} colsMd={3} colsLg={4} gap={3} class="mt-6">
-            {provider.streaming.map((s) => (
-              <Card padding="sm" variant="outline">
-                <div class="flex items-center justify-between">
-                  <Text weight="semibold" size="sm">{streamingNameMap.get(s.service) ?? s.service}</Text>
-                  <Badge tone={streamingSupportBadge[s.support] as any} size="sm">
-                    {capitalize(s.support)}
-                  </Badge>
-                </div>
-                {s.verifiedAt && <Text size="xs" tone="muted" class="mt-1">Verified {s.verifiedAt}</Text>}
-              </Card>
-            ))}
+            {provider.streaming.map((s) => {
+              const svcSlug = streamingSlugMap.get(s.service);
+              const content = (
+                <Card padding="sm" variant="outline">
+                  <div class="flex items-center justify-between">
+                    <Text weight="semibold" size="sm">{streamingNameMap.get(s.service) ?? s.service}</Text>
+                    <Badge tone={streamingSupportBadge[s.support] as any} size="sm">
+                      {capitalize(s.support)}
+                    </Badge>
+                  </div>
+                  {s.verifiedAt && <Text size="xs" tone="muted" class="mt-1">Verified {s.verifiedAt}</Text>}
+                </Card>
+              );
+              return svcSlug
+                ? <a href={streamingHref(svcSlug)} class="no-underline">{content}</a>
+                : content;
+            })}
           </Grid>
         </Container>
       </Section>
@@ -457,6 +494,21 @@ function capitalize(s: string): string {
         </Container>
       </Section>
     )}
+
+    <Section>
+      <Container>
+        <Heading level={2}>Explore More</Heading>
+        <Text tone="muted" class="mt-2">Browse VPNs by feature, protocol, platform, country, or streaming service.</Text>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <a href="/features/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Features</a>
+          <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
+          <a href="/platforms/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Platforms</a>
+          <a href="/countries/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Countries</a>
+          <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming Services</a>
+          <a href="/comparisons/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Compare Providers</a>
+        </div>
+      </Container>
+    </Section>
 
     {(relatedComparisons.length > 0 || relatedGuides.length > 0) && (
       <Section background>

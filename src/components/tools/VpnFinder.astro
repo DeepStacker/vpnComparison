@@ -1,0 +1,657 @@
+---
+interface VpnFinderProvider {
+  id: string; slug: string; name: string; tagline: string;
+  serverNetwork: { serverCount: number; countryCount: number; countries: string[]; virtualLocations: boolean };
+  protocols: string[]; platforms: string[]; features: string[];
+  streaming: Array<{ service: string; support: string; verifiedAt?: string }>;
+  torrenting: { supported: boolean; labeledServers: boolean; rating?: number };
+  loggingPolicy: string; jurisdiction: string;
+  pricing: { currency: string; plans: Array<{ cycle: string; price: number; effectiveMonthly: number; featured?: boolean }>; freeTier: boolean };
+  audits: Array<{ auditor: string; independent: boolean }>;
+  killSwitch: boolean; multiHop: boolean; splitTunneling: boolean;
+  adBlocker: boolean; dedicatedIp: boolean; simultaneousConnections: number;
+}
+
+interface VpnFinderReview {
+  providerId: string;
+  scores: {
+    privacy: number; security: number; performance: number; streaming: number;
+    torrenting: number; easeOfUse: number; value: number; overall: number;
+  };
+  verdict: { headline: string; summary: string; recommendation: string };
+}
+
+interface Props {
+  providers: VpnFinderProvider[];
+  reviews: VpnFinderReview[];
+  featureNames: Record<string, string>;
+  protocolNames: Record<string, string>;
+  platformNames: Record<string, string>;
+  streamingNames: Record<string, string>;
+  countryNames: Record<string, string>;
+}
+
+const { providers, reviews, streamingNames, countryNames } = Astro.props;
+---
+
+<div id="vpn-finder-root" class="mx-auto max-w-3xl">
+  <div id="finder-step-indicator" class="mb-8 flex items-center gap-2"></div>
+  <div id="finder-content"></div>
+</div>
+
+<script is:inline type="application/json" id="finder-data" set:html={JSON.stringify(providers)}></script>
+<script is:inline type="application/json" id="finder-reviews-data" set:html={JSON.stringify(reviews)}></script>
+<script is:inline type="application/json" id="finder-streaming-names" set:html={JSON.stringify(streamingNames)}></script>
+<script is:inline type="application/json" id="finder-country-names" set:html={JSON.stringify(countryNames)}></script>
+
+<script>
+  interface Provider {
+    id: string;
+    slug: string;
+    name: string;
+    tagline: string;
+    serverNetwork: { serverCount: number; countryCount: number; countries: string[]; virtualLocations: boolean };
+    protocols: string[];
+    platforms: string[];
+    features: string[];
+    streaming: Array<{ service: string; support: string; verifiedAt?: string }>;
+    torrenting: { supported: boolean; labeledServers: boolean; rating?: number };
+    loggingPolicy: string;
+    jurisdiction: string;
+    pricing: { currency: string; plans: Array<{ cycle: string; price: number; effectiveMonthly: number; featured?: boolean }>; freeTier: boolean };
+    audits: Array<{ auditor: string; independent: boolean }>;
+    killSwitch: boolean;
+    multiHop: boolean;
+    splitTunneling: boolean;
+    adBlocker: boolean;
+    dedicatedIp: boolean;
+    simultaneousConnections: number;
+  }
+
+  interface ReviewData {
+    providerId: string;
+    scores: {
+      privacy: number; security: number; performance: number; streaming: number;
+      torrenting: number; easeOfUse: number; value: number; overall: number;
+    };
+    verdict: { headline: string; summary: string; recommendation: string };
+  }
+
+  const allProviders: Provider[] = JSON.parse(document.getElementById("finder-data")!.textContent);
+  const allReviews: ReviewData[] = JSON.parse(document.getElementById("finder-reviews-data")!.textContent);
+
+  const reviewMap = new Map(allReviews.map((r) => [r.providerId, r]));
+
+  const steps = [
+    { id: "goal", question: "What do you need a VPN for?", type: "multi", options: [
+      { value: "streaming", label: "Streaming (Netflix, Disney+, etc.)" },
+      { value: "privacy", label: "Privacy & security" },
+      { value: "torrenting", label: "Torrenting" },
+      { value: "bypass", label: "Bypass censorship" },
+      { value: "gaming", label: "Gaming" },
+      { value: "general", label: "General browsing" },
+    ]},
+    { id: "budget", question: "What's your budget?", type: "single", options: [
+      { value: "budget", label: "Under $3/month" },
+      { value: "mid", label: "$3–$6/month" },
+      { value: "premium", label: "$6–$10/month" },
+      { value: "any", label: "No preference" },
+    ]},
+    { id: "platform", question: "Which platforms matter most?", type: "multi", options: [
+      { value: "windows", label: "Windows" }, { value: "macos", label: "macOS" },
+      { value: "linux", label: "Linux" }, { value: "android", label: "Android" },
+      { value: "ios", label: "iPhone/iPad" }, { value: "router", label: "Router" },
+    ]},
+    { id: "privacy", question: "Privacy requirements?", type: "multi", options: [
+      { value: "no-logs", label: "No-logs policy" },
+      { value: "audits", label: "Independent audits" },
+      { value: "privacy-jurisdiction", label: "Privacy-friendly jurisdiction" },
+      { value: "open-source", label: "Open-source apps" },
+    ]},
+    { id: "streaming", question: "Which streaming services do you use?", type: "multi", options: [
+      { value: "netflix", label: "Netflix" }, { value: "disney-plus", label: "Disney+" },
+      { value: "prime-video", label: "Amazon Prime Video" }, { value: "hbo-max", label: "HBO Max" },
+      { value: "hulu", label: "Hulu" }, { value: "bbc-iplayer", label: "BBC iPlayer" },
+    ]},
+  ];
+
+  const privacyFriendlyJurisdictions = ["CH", "IS", "SE", "NL", "RO", "EE", "DK", "NO"];
+
+  interface Answers {
+    goal: string[];
+    budget: string;
+    platform: string[];
+    privacy: string[];
+    streaming: string[];
+  }
+
+  let currentStep = 0;
+  let answers: Answers = {
+    goal: [], budget: "", platform: [], privacy: [], streaming: [],
+  };
+
+  const indicator = document.getElementById("finder-step-indicator")!;
+  const content = document.getElementById("finder-content")!;
+
+  function render() {
+    renderStepIndicator();
+    if (currentStep < steps.length) {
+      renderStep();
+    } else {
+      renderResults();
+    }
+  }
+
+  function renderStepIndicator() {
+    indicator.textContent = "";
+    for (let i = 0; i < steps.length; i++) {
+      const dot = document.createElement("div");
+      dot.className =
+        "h-2 rounded-full transition-all duration-300 " +
+        (i === currentStep
+          ? "w-8 bg-primary"
+          : i < currentStep
+            ? "w-2 bg-primary/50"
+            : "w-2 bg-border");
+      indicator.appendChild(dot);
+    }
+  }
+
+  function renderStep() {
+    const step = steps[currentStep]!;
+    content.innerHTML = "";
+
+    const heading = document.createElement("h2");
+    heading.className = "text-xl font-semibold mb-2";
+    heading.textContent = step.question;
+    content.appendChild(heading);
+
+    const stepNum = document.createElement("p");
+    stepNum.className = "text-sm text-muted-foreground mb-6";
+    stepNum.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+    content.appendChild(stepNum);
+
+    const optionsContainer = document.createElement("div");
+    optionsContainer.className = "space-y-3";
+
+    const currentAnswers = answers[step.id as keyof Answers] as string[] | string;
+
+    for (const opt of step.options) {
+      const label = document.createElement("label");
+      label.className =
+        "flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface p-4 transition-all hover:border-primary hover:bg-surface-raised has-[:checked]:border-primary has-[:checked]:bg-primary/5";
+
+      const input = document.createElement("input");
+      input.type = step.type === "single" ? "radio" : "checkbox";
+      input.name = step.id;
+      input.value = opt.value;
+      input.className = "h-4 w-4 accent-primary";
+
+      if (step.type === "single") {
+        if (currentAnswers === opt.value) input.checked = true;
+      } else {
+        if ((currentAnswers as string[]).includes(opt.value)) input.checked = true;
+      }
+
+      input.addEventListener("change", () => handleInput(step.id, step.type, input));
+      label.appendChild(input);
+
+      const span = document.createElement("span");
+      span.className = "text-sm font-medium";
+      span.textContent = opt.label;
+      label.appendChild(span);
+
+      optionsContainer.appendChild(label);
+    }
+    content.appendChild(optionsContainer);
+
+    const btnRow = document.createElement("div");
+    btnRow.className = "mt-8 flex items-center gap-3";
+
+    if (currentStep > 0) {
+      const back = document.createElement("button");
+      back.type = "button";
+      back.className =
+        "rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-raised";
+      back.textContent = "Back";
+      back.addEventListener("click", () => {
+        currentStep--;
+        render();
+      });
+      btnRow.appendChild(back);
+    }
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className =
+      "rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed";
+    next.textContent = currentStep === steps.length - 1 ? "See Results" : "Next";
+    const ans = answers[step.id as keyof Answers] as string[] | string;
+    next.disabled = step.type === "single" ? !ans : (ans as string[]).length === 0;
+    next.addEventListener("click", () => {
+      if (next.disabled) return;
+      currentStep++;
+      render();
+    });
+    btnRow.appendChild(next);
+
+    content.appendChild(btnRow);
+  }
+
+  function handleInput(stepId: string, type: string, input: HTMLInputElement) {
+    if (type === "single") {
+      (answers as any)[stepId] = input.value;
+    } else {
+      const arr = answers[stepId as keyof Answers] as string[];
+      if (input.checked) {
+        arr.push(input.value);
+      } else {
+        const idx = arr.indexOf(input.value);
+        if (idx >= 0) arr.splice(idx, 1);
+      }
+    }
+    render();
+  }
+
+  /* ---------- Scoring ---------- */
+  interface ScoreDetail {
+    label: string;
+    score: number;
+    max: number;
+    explanation: string;
+  }
+
+  interface ScoredProvider {
+    provider: Provider;
+    totalScore: number;
+    details: ScoreDetail[];
+    review?: ReviewData;
+  }
+
+  function scoreProviders(): ScoredProvider[] {
+    return allProviders.map((p) => {
+      const review = reviewMap.get(p.id);
+      const details: ScoreDetail[] = [];
+      let totalScore = 0;
+      let totalWeight = 0;
+
+      const goalAns = answers.goal;
+
+      /* Goal: streaming */
+      if (goalAns.includes("streaming") || goalAns.includes("general")) {
+        const streamingScore = scoreStreaming(p);
+        details.push({
+          label: "Streaming support",
+          score: streamingScore,
+          max: 100,
+          explanation: streamingScore >= 80
+            ? "Works with most major streaming services."
+            : streamingScore >= 40
+              ? "Works with some streaming services."
+              : "Limited streaming support.",
+        });
+        totalScore += streamingScore * 3;
+        totalWeight += 3;
+      }
+
+      /* Goal: privacy */
+      if (goalAns.includes("privacy")) {
+        const privScore = scorePrivacy(p);
+        details.push({
+          label: "Privacy protection",
+          score: privScore,
+          max: 100,
+          explanation: privScore >= 80
+            ? "Strong privacy protections with no-logs policy and independent audits."
+            : privScore >= 50
+              ? "Good privacy features, but some concerns."
+              : "Limited privacy safeguards.",
+        });
+        totalScore += privScore * 3;
+        totalWeight += 3;
+      }
+
+      /* Goal: torrenting */
+      if (goalAns.includes("torrenting")) {
+        const torrScore = p.torrenting.supported ? 80 : 0;
+        details.push({
+          label: "Torrenting support",
+          score: torrScore,
+          max: 100,
+          explanation: torrScore >= 80
+            ? "Supports P2P/torrenting with labeled servers."
+            : "Does not support or discourage torrenting.",
+        });
+        totalScore += torrScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Goal: bypass censorship */
+      if (goalAns.includes("bypass")) {
+        const bypassScore = scoreBypass(p);
+        details.push({
+          label: "Censorship bypass",
+          score: bypassScore,
+          max: 100,
+          explanation: bypassScore >= 70
+            ? "Strong obfuscation and multi-hop features for bypassing restrictions."
+            : bypassScore >= 40
+              ? "Some obfuscation capabilities."
+              : "Limited censorship circumvention.",
+        });
+        totalScore += bypassScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Goal: gaming */
+      if (goalAns.includes("gaming")) {
+        const perfScore = review ? review.scores.performance * 10 : 50;
+        details.push({
+          label: "Performance for gaming",
+          score: perfScore,
+          max: 100,
+          explanation: perfScore >= 75
+            ? "Excellent performance with low latency."
+            : perfScore >= 50
+              ? "Adequate for casual gaming."
+              : "May not be ideal for gaming.",
+        });
+        totalScore += perfScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Budget */
+      if (answers.budget && answers.budget !== "any") {
+        const budgetScore = scoreBudget(p, answers.budget);
+        details.push({
+          label: "Pricing",
+          score: budgetScore,
+          max: 100,
+          explanation: budgetScore >= 80
+            ? "Fits within your budget."
+            : budgetScore >= 40
+              ? "Slightly above your target budget."
+              : "Above your target budget.",
+        });
+        totalScore += budgetScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Platform match */
+      if (answers.platform.length > 0) {
+        const platScore = scorePlatforms(p, answers.platform);
+        details.push({
+          label: "Platform support",
+          score: platScore,
+          max: 100,
+          explanation: platScore >= 80
+            ? "Supports all your platforms."
+            : platScore >= 40
+              ? "Supports most of your platforms."
+              : "Limited platform support for your needs.",
+        });
+        totalScore += platScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Privacy requirements */
+      if (answers.privacy.length > 0) {
+        const privReqScore = scorePrivacyRequirements(p, answers.privacy);
+        details.push({
+          label: "Privacy requirements",
+          score: privReqScore,
+          max: 100,
+          explanation: privReqScore >= 80
+            ? "Meets all your privacy requirements."
+            : privReqScore >= 40
+              ? "Meets some privacy requirements."
+              : "Few privacy requirements met.",
+        });
+        totalScore += privReqScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Streaming services */
+      if (answers.streaming.length > 0) {
+        const svcScore = scoreStreamingServices(p, answers.streaming);
+        details.push({
+          label: "Streaming service compatibility",
+          score: svcScore,
+          max: 100,
+          explanation: svcScore >= 80
+            ? "Verified to work with all your streaming services."
+            : svcScore >= 40
+              ? "Works with some of your streaming services."
+              : "Limited or no streaming service compatibility.",
+        });
+        totalScore += svcScore * 2;
+        totalWeight += 2;
+      }
+
+      /* Overall review score */
+      if (review) {
+        const overallScore = review.scores.overall * 10;
+        details.push({
+          label: "Overall rating",
+          score: overallScore,
+          max: 100,
+          explanation: `Rated ${review.scores.overall.toFixed(1)}/10 by our reviewers.`,
+        });
+        totalScore += overallScore * 1;
+        totalWeight += 1;
+      }
+
+      const finalScore = totalWeight > 0 ? Math.round(totalScore / totalWeight) : 50;
+
+      return { provider: p, totalScore: finalScore, details, review };
+    }).sort((a, b) => b.totalScore - a.totalScore);
+  }
+
+  function scoreStreaming(p: Provider): number {
+    const svcs = p.streaming.filter((s) => s.support === "verified");
+    return Math.min(100, svcs.length * 20);
+  }
+
+  function scorePrivacy(p: Provider): number {
+    let score = 0;
+    if (p.loggingPolicy === "no-logs") score += 40;
+    else if (p.loggingPolicy === "minimal") score += 20;
+    if (p.audits.some((a) => a.independent)) score += 30;
+    if (privacyFriendlyJurisdictions.includes(p.jurisdiction)) score += 20;
+    if (p.killSwitch) score += 10;
+    return Math.min(100, score);
+  }
+
+  function scoreBypass(p: Provider): number {
+    let score = 0;
+    if (p.features.includes("obfuscation")) score += 30;
+    if (p.multiHop) score += 30;
+    if (p.protocols.includes("wireguard")) score += 20;
+    if (p.serverNetwork.countryCount > 50) score += 20;
+    return Math.min(100, score);
+  }
+
+  function scoreBudget(p: Provider, budget: string): number {
+    const minMonthly = Math.min(...p.pricing.plans.map((pl) => pl.effectiveMonthly));
+    const limits: Record<string, number> = { budget: 3, mid: 6, premium: 10 };
+    const limit = limits[budget] ?? 999;
+    if (minMonthly <= limit) return 100;
+    if (minMonthly <= limit * 1.5) return 60;
+    return 20;
+  }
+
+  function scorePlatforms(p: Provider, selected: string[]): number {
+    let matchCount = 0;
+    for (const plat of selected) {
+      if (p.platforms.includes(plat)) matchCount++;
+    }
+    return Math.round((matchCount / selected.length) * 100);
+  }
+
+  function scorePrivacyRequirements(p: Provider, selected: string[]): number {
+    let matchCount = 0;
+    for (const req of selected) {
+      if (req === "no-logs" && p.loggingPolicy === "no-logs") matchCount++;
+      else if (req === "audits" && p.audits.length > 0) matchCount++;
+      else if (req === "privacy-jurisdiction" && privacyFriendlyJurisdictions.includes(p.jurisdiction)) matchCount++;
+      else if (req === "open-source" && p.protocols.includes("wireguard")) matchCount++;
+    }
+    return Math.round((matchCount / selected.length) * 100);
+  }
+
+  function scoreStreamingServices(p: Provider, selected: string[]): number {
+    let matchCount = 0;
+    for (const svc of selected) {
+      const match = p.streaming.find((s) => s.service === svc);
+      if (match && match.support === "verified") matchCount++;
+      else if (match && match.support === "partial") matchCount += 0.5;
+    }
+    return Math.round((matchCount / selected.length) * 100);
+  }
+
+  /* ---------- Results ---------- */
+  function renderResults() {
+    const scored = scoreProviders();
+
+    content.innerHTML = "";
+
+    const summary = document.createElement("div");
+    summary.className = "mb-8 text-center";
+    summary.innerHTML = `
+      <h2 class="text-2xl font-bold">Your VPN Recommendations</h2>
+      <p class="mt-2 text-muted-foreground">
+        Based on your answers, here are the VPNs ranked by how well they match your needs.
+      </p>
+    `;
+    content.appendChild(summary);
+
+    for (const [index, result] of scored.entries()) {
+      const p = result.provider;
+      const review = result.review;
+
+      const card = document.createElement("div");
+      card.className =
+        "mb-6 rounded-xl border border-border bg-surface p-6 shadow-sm transition-all hover:shadow-md";
+
+      const rankEmoji = index === 0 ? "\u{1F3C6}" : index === 1 ? "\u{1F948}" : index === 2 ? "\u{1F949}" : `#${index + 1}`;
+
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">${rankEmoji}</span>
+              <h3 class="text-xl font-bold">${escapeHtml(p.name)}</h3>
+            </div>
+            <p class="mt-1 text-sm text-muted-foreground">${escapeHtml(p.tagline)}</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <div class="text-3xl font-bold text-primary">${result.totalScore}%</div>
+            <p class="text-xs text-muted-foreground">match</p>
+          </div>
+        </div>
+      `;
+
+      const scoreBar = document.createElement("div");
+      scoreBar.className = "mt-4 h-2 w-full rounded-full bg-border overflow-hidden";
+      const fill = document.createElement("div");
+      fill.className =
+        "h-full rounded-full transition-all duration-700 " +
+        (result.totalScore >= 80 ? "bg-success" : result.totalScore >= 50 ? "bg-primary" : "bg-warning");
+      fill.style.width = `${result.totalScore}%`;
+      scoreBar.appendChild(fill);
+      card.appendChild(scoreBar);
+
+      const detailsDiv = document.createElement("div");
+      detailsDiv.className = "mt-4 space-y-2";
+
+      for (const detail of result.details) {
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between gap-3";
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "text-sm flex items-center gap-2 min-w-0";
+        const dot = document.createElement("span");
+        dot.className =
+          "inline-block h-2 w-2 shrink-0 rounded-full " +
+          (detail.score >= 70 ? "bg-success" : detail.score >= 40 ? "bg-primary" : "bg-warning");
+        labelSpan.appendChild(dot);
+        labelSpan.appendChild(document.createTextNode(detail.label));
+        row.appendChild(labelSpan);
+
+        const valSpan = document.createElement("span");
+        valSpan.className =
+          "text-sm font-medium shrink-0 " +
+          (detail.score >= 70 ? "text-success" : detail.score >= 40 ? "text-primary" : "text-warning");
+        valSpan.textContent = `${detail.score}%`;
+        row.appendChild(valSpan);
+
+        detailsDiv.appendChild(row);
+
+        const expl = document.createElement("p");
+        expl.className = "text-xs text-muted-foreground pl-4 -mt-1";
+        expl.textContent = detail.explanation;
+        detailsDiv.appendChild(expl);
+      }
+
+      card.appendChild(detailsDiv);
+
+      const ctaRow = document.createElement("div");
+      ctaRow.className = "mt-4 flex flex-wrap gap-3";
+
+      const detailBtn = document.createElement("a");
+      detailBtn.href = `/vpn/${p.slug}/`;
+      detailBtn.className =
+        "inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline transition-colors hover:bg-primary-hover";
+      detailBtn.textContent = "View Details";
+      ctaRow.appendChild(detailBtn);
+
+      if (review) {
+        const reviewBtn = document.createElement("a");
+        reviewBtn.href = `/vpn/${p.slug}/#review`;
+        reviewBtn.className =
+          "inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:bg-surface-raised";
+        reviewBtn.textContent = "Read Review";
+        ctaRow.appendChild(reviewBtn);
+      }
+
+      const compareBtn = document.createElement("a");
+      compareBtn.href = `/compare/${p.slug}-vs-${scored[0]!.provider.slug}/`;
+      compareBtn.className =
+        "inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:bg-surface-raised";
+      compareBtn.textContent = "Compare";
+      ctaRow.appendChild(compareBtn);
+
+      card.appendChild(ctaRow);
+
+      content.appendChild(card);
+    }
+
+    const restartDiv = document.createElement("div");
+    restartDiv.className = "mt-8 text-center";
+
+    const restartBtn = document.createElement("button");
+    restartBtn.type = "button";
+    restartBtn.className =
+      "rounded-lg border border-border px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-raised";
+    restartBtn.textContent = "Start Over";
+    restartBtn.addEventListener("click", () => {
+      answers = { goal: [], budget: "", platform: [], privacy: [], streaming: [] };
+      currentStep = 0;
+      render();
+    });
+    restartDiv.appendChild(restartBtn);
+    content.appendChild(restartDiv);
+
+    const methodologyP = document.createElement("p");
+    methodologyP.className = "mt-4 text-xs text-muted-foreground";
+    methodologyP.innerHTML =
+      'Recommendations are based on your answers and our structured provider data. <a href="/methodology/" class="underline underline-offset-2 hover:text-foreground">Learn how we score providers \u2192</a>';
+    content.appendChild(methodologyP);
+  }
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  render();
+</script>

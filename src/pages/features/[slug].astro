@@ -1,0 +1,125 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import { getProvidersByFeature, getRelatedGuidesForEntity } from "@/lib/content/explorer";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+export async function getStaticPaths() {
+  const features = await getCollection("features");
+  return features.map((f) => ({ params: { slug: f.data.slug } }));
+}
+
+const { slug } = Astro.params;
+const entry = await getEntry("features", slug);
+if (!entry) return Astro.redirect("/404");
+
+const feature = entry.data;
+const matches = await getProvidersByFeature(feature.id);
+const relatedGuides = await getRelatedGuidesForEntity(feature.slug);
+
+const categoryLabels: Record<string, string> = {
+  security: "Security",
+  privacy: "Privacy",
+  performance: "Performance",
+  streaming: "Streaming",
+  torrenting: "Torrenting",
+  usability: "Usability",
+  advanced: "Advanced",
+  pricing: "Pricing",
+};
+
+const seo = normalizeSeoMeta({
+  title: `VPNs with ${feature.name} — Provider Comparison`,
+  description: `Find VPN providers that offer ${feature.name.toLowerCase()}. ${feature.description} Compare ${matches.length} VPNs with this feature.`,
+  canonical: canonicalUrl(`/features/${slug}/`),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Features", href: "/features/" },
+  { label: feature.name, href: `/features/${slug}/` },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background padding="loose">
+    <Container>
+      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <Badge class="mb-2">{categoryLabels[feature.category] ?? feature.category}</Badge>
+          <Heading level={1}>{feature.name}</Heading>
+          <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{feature.description}</Text>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Heading level={2}>
+        Providers with {feature.name}
+        <Text element="span" tone="muted" size="sm" class="ml-2">({matches.length})</Text>
+      </Heading>
+      {matches.length === 0 && (
+        <div class="mt-6 flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
+          <Text tone="muted">No VPN providers currently offer {feature.name.toLowerCase()}.</Text>
+        </div>
+      )}
+      <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
+        {matches.map(({ provider }) => (
+          <Card variant="raised" class="flex flex-col">
+            <Heading level={3} size="lg">{provider.name}</Heading>
+            <Text size="sm" tone="muted" class="mt-1">{provider.tagline}</Text>
+            <div class="mt-2 flex flex-wrap gap-1.5">
+              <Badge tone="neutral" size="sm">{provider.serverNetwork.serverCount.toLocaleString()} servers</Badge>
+              <Badge tone="success" size="sm">{provider.simultaneousConnections === 0 ? "Unlimited" : `${provider.simultaneousConnections} devices`}</Badge>
+            </div>
+            <div class="mt-auto pt-4">
+              <Button variant="outline" size="sm" href={`/vpn/${provider.slug}/`}>View Details</Button>
+            </div>
+          </Card>
+        ))}
+      </Grid>
+    </Container>
+  </Section>
+
+  {relatedGuides.length > 0 && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Related Guides</Heading>
+        <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
+          {relatedGuides.map((g) => (
+            <Card>
+              <Heading level={3} size="lg">{g.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
+              <Badge tone="neutral" size="sm" class="mt-2">{g.data.difficulty}</Badge>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  <Section>
+    <Container>
+      <Heading level={2}>Explore by Other Dimensions</Heading>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
+        <a href="/platforms/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Platforms</a>
+        <a href="/countries/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Countries</a>
+        <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming</a>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>

@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import ToolLayout from "@/layouts/ToolLayout.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import VpnCompare from "@/components/tools/VpnCompare.astro";
+import type { Breadcrumb } from "@/types/site";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+const allComparisons = await getCollection("comparisons");
+const allCountries = await getCollection("countries");
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => ({
+  providerId: e.data.provider.id,
+  scores: e.data.scores,
+  verdict: e.data.verdict,
+}));
+const comparisons = allComparisons.map((e) => ({
+  slug: e.id,
+  title: e.data.title,
+  providerIds: e.data.providers.map((ref) => ref.id),
+}));
+const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("VPN Comparison Builder — Compare Any VPNs Side by Side"),
+  description: "Select any VPN providers and compare them side by side across pricing, privacy, performance, features, and more.",
+  canonical: canonicalUrl("/tools/compare/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Comparison Builder", href: "/tools/compare/" },
+];
+---
+
+<ToolLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <div slot="intro">
+    <div class="mx-auto max-w-2xl text-center">
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Compare VPNs</h1>
+      <p class="mt-3 text-lg text-muted-foreground">
+        Select up to 4 VPN providers and compare them side by side across price, privacy, network, and features.
+      </p>
+    </div>
+  </div>
+  <VpnCompare
+    providers={providers}
+    reviews={reviews}
+    comparisons={comparisons}
+    countryNames={Object.fromEntries(countryNameMap)}
+  />
+</ToolLayout>

@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import ToolLayout from "@/layouts/ToolLayout.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import VpnFinder from "@/components/tools/VpnFinder.astro";
+import type { Breadcrumb } from "@/types/site";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+const allFeatures = await getCollection("features");
+const allProtocols = await getCollection("protocols");
+const allPlatforms = await getCollection("platforms");
+const allStreamingSvcs = await getCollection("streaming-services");
+const allCountries = await getCollection("countries");
+
+const featureNameMap = new Map(allFeatures.map((f) => [f.data.id, f.data.name]));
+const protocolNameMap = new Map(allProtocols.map((p) => [p.data.id, p.data.name]));
+const platformNameMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.name]));
+const streamingNameMap = new Map(allStreamingSvcs.map((s) => [s.data.id, s.data.name]));
+const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => ({
+  providerId: e.data.provider.id,
+  scores: e.data.scores,
+  verdict: e.data.verdict,
+}));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("VPN Finder — Find the Right VPN for Your Needs"),
+  description: "Answer a few questions and get a personalized VPN recommendation based on your privacy needs, streaming preferences, budget, and platform requirements.",
+  canonical: canonicalUrl("/tools/finder/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Finder", href: "/tools/finder/" },
+];
+---
+
+<ToolLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <div slot="intro">
+    <div class="mx-auto max-w-2xl text-center">
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Find Your VPN</h1>
+      <p class="mt-3 text-lg text-muted-foreground">
+        Answer a few questions and we'll recommend the best VPN for your needs. Every recommendation is explained — no black boxes.
+      </p>
+    </div>
+  </div>
+  <VpnFinder
+    providers={providers}
+    reviews={reviews}
+    featureNames={Object.fromEntries(featureNameMap)}
+    protocolNames={Object.fromEntries(protocolNameMap)}
+    platformNames={Object.fromEntries(platformNameMap)}
+    streamingNames={Object.fromEntries(streamingNameMap)}
+    countryNames={Object.fromEntries(countryNameMap)}
+  />
+</ToolLayout>

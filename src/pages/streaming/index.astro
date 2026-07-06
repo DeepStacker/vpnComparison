@@ -1,0 +1,91 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Card from "@/components/ui/Card.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Button from "@/components/ui/Button.astro";
+import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { getStreamingServiceCountMap } from "@/lib/content/explorer";
+import { streamingHref } from "@/lib/content/links";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const allStreamingSvcs = await getCollection("streaming-services");
+const countMap = await getStreamingServiceCountMap();
+
+const seo = normalizeSeoMeta({
+  title: "VPN Streaming Compatibility — Netflix, Disney+, Prime Video & More",
+  description: "Find out which VPNs work with Netflix, Disney+, Amazon Prime Video, HBO Max, Hulu, and BBC iPlayer. Verified streaming support from hands-on testing.",
+  canonical: canonicalUrl("/streaming/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "Streaming", href: "/streaming/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section background>
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Heading level={1}>Streaming Compatibility</Heading>
+        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+          Not every VPN can unblock every streaming service. Browse verified compatibility for Netflix, Disney+, Prime Video, HBO Max, Hulu, and BBC iPlayer — tested and verified by our team.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <Grid cols={1} colsMd={2} colsLg={3} gap={6}>
+        {allStreamingSvcs.map((s) => {
+          const count = countMap.get(s.data.id) ?? 0;
+          return (
+            <Card variant="raised" class="flex flex-col">
+              <div class="flex items-center gap-3">
+                <Icon name={s.data.icon as any} size={24} class="text-primary" />
+                <Heading level={2} size="lg">{s.data.name}</Heading>
+              </div>
+              <Text size="sm" tone="muted" class="mt-2">
+                {s.data.regions.length > 0
+                  ? `Available in ${s.data.regions.length} region${s.data.regions.length > 1 ? "s" : ""}`
+                  : "Global service"}
+              </Text>
+              <div class="mt-2">
+                <Badge tone={count > 0 ? "success" : "neutral"} size="sm">
+                  {count} {count === 1 ? "VPN works" : "VPNs work"}
+                </Badge>
+              </div>
+              <div class="mt-auto pt-4">
+                <Button variant="outline" size="sm" href={streamingHref(s.data.slug)}>
+                  View Compatible VPNs
+                </Button>
+              </div>
+            </Card>
+          );
+        })}
+      </Grid>
+    </Container>
+  </Section>
+
+  <Section background padding="loose">
+    <Container>
+      <div class="mx-auto max-w-xl text-center">
+        <Icon name="tv" size={32} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Verified by Real Testing</Heading>
+        <Text tone="muted" class="mt-3 leading-relaxed">
+          Streaming support is verified through hands-on testing, not manufacturer claims. Each provider's compatibility is checked against every major platform and labeled as verified, partial, or unsupported.
+        </Text>
+        <div class="mt-6">
+          <Button variant="outline" href="/methodology/">View Testing Methodology</Button>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</SeoLayout>
