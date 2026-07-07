@@ -54,11 +54,11 @@ const explorerLinks = [
     <Container>
       <div class="relative mx-auto max-w-2xl text-center">
         <Badge tone="primary" class="border border-brand-400/20">FreeVPN4USA — VPN Intelligence Platform</Badge>
-        <h1 class="mt-5 text-4xl font-bold tracking-tight text-balance leading-tight text-white sm:text-5xl">Find the Right VPN, Not the Right Ad</h1>
-        <p class="mt-4 text-lg leading-relaxed text-white/75 max-w-prose mx-auto">
+        <h1 class="mt-4 text-4xl font-bold tracking-tight text-balance leading-tight text-white sm:text-5xl">Find the Right VPN, Not the Right Ad</h1>
+        <p class="mt-3 text-lg leading-relaxed text-white/75 max-w-prose mx-auto">
           We test every VPN with the same methodology, present the data transparently, and never let affiliate commissions influence our recommendations.
         </p>
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
           <Button href="/tools/finder/" class="shadow-glow">Find Your VPN</Button>
           <Button variant="outline" href="/vpn/" class="border-white/20 text-white hover:bg-white/10">Browse All Reviews</Button>
           <Button variant="outline" href="/best-lists/" class="border-white/20 text-white hover:bg-white/10">Best VPN Lists</Button>
@@ -71,20 +71,20 @@ const explorerLinks = [
   <Section padding="tight">
     <Container>
       <div class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-        <div class="bg-surface p-5 text-center">
-          <div class="text-2xl font-bold text-foreground">{allProviders.length}</div>
+        <div class="bg-surface p-4 text-center">
+          <div class="text-xl font-bold text-foreground">{allProviders.length}</div>
           <div class="text-xs text-muted-foreground mt-0.5">VPNs tested</div>
         </div>
-        <div class="bg-surface p-5 text-center">
-          <div class="text-2xl font-bold text-foreground">{avgScore.toFixed(1)}</div>
+        <div class="bg-surface p-4 text-center">
+          <div class="text-xl font-bold text-foreground">{avgScore.toFixed(1)}</div>
           <div class="text-xs text-muted-foreground mt-0.5">Avg score</div>
         </div>
-        <div class="bg-surface p-5 text-center">
-          <div class="text-2xl font-bold text-foreground">{allCountries.length}</div>
+        <div class="bg-surface p-4 text-center">
+          <div class="text-xl font-bold text-foreground">{allCountries.length}</div>
           <div class="text-xs text-muted-foreground mt-0.5">Countries</div>
         </div>
-        <div class="bg-surface p-5 text-center">
-          <div class="text-2xl font-bold text-foreground">{allFeatures.length}</div>
+        <div class="bg-surface p-4 text-center">
+          <div class="text-xl font-bold text-foreground">{allFeatures.length}</div>
           <div class="text-xs text-muted-foreground mt-0.5">Features tracked</div>
         </div>
       </div>
@@ -99,21 +99,21 @@ const explorerLinks = [
           <Badge tone="primary" size="sm">Editor's Choice</Badge>
         </div>
         <Heading level={2} class="text-center">Our Top-Rated VPN</Heading>
-        <div class="mt-8 mx-auto max-w-lg">
-          <a href={`/vpn/${editorChoice.entry.data.slug}/`} class="group block rounded-xl border-2 border-primary/30 bg-surface p-8 no-underline transition-all hover:border-primary hover:shadow-lg motion-safe:duration-200">
+        <div class="mt-6 mx-auto max-w-lg">
+          <a href={`/vpn/${editorChoice.entry.data.slug}/`} class="group block rounded-xl border-2 border-primary/30 bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-lg motion-safe:duration-200">
             <div class="flex flex-col items-center text-center">
-              <img src={`/logos/${editorChoice.entry.data.slug}.svg`} alt="" class="h-12 w-12 object-contain" width={48} height={48} loading="eager" />
-              <Heading level={3} class="mt-4 text-xl">{editorChoice.entry.data.name}</Heading>
-              <p class="mt-2 text-sm text-muted-foreground leading-relaxed max-w-sm">{editorChoice.entry.data.tagline}</p>
+              <img src={`/logos/${editorChoice.entry.data.slug}.svg`} alt="" class="h-10 w-10 object-contain" width={40} height={40} loading="eager" />
+              <Heading level={3} class="mt-3 text-lg">{editorChoice.entry.data.name}</Heading>
+              <p class="mt-1 text-sm text-muted-foreground leading-relaxed max-w-sm">{editorChoice.entry.data.tagline}</p>
               {editorChoice.review && (
-                <div class="mt-4">
-                  <ScoreRing value={editorChoice.review.scores.overall} size={80} strokeWidth={6} label="Overall score" />
+                <div class="mt-3">
+                  <ScoreRing value={editorChoice.review.scores.overall} size={64} strokeWidth={5} label="Overall score" />
                 </div>
               )}
               {editorChoice.review?.verdict && (
-                <p class="mt-3 text-sm font-medium text-primary">{editorChoice.review.verdict.headline}</p>
+                <p class="mt-2 text-sm font-medium text-primary">{editorChoice.review.verdict.headline}</p>
               )}
-              <div class="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <div class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                 Read full review <Icon name="arrow-right" size={14} />
               </div>
             </div>
@@ -133,20 +133,20 @@ const explorerLinks = [
       <p class="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
         Not sure where to start? Our tools turn data into decisions — no guesswork.
       </p>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
-        <a href="/tools/finder/" class="group rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-md">
-          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <Icon name="wand-2" size={22} />
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 max-w-3xl mx-auto">
+        <a href="/tools/finder/" class="group rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-primary hover:shadow-md">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <Icon name="wand-2" size={18} />
           </div>
-          <Heading level={3} class="mt-4 text-base font-semibold">VPN Recommender</Heading>
-          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Answer a few questions about your needs and get a personalized recommendation with full transparency.</p>
+          <Heading level={3} class="mt-3 text-sm font-semibold">VPN Recommender</Heading>
+          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Answer a few questions and get a personalized recommendation with full transparency.</p>
         </a>
-        <a href="/tools/compare/" class="group rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-md">
-          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <Icon name="arrow-left-right" size={22} />
+        <a href="/tools/compare/" class="group rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-primary hover:shadow-md">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <Icon name="arrow-left-right" size={18} />
           </div>
-          <Heading level={3} class="mt-4 text-base font-semibold">Comparison Builder</Heading>
-          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Select any providers and compare them side by side across pricing, privacy, network, features, and more.</p>
+          <Heading level={3} class="mt-3 text-sm font-semibold">Comparison Builder</Heading>
+          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Select any providers and compare side by side across pricing, privacy, features, and more.</p>
         </a>
       </div>
     </Container>
@@ -162,11 +162,11 @@ const explorerLinks = [
       <p class="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
         Dive into any dimension of our VPN intelligence — every page is cross-linked and data-rich.
       </p>
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <div class="mt-5 flex flex-wrap justify-center gap-2">
         {explorerLinks.map((link) => (
           <a
             href={link.href}
-            class="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium no-underline text-foreground transition-all hover:border-primary hover:text-primary hover:shadow-sm"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium no-underline text-foreground transition-all hover:border-primary hover:text-primary hover:shadow-sm"
           >
             <Icon name={link.icon} size={16} class="text-primary shrink-0" />
             {link.label}
@@ -180,40 +180,40 @@ const explorerLinks = [
   <!-- ============ BEST LISTS + GUIDES ============ -->
   <Section>
     <Container>
-      <div class="grid gap-8 lg:grid-cols-2">
+      <div class="grid gap-6 lg:grid-cols-2">
         <div>
-          <Heading level={2} class="text-lg">Best VPN Lists</Heading>
-          <p class="mt-1 text-sm text-muted-foreground">Curated by use case with transparent criteria</p>
-          <div class="mt-4 space-y-3">
+          <Heading level={2} class="text-base">Best VPN Lists</Heading>
+          <p class="mt-1 text-xs text-muted-foreground">Curated by use case with transparent criteria</p>
+          <div class="mt-3 space-y-2">
             {allBestLists.slice(0, 4).map((bl) => (
-              <a href={`/best-lists/${bl.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-4 no-underline transition-all hover:border-primary hover:shadow-sm">
+              <a href={`/best-lists/${bl.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-3 no-underline transition-all hover:border-primary hover:shadow-sm">
                 <div class="min-w-0">
                   <div class="text-sm font-medium text-foreground">{bl.data.title}</div>
                   <div class="text-xs text-muted-foreground mt-0.5">{bl.data.entries.length} entries</div>
                 </div>
-                <Icon name="arrow-right" size={16} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <Icon name="arrow-right" size={14} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
               </a>
             ))}
           </div>
-          <div class="mt-4">
+          <div class="mt-3">
             <Button variant="ghost" size="sm" href="/best-lists/">View all lists</Button>
           </div>
         </div>
         <div>
-          <Heading level={2} class="text-lg">Popular Guides</Heading>
-          <p class="mt-1 text-sm text-muted-foreground">Learn how VPNs work and how to choose one</p>
-          <div class="mt-4 space-y-3">
+          <Heading level={2} class="text-base">Popular Guides</Heading>
+          <p class="mt-1 text-xs text-muted-foreground">Learn how VPNs work and how to choose one</p>
+          <div class="mt-3 space-y-2">
             {allGuides.slice(0, 4).map((g) => (
-              <a href={`/guides/${g.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-4 no-underline transition-all hover:border-primary hover:shadow-sm">
+              <a href={`/guides/${g.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-3 no-underline transition-all hover:border-primary hover:shadow-sm">
                 <div class="min-w-0">
                   <div class="text-sm font-medium text-foreground">{g.data.title}</div>
                   <div class="text-xs text-muted-foreground mt-0.5 capitalize">{g.data.difficulty}</div>
                 </div>
-                <Icon name="arrow-right" size={16} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <Icon name="arrow-right" size={14} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
               </a>
             ))}
           </div>
-          <div class="mt-4">
+          <div class="mt-3">
             <Button variant="ghost" size="sm" href="/guides/">View all guides</Button>
           </div>
         </div>
