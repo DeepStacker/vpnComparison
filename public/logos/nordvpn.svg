@@ -1,0 +1,9 @@
+<svg 
+  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32" fill="none">
+  <!-- NordVPN mountain icon -->
+  <path d="M4 26 L16 6 L28 26 Z" fill="#4687FF" stroke="#4687FF" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M10 26 L16 14 L22 26 Z" fill="#fff" stroke="#fff" stroke-width="0.5" stroke-linejoin="round"/>
+  <!-- NordVPN wordmark -->
+  <text x="36" y="23" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="currentColor" letter-spacing="-0.3">NordVPN</text>
+</svg>
+

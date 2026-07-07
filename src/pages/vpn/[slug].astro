@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import ArticleLayout from "@/layouts/ArticleLayout.astro";
+import SeoLayout from "@/layouts/SeoLayout.astro";
 import Section from "@/components/ui/Section.astro";
 import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
@@ -8,14 +8,16 @@ import Text from "@/components/ui/Text.astro";
 import Card from "@/components/ui/Card.astro";
 import Badge from "@/components/ui/Badge.astro";
 import Button from "@/components/ui/Button.astro";
-import Rating from "@/components/ui/Rating.astro";
+import ScoreBar from "@/components/ui/ScoreBar.astro";
+import ScoreRing from "@/components/ui/ScoreRing.astro";
+import PriceTag from "@/components/ui/PriceTag.astro";
+import StreamingMatrix from "@/components/ui/StreamingMatrix.astro";
 import Grid from "@/components/ui/Grid.astro";
-import Table from "@/components/ui/Table.astro";
 import Chip from "@/components/ui/Chip.astro";
 import Icon from "@/components/ui/Icon.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
-import { readingTimeLabel } from "@/lib/utils/reading-time";
-import { featureHref, protocolHref, platformHref, countryHref, streamingHref } from "@/lib/content/links";
+import { cx } from "@/lib/utils/string";
+import { featureHref, protocolHref, platformHref, countryHref } from "@/lib/content/links";
 import type { Breadcrumb } from "@/types/site";
 import type { ISODateString } from "@/types/common";
 
@@ -54,7 +56,6 @@ const protocolSlugMap = new Map(allProtocols.map((p) => [p.data.id, p.data.slug]
 const platformNameMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.name]));
 const platformSlugMap = new Map(allPlatforms.map((p) => [p.data.id, p.data.slug]));
 const streamingNameMap = new Map(allStreamingSvcs.map((s) => [s.data.id, s.data.name]));
-const streamingSlugMap = new Map(allStreamingSvcs.map((s) => [s.data.id, s.data.slug]));
 const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
 const countrySlugMap = new Map(allCountries.map((c) => [c.data.code, c.data.slug]));
 
@@ -71,8 +72,6 @@ const reviewAuthorEntry = review?.data?.reviewer?.id
   ? await getEntry("authors", review.data.reviewer.id)
   : null;
 const authorName = reviewAuthorEntry?.data?.name;
-const authorAvatar = reviewAuthorEntry?.data?.avatar;
-const readingTime = review?.body?.trim() ? readingTimeLabel(review.body) : undefined;
 
 const pageTitle = reviewData?.title
   ? buildTitle(reviewData.title)
@@ -86,311 +85,229 @@ const seo = normalizeSeoMeta({
 });
 
 const breadcrumbs: Breadcrumb[] = [
-  { label: "VPN Reviews", href: "/" },
+  { label: "VPN Reviews", href: "/vpn/" },
   { label: provider.name, href: `/vpn/${slug}/` },
 ];
 
 const jurisdictionCountrySlug = countrySlugMap.get(provider.jurisdiction);
 
-const loggingPolicyBadge: Record<string, string> = {
-  "no-logs": "success",
-  minimal: "info",
-  "connection-only": "warning",
-  "usage-only": "warning",
-  unknown: "neutral",
-};
+const cheapest = provider.pricing.plans.find((p) => p.featured) ?? provider.pricing.plans[0];
 
-const streamingSupportBadge: Record<string, string> = {
-  verified: "success",
-  partial: "warning",
-  unsupported: "danger",
-  unknown: "neutral",
-};
-
-const scoreLabels: Record<string, string> = {
-  overall: "Overall",
-  performance: "Performance",
-  privacy: "Privacy",
-  security: "Security",
-  streaming: "Streaming",
-  torrenting: "Torrenting",
-  easeOfUse: "Ease of Use",
-  value: "Value",
-};
-
-const plansColumns = [
-  { key: "cycle", label: "Plan" },
-  { key: "price", label: "Price", align: "right" as const },
-  { key: "effectiveMonthly", label: "Effective Monthly", align: "right" as const },
-];
-
-const plansRows = provider.pricing.plans.map((plan) => ({
-  cycle: plan.cycle.charAt(0).toUpperCase() + plan.cycle.slice(1),
-  price: `$${plan.price.toFixed(2)}`,
-  effectiveMonthly: `$${plan.effectiveMonthly.toFixed(2)}`,
-}));
-
+/** Simple capitalize helper */
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 ---
 
-<ArticleLayout
-  seo={seo}
-  breadcrumbs={breadcrumbs}
-  authorName={authorName}
-  authorAvatar={authorAvatar}
-  readingTime={readingTime}
->
-  <div slot="title">
-    <Section background padding="loose">
-      <Container>
-        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            {jurisdictionCountrySlug
-              ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline"><Badge class="mb-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction} Jurisdiction</Badge></a>
-              : <Badge class="mb-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction} Jurisdiction</Badge>
-            }
-            <Heading level={1}>{provider.name}</Heading>
-            <Text size="lg" tone="muted" class="mt-1 max-w-2xl">{provider.tagline}</Text>
-            {allScores && (
-              <div class="mt-3">
-                <Rating value={allScores.overall} label="Overall score" size={20} />
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+
+  <!-- ============================================================
+       PROVIDER HERO
+       ============================================================ -->
+  <Section class="relative overflow-hidden bg-gradient-hero" padding="none">
+    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.04]" aria-hidden="true" />
+    <div class="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-brand-400/8 blur-3xl" aria-hidden="true" />
+    <div class="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-brand-300/6 blur-3xl" aria-hidden="true" />
+    <Container>
+      <div class="flex flex-col gap-8 py-12 lg:flex-row lg:items-center lg:justify-between lg:py-16">
+        <!-- Left: identity + meta -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10">
+              <img src={`/logos/${slug}.svg`} alt={`${provider.name} logo`} class="h-9 w-9 object-contain" width={36} height={36} loading="eager" />
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">{provider.name} Review</h1>
+              {reviewData && (
+                <div class="mt-1.5 flex items-center gap-3">
+                  {reviewData.verdict.recommendation === "recommended" && (
+                    <Badge tone="success" size="sm" class="border border-white/10">Editor's Choice</Badge>
+                  )}
+                  <Text size="xs" class="text-white/50">
+                    Updated {reviewData.updatedAt ?? provider.updatedAt}
+                  </Text>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <!-- Verdict headline -->
+          {reviewData?.verdict && (
+            <p class="max-w-2xl text-lg leading-relaxed text-white/85 font-medium">
+              {reviewData.verdict.headline}
+            </p>
+          )}
+          <p class="mt-2 max-w-2xl text-base leading-relaxed text-white/65">
+            {provider.tagline}
+          </p>
+
+          <!-- CTA row -->
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            {cheapest && (
+              <div class="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-2.5">
+                <div class="flex items-baseline gap-0.5 text-white">
+                  <span class="text-2xl font-bold tracking-tight">${cheapest.effectiveMonthly.toFixed(2)}</span>
+                  <span class="text-sm text-white/60">/mo</span>
+                </div>
+                <div class="text-xs text-white/50">
+                  {cheapest.cycle === "monthly" ? "Monthly" : cheapest.cycle === "yearly" ? "Annual" : "2-year"} plan
+                </div>
               </div>
             )}
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <Button href={provider.websiteUrl} variant="outline" size="sm" target="_blank" rel="noopener noreferrer">
-              Visit Website
+            <Button href={provider.websiteUrl} variant="outline" size="lg" target="_blank" rel="noopener noreferrer" class="border-white/20 text-white hover:bg-white/10">
+              Visit Website <Icon name="external-link" size={14} />
             </Button>
             {review && (
-              <Button href={`/vpn/${slug}/#review`} size="sm">
+              <Button href="#scores" size="lg" class="shadow-glow">
                 Read Review
               </Button>
             )}
           </div>
         </div>
-      </Container>
-    </Section>
 
-    <Section>
-      <Container>
-        <Grid cols={1} colsMd={2} colsLg={4} gap={6}>
-          <Card padding="md">
-            <div class="flex items-center gap-2">
-              <Icon name="server" size={18} class="text-primary" />
-              <Text weight="semibold">Server Network</Text>
-            </div>
-            <Text size="xl" weight="semibold" class="mt-2">{provider.serverNetwork.serverCount.toLocaleString()}</Text>
-            <Text size="sm" tone="muted">servers in {provider.serverNetwork.countryCount} countries</Text>
-          </Card>
-          <Card padding="md">
-            <div class="flex items-center gap-2">
-              <Icon name="shield" size={18} class="text-primary" />
-              <Text weight="semibold">Logging Policy</Text>
-            </div>
-            <div class="mt-2">
-              <Badge tone={loggingPolicyBadge[provider.loggingPolicy] as any}>
-                {capitalize(provider.loggingPolicy.replace(/-/g, " "))}
-              </Badge>
-            </div>
-            <Text size="sm" tone="muted" class="mt-1">
-              {provider.killSwitch ? "Kill switch included" : "No kill switch"}
-            </Text>
-          </Card>
-          {jurisdictionCountrySlug
-            ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline">
-                <Card padding="md">
-                  <div class="flex items-center gap-2">
-                    <Icon name="globe" size={18} class="text-primary" />
-                    <Text weight="semibold">Jurisdiction</Text>
-                  </div>
-                  <Text size="xl" weight="semibold" class="mt-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
-                  <Text size="sm" tone="muted">Headquarters</Text>
-                </Card>
-              </a>
-            : <Card padding="md">
-                <div class="flex items-center gap-2">
-                  <Icon name="globe" size={18} class="text-primary" />
-                  <Text weight="semibold">Jurisdiction</Text>
-                </div>
-                <Text size="xl" weight="semibold" class="mt-2">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
-                <Text size="sm" tone="muted">Headquarters</Text>
-              </Card>
-          }
-          <Card padding="md">
-            <div class="flex items-center gap-2">
-              <Icon name="monitor-smartphone" size={18} class="text-primary" />
-              <Text weight="semibold">Connections</Text>
-            </div>
-            <Text size="xl" weight="semibold" class="mt-2">
-              {provider.simultaneousConnections === 0 ? "Unlimited" : provider.simultaneousConnections}
-            </Text>
-            <Text size="sm" tone="muted">Simultaneous devices</Text>
-          </Card>
-        </Grid>
-      </Container>
-    </Section>
-
-    <Section background>
-      <Container>
-        <Heading level={2}>Pricing Plans</Heading>
-        <Text tone="muted" class="mt-2">
-          {provider.pricing.moneyBackGuaranteeDays}-day money-back guarantee
-          {provider.pricing.freeTier ? " · Free tier available" : ""}
-        </Text>
-        <div class="mt-6">
-          <Table columns={plansColumns} rows={plansRows} caption={`${provider.name} pricing plans`} zebra firstColumnSticky />
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <Text size="sm" tone="muted" element="span" class="mr-1">Payment: </Text>
-          {provider.pricing.paymentMethods.map((m) => <Chip>{m}</Chip>)}
-        </div>
-        {provider.pricing.freeTierNotes && (
-          <Text size="sm" tone="info" class="mt-2">{provider.pricing.freeTierNotes}</Text>
+        <!-- Right: score ring -->
+        {allScores && (
+          <a href="#scores" class="flex shrink-0 flex-col items-center gap-2 no-underline group/score">
+            <svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label={`Overall score ${allScores.overall.toFixed(1)} out of 10`}>
+              <circle cx="70" cy="70" r="60" fill="none" stroke="rgb(255 255 255 / 0.12)" stroke-width="8" />
+              <circle cx="70" cy="70" r="60" fill="none" stroke="rgb(255 255 255 / 0.9)" stroke-width="8"
+                stroke-dasharray={`${2 * Math.PI * 60}`}
+                stroke-dashoffset={`${2 * Math.PI * 60 * (1 - allScores.overall / 10)}`}
+                stroke-linecap="round" transform="rotate(-90 70 70)"
+                class="transition-all motion-safe:duration-700 motion-safe:ease-emphasized" />
+              <text x="50%" y="44%" text-anchor="middle" dominant-baseline="central" font-size="36" font-weight="700" fill="white">
+                {allScores.overall.toFixed(1)}
+              </text>
+              <text x="50%" y="62%" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="rgb(255 255 255 / 0.55)">
+                OUT OF 10
+              </text>
+            </svg>
+          </a>
         )}
-      </Container>
-    </Section>
+      </div>
+    </Container>
+  </Section>
 
-    <Section>
-      <Container>
-        <Heading level={2}>Features</Heading>
-        <Text tone="muted" class="mt-2">What {provider.name} offers out of the box</Text>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {provider.features.map((fid) => {
-            const name = featureNameMap.get(fid);
-            const slug = featureSlugMap.get(fid);
-            if (!name || !slug) return null;
-            return <a href={featureHref(slug)} class="no-underline"><Badge>{name}</Badge></a>;
-          })}
-        </div>
-      </Container>
-    </Section>
-
-    <Section background>
-      <Container>
-        <Heading level={2}>Server Network</Heading>
-        <Text tone="muted" class="mt-2">
-          {provider.serverNetwork.serverCount.toLocaleString()} servers across {provider.serverNetwork.countryCount} countries
-          {provider.serverNetwork.virtualLocations ? " (includes virtual locations)" : ""}
-        </Text>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {provider.serverNetwork.countries.map((code) => {
-            const name = countryNameMap.get(code);
-            const slug = countrySlugMap.get(code);
-            if (!slug) return <Chip>{name ?? code} ({code})</Chip>;
-            return <a href={countryHref(slug)} class="no-underline"><Chip>{name ?? code} ({code})</Chip></a>;
-          })}
-        </div>
-      </Container>
-    </Section>
-
-    <Section>
-      <Container>
-        <Heading level={2}>Protocols</Heading>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {provider.protocols.map((pid) => {
-            const name = protocolNameMap.get(pid);
-            const slug = protocolSlugMap.get(pid);
-            if (!name || !slug) return null;
-            return <a href={protocolHref(slug)} class="no-underline"><Badge tone="neutral">{name}</Badge></a>;
-          })}
-        </div>
-      </Container>
-    </Section>
-
-    <Section background>
-      <Container>
-        <Heading level={2}>Platform Support</Heading>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {provider.platforms.map((pid) => {
-            const name = platformNameMap.get(pid);
-            const slug = platformSlugMap.get(pid);
-            if (!name || !slug) return null;
-            return <a href={platformHref(slug)} class="no-underline"><Chip>{name}</Chip></a>;
-          })}
-        </div>
-      </Container>
-    </Section>
-  </div>
-
-  {allScores && (
-    <Section id="review">
-      <Container>
-        <Heading level={2}>Review Scores</Heading>
-        <Text tone="muted" class="mt-2">
-          {reviewData?.title ?? `${provider.name} review scores`}
-          {reviewData?.testDate && <span> · Tested {reviewData.testDate}</span>}
-        </Text>
-        <Grid cols={2} colsMd={4} gap={4} class="mt-6">
-          {Object.entries(scoreLabels).map(([key, label]) => {
-            const value = allScores[key as keyof typeof allScores];
-            if (value == null) return null;
-            return (
-              <Card padding="sm">
-                <Text size="sm" tone="muted">{label}</Text>
-                <Rating value={value} size={14} showValue={false} class="mt-1" />
-                <Text weight="semibold" class="mt-1">{value.toFixed(1)}</Text>
-              </Card>
-            );
-          })}
-        </Grid>
-        {reviewData?.verdict && (
-          <div class="mt-6">
-            <Card
-              variant="raised"
-              padding="lg"
-              class:list={{
-                "border-l-4 border-success": reviewData.verdict.recommendation === "recommended",
-                "border-l-4 border-warning": reviewData.verdict.recommendation === "conditional",
-                "border-l-4 border-danger": reviewData.verdict.recommendation === "not-recommended",
-              }}
-            >
-              <div class="flex items-start gap-4">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
-                  class:list={{
-                    "bg-success-surface text-success": reviewData.verdict.recommendation === "recommended",
-                    "bg-warning-surface text-warning": reviewData.verdict.recommendation === "conditional",
-                    "bg-danger-surface text-danger": reviewData.verdict.recommendation === "not-recommended",
-                  }}
-                >
-                  <Icon
-                    name={reviewData.verdict.recommendation === "recommended" ? "circle-check" : "alert-circle"}
-                    size={24}
-                  />
-                </div>
-                <div class="min-w-0">
-                  <Badge
-                    tone={
-                      reviewData.verdict.recommendation === "recommended"
-                        ? "success"
-                        : reviewData.verdict.recommendation === "conditional"
-                          ? "warning"
-                          : "danger"
-                      }
-                  >
-                    {reviewData.verdict.recommendation === "recommended"
-                      ? "Recommended"
-                      : reviewData.verdict.recommendation === "conditional"
-                        ? "Conditional"
-                        : "Not Recommended"}
-                  </Badge>
-                  <Heading level={3} class="mt-2">{reviewData.verdict.headline}</Heading>
-                  <Text tone="muted" class="mt-2 leading-relaxed">{reviewData.verdict.summary}</Text>
-                  <div class="mt-4">
-                    <Button variant="outline" size="sm" href="/methodology/">How we test →</Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
+  <!-- ============================================================
+       KEY STATS ROW
+       ============================================================ -->
+  <Section padding="tight">
+    <Container>
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+            <Icon name="server" size={16} />
           </div>
-        )}
+          <div class="min-w-0">
+            <Text size="sm" weight="semibold" class="tabular-nums">{provider.serverNetwork.serverCount.toLocaleString()}</Text>
+            <Text size="xs" tone="muted">Servers</Text>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+            <Icon name="globe" size={16} />
+          </div>
+          <div class="min-w-0">
+            <Text size="sm" weight="semibold" class="tabular-nums">{provider.serverNetwork.countryCount}</Text>
+            <Text size="xs" tone="muted">Countries</Text>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+            <Icon name="monitor-smartphone" size={16} />
+          </div>
+          <div class="min-w-0">
+            <Text size="sm" weight="semibold" class="tabular-nums">{provider.simultaneousConnections === 0 ? "∞" : provider.simultaneousConnections}</Text>
+            <Text size="xs" tone="muted">Devices</Text>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+            <Icon name="shield" size={16} />
+          </div>
+          <div class="min-w-0">
+            <Text size="sm" weight="semibold">{provider.loggingPolicy === "no-logs" ? "No-logs" : capitalize(provider.loggingPolicy)}</Text>
+            <Text size="xs" tone="muted">Logging</Text>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
+            <Icon name="landmark" size={16} />
+          </div>
+          <div class="min-w-0">
+            {jurisdictionCountrySlug
+              ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline"><Text size="sm" weight="semibold" class="text-primary hover:underline">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text></a>
+              : <Text size="sm" weight="semibold">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
+            }
+            <Text size="xs" tone="muted">Jurisdiction</Text>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <!-- ============================================================
+       SCORE BREAKDOWN
+       ============================================================ -->
+  {allScores && (
+    <Section background id="scores">
+      <Container>
+        <div class="flex items-center justify-between">
+          <div>
+            <Badge tone="primary" size="sm">Review scores</Badge>
+            <Heading level={2} class="mt-2">Score Breakdown — {allScores.overall.toFixed(1)} / 10</Heading>
+            {reviewData?.testDate && <Text size="sm" tone="muted">Tested {reviewData.testDate}</Text>}
+          </div>
+        </div>
+        <div class="mt-6 grid gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2 space-y-4">
+            <ScoreBar value={allScores.performance} label="Performance" />
+            <ScoreBar value={allScores.privacy} label="Privacy" />
+            <ScoreBar value={allScores.security} label="Security" />
+            <ScoreBar value={allScores.streaming} label="Streaming" />
+            <ScoreBar value={allScores.torrenting} label="Torrenting" />
+            <ScoreBar value={allScores.easeOfUse} label="Ease of Use" />
+            <ScoreBar value={allScores.value} label="Value" />
+          </div>
+          <div>
+            {reviewData?.verdict && reviewData?.methodology && (
+              <Card variant="raised" padding="lg" class="h-full flex flex-col">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-full"
+                    class:list={{
+                      "bg-success-surface text-success": reviewData.verdict.recommendation === "recommended",
+                      "bg-warning-surface text-warning": reviewData.verdict.recommendation === "conditional",
+                      "bg-danger-surface text-danger": reviewData.verdict.recommendation === "not-recommended",
+                    }}
+                  >
+                    <Icon name={reviewData.verdict.recommendation === "recommended" ? "circle-check" : "alert-circle"} size={18} />
+                  </div>
+                  <Badge
+                    tone={reviewData.verdict.recommendation === "recommended" ? "success" : reviewData.verdict.recommendation === "conditional" ? "warning" : "danger"}>
+                    {reviewData.verdict.recommendation === "recommended" ? "Recommended" : capitalize(reviewData.verdict.recommendation)}
+                  </Badge>
+                </div>
+                <Heading level={3} class="text-lg">{reviewData.verdict.headline}</Heading>
+                <Text size="sm" tone="muted" class="mt-2 leading-relaxed flex-1">{reviewData.verdict.summary}</Text>
+                <Text size="xs" tone="muted" class="mt-3 leading-relaxed border-t border-border pt-3">{reviewData.methodology}</Text>
+                <Button variant="outline" size="sm" href="/methodology/" class="mt-3">Full methodology</Button>
+              </Card>
+            )}
+          </div>
+        </div>
       </Container>
     </Section>
   )}
 
-  {reviewData && (reviewData.pros.length > 0 || reviewData.cons.length > 0) && (
-    <Section background>
+  <!-- ============================================================
+       PROS & CONS
+       ============================================================ -->
+  {reviewData && (reviewData.pros.length > 0 || reviewData.cons.length > 0) ? (
+    <Section>
       <Container>
         <Heading level={2}>Pros & Cons</Heading>
         <Text tone="muted" class="mt-2">What sets {provider.name} apart — and where it falls short.</Text>
@@ -438,123 +355,313 @@ function capitalize(s: string): string {
         </Grid>
       </Container>
     </Section>
+  ) : null}
+
+  <!-- ============================================================
+       PRICING
+       ============================================================ -->
+  <Section background>
+    <Container>
+      <div class="flex items-center justify-between">
+        <div>
+          <Badge tone="primary" size="sm">Pricing</Badge>
+          <Heading level={2} class="mt-2">Plans &amp; Pricing</Heading>
+        </div>
+        {provider.pricing.moneyBackGuaranteeDays > 0 && (
+          <Badge tone="success" size="sm">{provider.pricing.moneyBackGuaranteeDays}-day guarantee</Badge>
+        )}
+      </div>
+      <Text tone="muted" class="mt-2">
+        {provider.pricing.freeTier ? "Free tier available" : ""}
+      </Text>
+      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+        {provider.pricing.plans.map((plan) => (
+          <Card padding="lg" variant={plan.featured ? "raised" : "default"} class={cx(plan.featured && "border-primary/50 ring-1 ring-primary/20")}>
+            <Badge tone={plan.featured ? "primary" : "neutral"} size="sm">{capitalize(plan.cycle)}</Badge>
+            <div class="mt-3">
+              <PriceTag price={plan.effectiveMonthly} cycle={plan.cycle} featured={plan.featured} />
+              <Text size="sm" tone="muted" class="mt-1">${plan.price.toFixed(2)} billed {plan.cycle === "monthly" ? "monthly" : plan.cycle === "yearly" ? "annually" : "every 2 years"}</Text>
+            </div>
+          </Card>
+        ))}
+      </div>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <Text size="sm" tone="muted" element="span" class="mr-1">Payment: </Text>
+        {provider.pricing.paymentMethods.map((m) => (
+          <Badge tone="neutral" size="sm">{m}</Badge>
+        ))}
+      </div>
+      {provider.pricing.freeTierNotes && (
+        <Text size="sm" tone="info" class="mt-2">{provider.pricing.freeTierNotes}</Text>
+      )}
+    </Container>
+  </Section>
+
+  <!-- ============================================================
+       GROUPED SPECIFICATION PANEL
+       ============================================================ -->
+  <Section>
+    <Container>
+      <div class="flex items-center justify-between">
+        <div>
+          <Badge tone="primary" size="sm">Specifications</Badge>
+          <Heading level={2} class="mt-2">Features & Compatibility</Heading>
+        </div>
+      </div>
+
+      <!-- Single grouped panel with labeled sections -->
+      <Card variant="raised" padding="lg" class="mt-6">
+        <div class="grid gap-8 lg:grid-cols-2">
+          <!-- Left column: Features + Protocols + Platforms -->
+          <div class="space-y-6">
+            <!-- Features -->
+            <div>
+              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
+                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
+                  <Icon name="list-checks" size={13} />
+                </span>
+                Features
+              </Heading>
+              <div class="flex flex-wrap gap-1.5">
+                {provider.features.map((fid) => {
+                  const name = featureNameMap.get(fid);
+                  const fslug = featureSlugMap.get(fid);
+                  if (!name || !fslug) return null;
+                  return <a href={featureHref(fslug)} class="no-underline"><Badge tone="neutral" size="sm">{name}</Badge></a>;
+                })}
+              </div>
+            </div>
+
+            <!-- Protocols -->
+            <div>
+              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
+                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
+                  <Icon name="terminal" size={13} />
+                </span>
+                Protocols
+              </Heading>
+              <div class="flex flex-wrap gap-1.5">
+                {provider.protocols.map((pid) => {
+                  const name = protocolNameMap.get(pid);
+                  const pslug = protocolSlugMap.get(pid);
+                  if (!name || !pslug) return null;
+                  return <a href={protocolHref(pslug)} class="no-underline"><Badge tone="neutral" size="sm">{name}</Badge></a>;
+                })}
+              </div>
+            </div>
+
+            <!-- Platforms -->
+            <div>
+              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
+                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
+                  <Icon name="monitor-smartphone" size={13} />
+                </span>
+                Platforms
+              </Heading>
+              <div class="flex flex-wrap gap-1.5">
+                {provider.platforms.map((pid) => {
+                  const name = platformNameMap.get(pid);
+                  const pslug = platformSlugMap.get(pid);
+                  if (!name || !pslug) return null;
+                  return <a href={platformHref(pslug)} class="no-underline"><Chip>{name}</Chip></a>;
+                })}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column: Server locations + DNS/Leak/Obfuscation -->
+          <div class="space-y-6">
+            <!-- Server locations -->
+            <div>
+              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
+                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
+                  <Icon name="globe" size={13} />
+                </span>
+                Server Locations ({provider.serverNetwork.countries.length})
+              </Heading>
+              <div class="flex flex-wrap gap-1.5">
+                {provider.serverNetwork.countries.map((code) => {
+                  const cslug = countrySlugMap.get(code);
+                  if (!cslug) return <Chip>{code}</Chip>;
+                  return <a href={countryHref(cslug)} class="no-underline"><Chip>{code}</Chip></a>;
+                })}
+              </div>
+            </div>
+
+            <!-- DNS / Leak / Obfuscation details inline -->
+            <div class="space-y-3">
+              {provider.dnsHandling && (
+                <div class="rounded-lg border border-border bg-surface-sunken/50 p-3">
+                  <Heading level={4} class="text-xs font-semibold flex items-center gap-1.5">
+                    <Icon name="search" size={12} class="text-primary" /> DNS Handling
+                  </Heading>
+                  <Text size="xs" tone="muted" class="mt-1 leading-relaxed">{provider.dnsHandling}</Text>
+                </div>
+              )}
+              {provider.leakProtection && (
+                <div class="rounded-lg border border-border bg-surface-sunken/50 p-3">
+                  <Heading level={4} class="text-xs font-semibold flex items-center gap-1.5">
+                    <Icon name="shield" size={12} class="text-primary" /> Leak Protection
+                  </Heading>
+                  <Text size="xs" tone="muted" class="mt-1 leading-relaxed">{provider.leakProtection}</Text>
+                </div>
+              )}
+              {provider.obfuscationType && provider.obfuscationType !== "none" && (
+                <div class="rounded-lg border border-border bg-surface-sunken/50 p-3">
+                  <Heading level={4} class="text-xs font-semibold flex items-center gap-1.5">
+                    <Icon name="eye-off" size={12} class="text-primary" /> Obfuscation
+                  </Heading>
+                  <Text size="xs" tone="muted" class="mt-1 leading-relaxed">
+                    Type: {capitalize(provider.obfuscationType)}{provider.postQuantum ? ' · Post-quantum ready' : ''}
+                  </Text>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </Card>
+    </Container>
+  </Section>
+
+  <!-- ============================================================
+       STREAMING
+       ============================================================ -->
+  {provider.streaming.length > 0 && (
+    <Section background>
+      <Container>
+        <div class="flex items-center justify-between">
+          <div>
+            <Badge tone="primary" size="sm">Streaming</Badge>
+            <Heading level={2} class="mt-2">Streaming Support</Heading>
+          </div>
+        </div>
+        <Text tone="muted" class="mt-2">Verified compatibility with major streaming platforms</Text>
+        <div class="mt-6">
+          <StreamingMatrix items={provider.streaming} serviceNames={Object.fromEntries(streamingNameMap)} />
+        </div>
+      </Container>
+    </Section>
   )}
 
-  <div slot="footer">
-    {provider.streaming.length > 0 && (
-      <Section>
-        <Container>
-          <Heading level={2}>Streaming Support</Heading>
-          <Text tone="muted" class="mt-2">Verified streaming compatibility for major platforms</Text>
-          <Grid cols={2} colsMd={3} colsLg={4} gap={3} class="mt-6">
-            {provider.streaming.map((s) => {
-              const svcSlug = streamingSlugMap.get(s.service);
-              const content = (
-                <Card padding="sm" variant="outline">
-                  <div class="flex items-center justify-between">
-                    <Text weight="semibold" size="sm">{streamingNameMap.get(s.service) ?? s.service}</Text>
-                    <Badge tone={streamingSupportBadge[s.support] as any} size="sm">
-                      {capitalize(s.support)}
-                    </Badge>
-                  </div>
-                  {s.verifiedAt && <Text size="xs" tone="muted" class="mt-1">Verified {s.verifiedAt}</Text>}
-                </Card>
-              );
-              return svcSlug
-                ? <a href={streamingHref(svcSlug)} class="no-underline">{content}</a>
-                : content;
-            })}
-          </Grid>
-        </Container>
-      </Section>
-    )}
-
-    {provider.torrenting.supported && (
-      <Section background>
-        <Container>
-          <Heading level={2}>Torrenting</Heading>
-          <div class="mt-4 flex flex-wrap gap-4">
-            <Badge tone="success">P2P Supported</Badge>
-            {provider.torrenting.labeledServers && <Badge tone="info">Labeled P2P Servers</Badge>}
-            {provider.torrenting.rating != null && (
-              <Rating value={provider.torrenting.rating} label="Torrenting rating" size={14} />
-            )}
-          </div>
-        </Container>
-      </Section>
-    )}
-
-    {OverviewContent && (
-      <Section>
-        <Container size="prose">
-          <Heading level={2}>Overview</Heading>
-          <div class="mt-4">
-            <OverviewContent />
-          </div>
-        </Container>
-      </Section>
-    )}
-
+  <!-- ============================================================
+       TORRENTING
+       ============================================================ -->
+  {provider.torrenting.supported && (
     <Section>
       <Container>
-        <Heading level={2}>Explore More</Heading>
-        <Text tone="muted" class="mt-2">Browse VPNs by feature, protocol, platform, country, or streaming service.</Text>
-        <div class="mt-4 flex flex-wrap gap-3">
-          <Button variant="outline" size="sm" href="/features/">Browse Features</Button>
-          <Button variant="outline" size="sm" href="/protocols/">Browse Protocols</Button>
-          <Button variant="outline" size="sm" href="/platforms/">Browse Platforms</Button>
-          <Button variant="outline" size="sm" href="/countries/">Browse Countries</Button>
-          <Button variant="outline" size="sm" href="/streaming/">Browse Streaming Services</Button>
-          <Button variant="outline" size="sm" href="/comparisons/">Compare Providers</Button>
-        </div>
-      </Container>
-    </Section>
-
-    {(relatedComparisons.length > 0 || relatedGuides.length > 0) && (
-      <Section background>
-        <Container>
-          <Heading level={2}>Related Content</Heading>
-          <Grid cols={1} colsMd={2} gap={6} class="mt-6">
-            {relatedComparisons.map((c) => (
-              <Card>
-                <Heading level={3}>{c.data.title}</Heading>
-                <Text size="sm" tone="muted" class="mt-1">{c.data.summary}</Text>
-                <div class="mt-4">
-                  <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>Read Comparison</Button>
-                </div>
-              </Card>
-            ))}
-            {relatedGuides.map((g) => (
-              <Card>
-                <Heading level={3}>{g.data.title}</Heading>
-                <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
-                <Badge tone="neutral" class="mt-2">{capitalize(g.data.difficulty)}</Badge>
-                <div class="mt-4">
-                  <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
-                </div>
-              </Card>
-            ))}
-          </Grid>
-        </Container>
-      </Section>
-    )}
-
-    <Section padding="tight">
-      <Container>
-        <div class="flex flex-wrap gap-3">
-          <Text size="sm" tone="muted" element="span">Founded: {provider.foundedYear}</Text>
-          <Text size="sm" tone="muted" element="span">·</Text>
-          <Text size="sm" tone="muted" element="span">Updated: {provider.updatedAt}</Text>
-          {provider.audits.length > 0 && (
-            <>
-              <Text size="sm" tone="muted" element="span">·</Text>
-              <Text size="sm" tone="muted" element="span">
-                {provider.audits.length} independent audit{provider.audits.length !== 1 ? "s" : ""}
-              </Text>
-            </>
+        <div class="flex items-center justify-between">
+          <div>
+            <Badge tone="primary" size="sm">Torrenting</Badge>
+            <Heading level={2} class="mt-2">P2P & Torrenting</Heading>
+          </div>
+          {provider.torrenting.rating != null && (
+            <ScoreRing value={provider.torrenting.rating} size={56} strokeWidth={4} label="Rating" />
           )}
         </div>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <Badge tone="success">P2P Supported</Badge>
+          {provider.torrenting.labeledServers && <Badge tone="info">Labeled P2P Servers</Badge>}
+          {provider.torrenting.portForwarding && <Badge tone="primary">Port Forwarding</Badge>}
+        </div>
+        {provider.torrenting.notes && (
+          <Text size="sm" tone="muted" class="mt-3 leading-relaxed max-w-2xl">{provider.torrenting.notes}</Text>
+        )}
       </Container>
     </Section>
-  </div>
-</ArticleLayout>
+  )}
+
+  <!-- ============================================================
+       OVERVIEW (factual MDX)
+       ============================================================ -->
+  {OverviewContent && (
+    <Section background>
+      <Container size="prose">
+        <div class="flex items-center justify-between">
+          <div>
+            <Badge tone="primary" size="sm">Factual overview</Badge>
+            <Heading level={2} class="mt-2">In-Depth Overview</Heading>
+          </div>
+        </div>
+        <div class="mt-6">
+          <OverviewContent />
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <!-- ============================================================
+       RELATED CONTENT
+       ============================================================ -->
+  <Section>
+    <Container>
+      <Heading level={2}>Explore More</Heading>
+      <Text tone="muted" class="mt-2">Browse VPNs by feature, protocol, platform, country, or streaming service.</Text>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <Button variant="outline" size="sm" href="/features/">Browse Features</Button>
+        <Button variant="outline" size="sm" href="/protocols/">Browse Protocols</Button>
+        <Button variant="outline" size="sm" href="/platforms/">Browse Platforms</Button>
+        <Button variant="outline" size="sm" href="/countries/">Browse Countries</Button>
+        <Button variant="outline" size="sm" href="/streaming/">Browse Streaming Services</Button>
+        <Button variant="outline" size="sm" href="/comparisons/">Compare Providers</Button>
+      </div>
+    </Container>
+  </Section>
+
+  {(relatedComparisons.length > 0 || relatedGuides.length > 0) && (
+    <Section background>
+      <Container>
+        <Heading level={2}>Related Content</Heading>
+        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
+          {relatedComparisons.map((c) => (
+            <Card>
+              <Heading level={3}>{c.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{c.data.summary}</Text>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>Read Comparison</Button>
+              </div>
+            </Card>
+          ))}
+          {relatedGuides.map((g) => (
+            <Card>
+              <Heading level={3}>{g.data.title}</Heading>
+              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
+              <Badge tone="neutral" class="mt-2">{capitalize(g.data.difficulty)}</Badge>
+              <div class="mt-4">
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+              </div>
+            </Card>
+          ))}
+        </Grid>
+      </Container>
+    </Section>
+  )}
+
+  <!-- ============================================================
+       FOOTNOTES
+       ============================================================ -->
+  <Section padding="tight">
+    <Container>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+        <span>Founded: {provider.foundedYear}</span>
+        <span>·</span>
+        <span>Updated: {provider.updatedAt}</span>
+        {provider.audits.length > 0 && (
+          <>
+            <span>·</span>
+            <span>{provider.audits.length} independent audit{provider.audits.length !== 1 ? "s" : ""}</span>
+          </>
+        )}
+        {provider.ramOnlyServers && (
+          <>
+            <span>·</span>
+            <span>RAM-only servers</span>
+          </>
+        )}
+      </div>
+    </Container>
+  </Section>
+
+</SeoLayout>
+
+
+

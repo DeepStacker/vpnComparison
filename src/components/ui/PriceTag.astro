@@ -1,0 +1,20 @@
+---
+interface Props {
+  price: number;
+  cycle: string;
+  currency?: string;
+  featured?: boolean;
+  class?: string;
+}
+
+const { price, cycle, currency = "USD", featured } = Astro.props;
+const sym = currency === "USD" ? "$" : currency === "EUR" ? "€" : currency + " ";
+---
+
+<div class="inline-flex flex-col items-start {featured ? 'text-primary' : 'text-foreground'}">
+  <div class="flex items-baseline gap-0.5">
+    <span class="text-3xl font-bold tracking-tight">{sym}{price.toFixed(2)}</span>
+    <span class="text-sm text-muted-foreground">/mo</span>
+  </div>
+  <span class="text-xs text-muted-foreground">{cycle} plan{featured ? ' · Best value' : ''}</span>
+</div>

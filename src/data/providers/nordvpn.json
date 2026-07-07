@@ -2,7 +2,7 @@
   "id": "nordvpn",
   "slug": "nordvpn",
   "name": "NordVPN",
-  "tagline": "Large server network with NordLynx protocol, Double VPN, and six independently audited no-logs verifications.",
+  "tagline": "Massive server network, NordLynx protocol, and six independently audited no-logs verifications.",
   "websiteUrl": "https://nordvpn.com/",
   "foundedYear": 2012,
   "jurisdiction": "PA",
@@ -11,24 +11,196 @@
   "ownership": "private",
   "warrantCanary": false,
   "ramOnlyServers": true,
-  "transparencyReports": ["https://nordvpn.com/blog/tag/transparency/"],
+  "transparencyReports": [
+    "https://nordvpn.com/blog/tag/transparency/"
+  ],
   "serverNetwork": {
-    "serverCount": 9000,
-    "countryCount": 130,
-    "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","ES","FI","FR","GB","GE","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LA","LB","LI","LK","LT","LU","LV","MA","MC","MD","ME","MK","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TT","TW","UA","US","UY","VE","VN","ZA"],
+    "serverCount": 7000,
+    "countryCount": 95,
+    "countries": [
+      "AL",
+      "AR",
+      "AT",
+      "AU",
+      "BA",
+      "BD",
+      "BE",
+      "BG",
+      "BH",
+      "BO",
+      "BR",
+      "CA",
+      "CH",
+      "CL",
+      "CN",
+      "CO",
+      "CR",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EC",
+      "EE",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GE",
+      "GR",
+      "GT",
+      "HK",
+      "HN",
+      "HR",
+      "HU",
+      "ID",
+      "IE",
+      "IL",
+      "IN",
+      "IS",
+      "IT",
+      "JM",
+      "JP",
+      "KE",
+      "KH",
+      "KR",
+      "KZ",
+      "LA",
+      "LB",
+      "LI",
+      "LK",
+      "LT",
+      "LU",
+      "LV",
+      "MA",
+      "MC",
+      "MD",
+      "ME",
+      "MK",
+      "MT",
+      "MU",
+      "MX",
+      "MY",
+      "NG",
+      "NI",
+      "NL",
+      "NO",
+      "NP",
+      "NZ",
+      "PA",
+      "PE",
+      "PH",
+      "PK",
+      "PL",
+      "PR",
+      "PT",
+      "PY",
+      "QA",
+      "RO",
+      "RS",
+      "SA",
+      "SE",
+      "SG",
+      "SI",
+      "SK",
+      "SV",
+      "TH",
+      "TR",
+      "TT",
+      "TW",
+      "UA",
+      "US",
+      "UY",
+      "VE",
+      "VN",
+      "ZA"
+    ],
     "virtualLocations": false,
     "ownedInfrastructure": false
   },
-  "protocols": ["openvpn", "wireguard", "ikev2", "l2tp"],
-  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension"],
-  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "multi-hop", "ad-blocker", "obfuscation", "dedicated-ip", "tor-over-vpn"],
+  "protocols": [
+    "openvpn",
+    "wireguard",
+    "ikev2",
+    "l2tp"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "android-tv",
+    "browser-extension"
+  ],
+  "features": [
+    "no-logs",
+    "kill-switch",
+    "split-tunneling",
+    "dns-leak-protection",
+    "multi-hop",
+    "ad-blocker",
+    "obfuscation",
+    "dedicated-ip",
+    "tor-over-vpn"
+  ],
   "streaming": [
-    { "service": "netflix", "support": "verified", "verifiedAt": "2026-05-10", "notes": "Consistent access to Netflix US, UK, CA, AU, JP and many other libraries. Obfuscated servers available for restricted regions.", "regionsTested": ["US","GB","CA","AU","JP"] },
-    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-05-10", "regionsTested": ["US","GB","CA"] },
-    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-04-20", "regionsTested": ["US","GB","DE"] },
-    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-04-20", "regionsTested": ["US"] },
-    { "service": "hulu", "support": "verified", "verifiedAt": "2026-04-20", "regionsTested": ["US"] },
-    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-03-15", "regionsTested": ["GB"] }
+    {
+      "service": "netflix",
+      "support": "verified",
+      "verifiedAt": "2025-11-10",
+      "notes": "Consistent access to Netflix US, UK, CA, AU, JP and many other libraries. Obfuscated servers available for restricted regions.",
+      "regionsTested": [
+        "US",
+        "GB",
+        "CA",
+        "AU",
+        "JP"
+      ]
+    },
+    {
+      "service": "disney-plus",
+      "support": "verified",
+      "verifiedAt": "2025-11-10",
+      "regionsTested": [
+        "US",
+        "GB",
+        "CA"
+      ]
+    },
+    {
+      "service": "prime-video",
+      "support": "verified",
+      "verifiedAt": "2025-10-20",
+      "regionsTested": [
+        "US",
+        "GB",
+        "DE"
+      ]
+    },
+    {
+      "service": "hbo-max",
+      "support": "verified",
+      "verifiedAt": "2025-10-20",
+      "regionsTested": [
+        "US"
+      ]
+    },
+    {
+      "service": "hulu",
+      "support": "verified",
+      "verifiedAt": "2025-10-20",
+      "regionsTested": [
+        "US"
+      ]
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-09-15",
+      "regionsTested": [
+        "GB"
+      ]
+    }
   ],
   "torrenting": {
     "supported": true,
@@ -51,12 +223,34 @@
   "pricing": {
     "currency": "USD",
     "plans": [
-      { "cycle": "monthly", "price": 12.99, "currency": "USD", "effectiveMonthly": 12.99 },
-      { "cycle": "yearly", "price": 59.88, "currency": "USD", "effectiveMonthly": 4.99 },
-      { "cycle": "biennially", "price": 83.76, "currency": "USD", "effectiveMonthly": 3.49, "featured": true }
+      {
+        "cycle": "monthly",
+        "price": 12.99,
+        "currency": "USD",
+        "effectiveMonthly": 12.99
+      },
+      {
+        "cycle": "yearly",
+        "price": 59.88,
+        "currency": "USD",
+        "effectiveMonthly": 4.99
+      },
+      {
+        "cycle": "biennially",
+        "price": 83.76,
+        "currency": "USD",
+        "effectiveMonthly": 3.49,
+        "featured": true
+      }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": ["credit-card", "paypal", "bitcoin", "google-pay", "amazon-pay"],
+    "paymentMethods": [
+      "credit-card",
+      "paypal",
+      "bitcoin",
+      "google-pay",
+      "amazon-pay"
+    ],
     "freeTier": false
   },
   "support": {
@@ -69,7 +263,7 @@
     {
       "auditor": "PwC Switzerland",
       "date": "2025-10-01",
-      "scope": "Sixth independent no-logs assurance engagement. Full review of data collection, storage, and privacy controls.",
+      "scope": "Sixth independent no-logs assurance engagement covering data collection, storage, and privacy controls.",
       "reportUrl": "https://nordvpn.com/blog/nordvpn-no-logs-assurance-engagement-2025/",
       "independent": true
     },
@@ -87,7 +281,7 @@
       "independent": true
     }
   ],
-  "updatedAt": "2026-06-10",
+  "updatedAt": "2025-12-15",
   "sources": [
     "https://nordvpn.com/servers",
     "https://nordvpn.com/blog/nordvpn-no-logs-assurance-engagement-2025/",

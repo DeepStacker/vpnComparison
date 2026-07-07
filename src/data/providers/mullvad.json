@@ -11,24 +11,122 @@
   "ownership": "private",
   "warrantCanary": false,
   "ramOnlyServers": true,
-  "transparencyReports": ["https://mullvad.net/en/blog/tag/transparency/"],
+  "transparencyReports": [
+    "https://mullvad.net/en/blog/tag/transparency/"
+  ],
   "serverNetwork": {
     "serverCount": 700,
-    "countryCount": 50,
-    "countries": ["AL","AR","AT","AU","BE","BG","BR","CA","CH","CL","CO","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GR","HK","HR","HU","ID","IE","IL","IN","IT","JP","KR","LT","LU","LV","MD","MK","MT","MX","MY","NG","NL","NO","NZ","PE","PH","PL","PT","RO","RS","SE","SG","SI","SK","TH","TR","TW","UA","US","VN","ZA"],
+    "countryCount": 60,
+    "countries": [
+      "AL",
+      "AR",
+      "AT",
+      "AU",
+      "BE",
+      "BG",
+      "BR",
+      "CA",
+      "CH",
+      "CL",
+      "CO",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GR",
+      "HK",
+      "HR",
+      "HU",
+      "ID",
+      "IE",
+      "IL",
+      "IN",
+      "IT",
+      "JP",
+      "KR",
+      "LT",
+      "LU",
+      "LV",
+      "MD",
+      "MK",
+      "MT",
+      "MX",
+      "MY",
+      "NG",
+      "NL",
+      "NO",
+      "NZ",
+      "PE",
+      "PH",
+      "PL",
+      "PT",
+      "RO",
+      "RS",
+      "SE",
+      "SG",
+      "SI",
+      "SK",
+      "TH",
+      "TR",
+      "TW",
+      "UA",
+      "US",
+      "VN",
+      "ZA"
+    ],
     "virtualLocations": false,
     "ownedInfrastructure": true
   },
-  "protocols": ["wireguard"],
-  "platforms": ["windows", "macos", "linux", "android", "ios"],
-  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "multi-hop", "port-forwarding", "obfuscation"],
+  "protocols": [
+    "wireguard"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios"
+  ],
+  "features": [
+    "no-logs",
+    "kill-switch",
+    "split-tunneling",
+    "dns-leak-protection",
+    "multi-hop",
+    "port-forwarding",
+    "obfuscation"
+  ],
   "streaming": [
-    { "service": "netflix", "support": "unsupported", "notes": "Mullvad does not actively unblock streaming services." },
-    { "service": "disney-plus", "support": "unsupported" },
-    { "service": "prime-video", "support": "unsupported" },
-    { "service": "hbo-max", "support": "unsupported" },
-    { "service": "hulu", "support": "unsupported" },
-    { "service": "bbc-iplayer", "support": "unsupported" }
+    {
+      "service": "netflix",
+      "support": "unsupported",
+      "notes": "Mullvad does not actively unblock streaming services."
+    },
+    {
+      "service": "disney-plus",
+      "support": "unsupported"
+    },
+    {
+      "service": "prime-video",
+      "support": "unsupported"
+    },
+    {
+      "service": "hbo-max",
+      "support": "unsupported"
+    },
+    {
+      "service": "hulu",
+      "support": "unsupported"
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "unsupported"
+    }
   ],
   "torrenting": {
     "supported": true,
@@ -51,10 +149,23 @@
   "pricing": {
     "currency": "EUR",
     "plans": [
-      { "cycle": "monthly", "price": 5.00, "currency": "EUR", "effectiveMonthly": 5.00, "featured": true }
+      {
+        "cycle": "monthly",
+        "price": 5.00,
+        "currency": "EUR",
+        "effectiveMonthly": 5.00,
+        "featured": true
+      }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": ["credit-card", "paypal", "bitcoin", "monero", "cash", "bank-transfer"],
+    "paymentMethods": [
+      "credit-card",
+      "paypal",
+      "bitcoin",
+      "monero",
+      "cash",
+      "bank-transfer"
+    ],
     "freeTier": false
   },
   "support": {
@@ -72,7 +183,7 @@
       "independent": true
     }
   ],
-  "updatedAt": "2026-01-20",
+  "updatedAt": "2025-11-20",
   "sources": [
     "https://mullvad.net/en/servers/",
     "https://mullvad.net/en/blog/removing-openvpn-15th-january-2026",

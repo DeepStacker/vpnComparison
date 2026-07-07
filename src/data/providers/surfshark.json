@@ -11,24 +11,188 @@
   "ownership": "private",
   "warrantCanary": false,
   "ramOnlyServers": true,
-  "transparencyReports": ["https://surfshark.com/transparency"],
+  "transparencyReports": [
+    "https://surfshark.com/transparency"
+  ],
   "serverNetwork": {
     "serverCount": 4500,
-    "countryCount": 100,
-    "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","EG","ES","FI","FR","GB","GE","GR","GT","HK","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LB","LK","LT","LU","LV","MA","MD","ME","MK","MT","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
+    "countryCount": 89,
+    "countries": [
+      "AL",
+      "AR",
+      "AT",
+      "AU",
+      "BA",
+      "BD",
+      "BE",
+      "BG",
+      "BH",
+      "BO",
+      "BR",
+      "CA",
+      "CH",
+      "CL",
+      "CN",
+      "CO",
+      "CR",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EC",
+      "EE",
+      "EG",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GE",
+      "GR",
+      "GT",
+      "HK",
+      "HR",
+      "HU",
+      "ID",
+      "IE",
+      "IL",
+      "IN",
+      "IS",
+      "IT",
+      "JM",
+      "JP",
+      "KE",
+      "KH",
+      "KR",
+      "KZ",
+      "LB",
+      "LK",
+      "LT",
+      "LU",
+      "LV",
+      "MA",
+      "MD",
+      "ME",
+      "MK",
+      "MT",
+      "MX",
+      "MY",
+      "NG",
+      "NI",
+      "NL",
+      "NO",
+      "NP",
+      "NZ",
+      "PA",
+      "PE",
+      "PH",
+      "PK",
+      "PL",
+      "PT",
+      "PY",
+      "QA",
+      "RO",
+      "RS",
+      "SA",
+      "SE",
+      "SG",
+      "SI",
+      "SK",
+      "SV",
+      "TH",
+      "TR",
+      "TW",
+      "UA",
+      "US",
+      "UY",
+      "VE",
+      "VN",
+      "ZA"
+    ],
     "virtualLocations": true,
     "ownedInfrastructure": false
   },
-  "protocols": ["wireguard", "openvpn", "ikev2"],
-  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension", "fire-tv"],
-  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "multi-hop", "ad-blocker", "obfuscation", "dedicated-ip"],
+  "protocols": [
+    "wireguard",
+    "openvpn",
+    "ikev2"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "android",
+    "ios",
+    "android-tv",
+    "browser-extension",
+    "fire-tv"
+  ],
+  "features": [
+    "no-logs",
+    "kill-switch",
+    "split-tunneling",
+    "dns-leak-protection",
+    "multi-hop",
+    "ad-blocker",
+    "obfuscation",
+    "dedicated-ip"
+  ],
   "streaming": [
-    { "service": "netflix", "support": "verified", "verifiedAt": "2026-05-20", "notes": "Accesses Netflix US, UK, CA, JP and other major libraries. NoBorders mode helps in restricted regions.", "regionsTested": ["US","GB","CA","JP"] },
-    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-05-20", "regionsTested": ["US","GB","CA"] },
-    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US","GB","DE"] },
-    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
-    { "service": "hulu", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
-    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-04-01", "regionsTested": ["GB"] }
+    {
+      "service": "netflix",
+      "support": "verified",
+      "verifiedAt": "2025-11-20",
+      "notes": "Accesses Netflix US, UK, CA, JP and other major libraries. NoBorders mode helps in restricted regions.",
+      "regionsTested": [
+        "US",
+        "GB",
+        "CA",
+        "JP"
+      ]
+    },
+    {
+      "service": "disney-plus",
+      "support": "verified",
+      "verifiedAt": "2025-11-20",
+      "regionsTested": [
+        "US",
+        "GB",
+        "CA"
+      ]
+    },
+    {
+      "service": "prime-video",
+      "support": "verified",
+      "verifiedAt": "2025-11-01",
+      "regionsTested": [
+        "US",
+        "GB",
+        "DE"
+      ]
+    },
+    {
+      "service": "hbo-max",
+      "support": "verified",
+      "verifiedAt": "2025-11-01",
+      "regionsTested": [
+        "US"
+      ]
+    },
+    {
+      "service": "hulu",
+      "support": "verified",
+      "verifiedAt": "2025-11-01",
+      "regionsTested": [
+        "US"
+      ]
+    },
+    {
+      "service": "bbc-iplayer",
+      "support": "verified",
+      "verifiedAt": "2025-10-01",
+      "regionsTested": [
+        "GB"
+      ]
+    }
   ],
   "torrenting": {
     "supported": true,
@@ -51,12 +215,33 @@
   "pricing": {
     "currency": "USD",
     "plans": [
-      { "cycle": "monthly", "price": 16.45, "currency": "USD", "effectiveMonthly": 16.45 },
-      { "cycle": "yearly", "price": 40.68, "currency": "USD", "effectiveMonthly": 3.39 },
-      { "cycle": "biennially", "price": 53.73, "currency": "USD", "effectiveMonthly": 2.49, "featured": true }
+      {
+        "cycle": "monthly",
+        "price": 16.45,
+        "currency": "USD",
+        "effectiveMonthly": 16.45
+      },
+      {
+        "cycle": "yearly",
+        "price": 40.68,
+        "currency": "USD",
+        "effectiveMonthly": 3.39
+      },
+      {
+        "cycle": "biennially",
+        "price": 53.73,
+        "currency": "USD",
+        "effectiveMonthly": 2.49,
+        "featured": true
+      }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": ["credit-card", "paypal", "google-pay", "bitcoin"],
+    "paymentMethods": [
+      "credit-card",
+      "paypal",
+      "google-pay",
+      "bitcoin"
+    ],
     "freeTier": false
   },
   "support": {
@@ -81,7 +266,7 @@
       "independent": true
     }
   ],
-  "updatedAt": "2026-06-20",
+  "updatedAt": "2025-11-15",
   "sources": [
     "https://surfshark.com/servers",
     "https://surfshark.com/features",

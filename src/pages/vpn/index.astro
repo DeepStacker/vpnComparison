@@ -1,0 +1,76 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Section from "@/components/ui/Section.astro";
+import Container from "@/components/ui/Container.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Grid from "@/components/ui/Grid.astro";
+import ProviderCard from "@/components/ui/ProviderCard.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import type { Breadcrumb } from "@/types/site";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+const allCountries = await getCollection("countries");
+
+const reviewMap = new Map(allReviews.map((r) => [r.data.provider.id, r.data]));
+const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("VPN Reviews"),
+  description: "In-depth, independently tested VPN reviews. Compare providers by speed, privacy, streaming, and value.",
+  canonical: canonicalUrl("/vpn/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Reviews", href: "/vpn/" },
+];
+---
+
+<SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <Section class="relative overflow-hidden bg-gradient-hero" padding="loose">
+    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.04]" aria-hidden="true" />
+    <Container>
+      <div class="mx-auto max-w-2xl text-center">
+        <Badge tone="primary" class="border border-brand-400/20">VPN Reviews</Badge>
+        <Heading level={1} class="mt-5 text-balance leading-tight !text-white">Independently Tested VPN Reviews</Heading>
+        <Text size="lg" class="mt-3 max-w-prose mx-auto leading-relaxed !text-white/75">
+          Every VPN on this site has been tested using a consistent methodology. We measure speed, verify privacy claims, and assess real-world streaming performance.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section>
+    <Container>
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <Badge tone="primary" size="sm">All providers</Badge>
+          <Heading level={2} class="mt-2">{allProviders.length} VPNs Reviewed</Heading>
+        </div>
+      </div>
+      <Grid cols={1} colsMd={2} colsLg={3} gap={6}>
+        {allProviders.map((e) => {
+          const p = e.data;
+          const review = reviewMap.get(p.id);
+          return (
+            <ProviderCard
+              name={p.name}
+              slug={p.slug}
+              tagline={p.tagline}
+              logoSlug={p.slug}
+              review={review ? { scores: review.scores, verdict: review.verdict } : undefined}
+              servers={p.serverNetwork.serverCount}
+              countries={p.serverNetwork.countryCount}
+              jurisdiction={p.jurisdiction}
+              jurisdictionName={countryNameMap.get(p.jurisdiction)}
+              plans={p.pricing.plans}
+            />
+          );
+        })}
+      </Grid>
+    </Container>
+  </Section>
+</SeoLayout>

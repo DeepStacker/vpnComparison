@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button.astro";
 import Badge from "@/components/ui/Badge.astro";
 import Grid from "@/components/ui/Grid.astro";
 import Icon from "@/components/ui/Icon.astro";
+import ProviderCard from "@/components/ui/ProviderCard.astro";
 import { SITE } from "@/constants/site";
 import { canonicalUrl, normalizeSeoMeta } from "@/lib/seo/meta";
 
@@ -25,6 +26,7 @@ const allCountries = await getCollection("countries");
 const allStreaming = await getCollection("streaming-services");
 
 const reviewMap = new Map(allReviews.map((r) => [r.data.provider.id, r.data]));
+const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
 const avgScore =
   allReviews.reduce((sum, r) => sum + r.data.scores.overall, 0) / allReviews.length;
 
@@ -149,32 +151,19 @@ const explorers: ExplorerEntry[] = [
         {allProviders.slice(0, 5).map((e) => {
           const p = e.data;
           const review = reviewMap.get(p.id);
-          const score = review?.scores.overall;
-          const cheapest = p.pricing.plans.find((pl) => pl.featured)?.effectiveMonthly ?? p.pricing.plans[0]?.effectiveMonthly;
           return (
-            <Card class="flex flex-col">
-              <div class="flex items-start justify-between">
-                <Heading level={3}>{p.name}</Heading>
-                {score != null && (
-                  <Badge tone={score >= 9 ? "success" : score >= 8 ? "primary" : "neutral"} size="sm">
-                    {score.toFixed(1)}
-                  </Badge>
-                )}
-              </div>
-              <Text size="sm" tone="muted" class="mt-1 leading-relaxed line-clamp-2">{p.tagline}</Text>
-              <div class="mt-2 flex flex-wrap gap-1.5">
-                <Badge tone="neutral" size="sm">{p.serverNetwork.countryCount} countries</Badge>
-                {cheapest != null && (
-                  <Badge tone="neutral" size="sm">from ${cheapest.toFixed(2)}/mo</Badge>
-                )}
-                <Badge tone="neutral" size="sm">{p.jurisdiction}</Badge>
-              </div>
-              <div class="mt-auto pt-4">
-                <Button variant="outline" size="sm" href={`/vpn/${p.slug}/`}>
-                  Read Review <Icon name="arrow-right" size={14} class="ml-1" />
-                </Button>
-              </div>
-            </Card>
+            <ProviderCard
+              name={p.name}
+              slug={p.slug}
+              tagline={p.tagline}
+              logoSlug={p.slug}
+              review={review ? { scores: review.scores, verdict: review.verdict } : undefined}
+              servers={p.serverNetwork.serverCount}
+              countries={p.serverNetwork.countryCount}
+              jurisdiction={p.jurisdiction}
+              jurisdictionName={countryNameMap.get(p.jurisdiction)}
+              plans={p.pricing.plans}
+            />
           );
         })}
       </Grid>

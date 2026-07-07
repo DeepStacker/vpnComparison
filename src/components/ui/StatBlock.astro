@@ -1,0 +1,33 @@
+---
+interface Props {
+  label: string;
+  value: string;
+  icon?: string;
+  /** "default" (for cards) | "sm" (for compact rows) */
+  size?: "default" | "sm";
+  class?: string;
+}
+
+import Icon from "./Icon.astro";
+const { label, value, icon, size = "default" } = Astro.props;
+
+const isSm = size === "sm";
+---
+
+<div class="flex items-start gap-3">
+  {icon && (
+    <div class:list={[
+      "flex shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary",
+      isSm ? "h-7 w-7" : "h-9 w-9",
+    ]}>
+      <Icon name={icon} size={isSm ? 14 : 16} />
+    </div>
+  )}
+  <div class="min-w-0">
+    <div class:list={[
+      "font-semibold text-foreground",
+      isSm ? "text-base" : "text-lg",
+    ]}>{value}</div>
+    <div class="text-xs text-muted-foreground">{label}</div>
+  </div>
+</div>

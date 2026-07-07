@@ -1,0 +1,72 @@
+---
+import ScoreRing from "./ScoreRing.astro";
+import StatBlock from "./StatBlock.astro";
+import PriceTag from "./PriceTag.astro";
+import Badge from "./Badge.astro";
+import Icon from "./Icon.astro";
+
+interface ReviewData {
+  scores: { overall: number };
+  verdict: { recommendation: string };
+}
+
+interface Props {
+  name: string;
+  slug: string;
+  tagline: string;
+  logoSlug: string;
+  review?: ReviewData;
+  servers: number;
+  countries: number;
+  jurisdiction: string;
+  jurisdictionName?: string;
+  plans: Array<{ cycle: string; price: number; effectiveMonthly: number; featured?: boolean }>;
+}
+
+const {
+  name, slug, tagline, logoSlug, review, servers, countries,
+  jurisdiction, jurisdictionName, plans,
+} = Astro.props;
+
+const cheapest = plans.find((p) => p.featured) ?? plans[0];
+const recLabel =
+  review?.verdict.recommendation === "recommended" ? "Editor's Choice"
+  : review?.verdict.recommendation === "conditional" ? "Conditional"
+  : undefined;
+---
+
+<a
+  href={`/vpn/${slug}/`}
+  class="group block rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary/50 hover:shadow-md motion-safe:duration-200"
+>
+  <div class="flex items-start justify-between gap-4">
+    <div class="min-w-0 flex-1">
+      <div class="flex items-center gap-3">
+        <img src={`/logos/${logoSlug}.svg`} alt="" class="h-8 w-8 rounded-md object-contain" width={32} height={32} loading="lazy" />
+        <div>
+          <h3 class="text-lg font-semibold text-foreground">{name}</h3>
+          {recLabel && <Badge tone="success" size="sm">{recLabel}</Badge>}
+        </div>
+      </div>
+      <p class="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2">{tagline}</p>
+    </div>
+    {review && (
+      <ScoreRing value={review.scores.overall} size={64} strokeWidth={5} label="Score" class="shrink-0" />
+    )}
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-border pt-4">
+    <StatBlock label="Servers" value={servers.toLocaleString()} icon="server" />
+    <StatBlock label="Countries" value={countries.toString()} icon="globe" />
+    <StatBlock label="Jurisdiction" value={jurisdictionName ?? jurisdiction} icon="shield" />
+  </div>
+
+  {cheapest && (
+    <div class="mt-4 flex items-center justify-between border-t border-border pt-4">
+      <PriceTag price={cheapest.effectiveMonthly} cycle={cheapest.cycle} featured={cheapest.featured} />
+      <span class="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:underline">
+        View review <Icon name="arrow-right" size={14} />
+      </span>
+    </div>
+  )}
+</a>
