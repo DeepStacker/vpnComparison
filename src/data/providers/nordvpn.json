@@ -2,7 +2,7 @@
   "id": "nordvpn",
   "slug": "nordvpn",
   "name": "NordVPN",
-  "tagline": "Massive server network, NordLynx protocol, and six independently audited no-logs verifications.",
+  "tagline": "9,400+ servers in 224 locations worldwide. NordLynx protocol, post-quantum encryption, and independently verified no-logs policy.",
   "websiteUrl": "https://nordvpn.com/",
   "foundedYear": 2012,
   "jurisdiction": "PA",
@@ -11,209 +11,37 @@
   "ownership": "private",
   "warrantCanary": false,
   "ramOnlyServers": true,
-  "transparencyReports": [
-    "https://nordvpn.com/blog/tag/transparency/"
-  ],
+  "transparencyReports": ["https://nordvpn.com/blog/tag/transparency/"],
   "serverNetwork": {
-    "serverCount": 7000,
-    "countryCount": 95,
-    "countries": [
-      "AL",
-      "AR",
-      "AT",
-      "AU",
-      "BA",
-      "BD",
-      "BE",
-      "BG",
-      "BH",
-      "BO",
-      "BR",
-      "CA",
-      "CH",
-      "CL",
-      "CN",
-      "CO",
-      "CR",
-      "CY",
-      "CZ",
-      "DE",
-      "DK",
-      "EC",
-      "EE",
-      "ES",
-      "FI",
-      "FR",
-      "GB",
-      "GE",
-      "GR",
-      "GT",
-      "HK",
-      "HN",
-      "HR",
-      "HU",
-      "ID",
-      "IE",
-      "IL",
-      "IN",
-      "IS",
-      "IT",
-      "JM",
-      "JP",
-      "KE",
-      "KH",
-      "KR",
-      "KZ",
-      "LA",
-      "LB",
-      "LI",
-      "LK",
-      "LT",
-      "LU",
-      "LV",
-      "MA",
-      "MC",
-      "MD",
-      "ME",
-      "MK",
-      "MT",
-      "MU",
-      "MX",
-      "MY",
-      "NG",
-      "NI",
-      "NL",
-      "NO",
-      "NP",
-      "NZ",
-      "PA",
-      "PE",
-      "PH",
-      "PK",
-      "PL",
-      "PR",
-      "PT",
-      "PY",
-      "QA",
-      "RO",
-      "RS",
-      "SA",
-      "SE",
-      "SG",
-      "SI",
-      "SK",
-      "SV",
-      "TH",
-      "TR",
-      "TT",
-      "TW",
-      "UA",
-      "US",
-      "UY",
-      "VE",
-      "VN",
-      "ZA"
-    ],
+    "serverCount": 9400,
+    "countryCount": 110,
+    "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","ES","FI","FR","GB","GE","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LA","LB","LI","LK","LT","LU","LV","MA","MC","MD","ME","MK","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TT","TW","UA","US","UY","VE","VN","ZA"],
     "virtualLocations": false,
     "ownedInfrastructure": false
   },
-  "protocols": [
-    "openvpn",
-    "wireguard",
-    "ikev2",
-    "l2tp"
-  ],
-  "platforms": [
-    "windows",
-    "macos",
-    "linux",
-    "android",
-    "ios",
-    "android-tv",
-    "browser-extension"
-  ],
-  "features": [
-    "no-logs",
-    "kill-switch",
-    "split-tunneling",
-    "dns-leak-protection",
-    "multi-hop",
-    "ad-blocker",
-    "obfuscation",
-    "dedicated-ip",
-    "tor-over-vpn"
-  ],
+  "protocols": ["wireguard", "openvpn", "ikev2"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "multi-hop", "ad-blocker", "obfuscation", "dedicated-ip", "tor-over-vpn", "quantum-resistant"],
   "streaming": [
-    {
-      "service": "netflix",
-      "support": "verified",
-      "verifiedAt": "2025-11-10",
-      "notes": "Consistent access to Netflix US, UK, CA, AU, JP and many other libraries. Obfuscated servers available for restricted regions.",
-      "regionsTested": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "JP"
-      ]
-    },
-    {
-      "service": "disney-plus",
-      "support": "verified",
-      "verifiedAt": "2025-11-10",
-      "regionsTested": [
-        "US",
-        "GB",
-        "CA"
-      ]
-    },
-    {
-      "service": "prime-video",
-      "support": "verified",
-      "verifiedAt": "2025-10-20",
-      "regionsTested": [
-        "US",
-        "GB",
-        "DE"
-      ]
-    },
-    {
-      "service": "hbo-max",
-      "support": "verified",
-      "verifiedAt": "2025-10-20",
-      "regionsTested": [
-        "US"
-      ]
-    },
-    {
-      "service": "hulu",
-      "support": "verified",
-      "verifiedAt": "2025-10-20",
-      "regionsTested": [
-        "US"
-      ]
-    },
-    {
-      "service": "bbc-iplayer",
-      "support": "verified",
-      "verifiedAt": "2025-09-15",
-      "regionsTested": [
-        "GB"
-      ]
-    }
+    { "service": "netflix", "support": "verified", "verifiedAt": "2026-05-10", "notes": "Reliable access to Netflix US, UK, CA, AU, JP and many other libraries via SmartPlay technology.", "regionsTested": ["US","GB","CA","AU","JP"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-05-10", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-04-20", "regionsTested": ["US","GB","DE"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-04-20", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "verified", "verifiedAt": "2026-04-20", "regionsTested": ["US"] },
+    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-03-15", "regionsTested": ["GB"] }
   ],
   "torrenting": {
     "supported": true,
     "labeledServers": true,
-    "portForwarding": false,
+    "portForwarding": true,
     "rating": 8,
-    "notes": "Specialized P2P servers available. Port forwarding not supported."
+    "notes": "P2P-optimized servers available. Dedicated server add-on includes port forwarding. SOCKS5 proxy support for torrent clients."
   },
   "loggingPolicy": "no-logs",
-  "dnsHandling": "Private DNS servers. DNS queries routed through encrypted tunnel. DNS leak protection across all apps.",
-  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all platforms. Threat Protection adds DNS-level filtering.",
+  "dnsHandling": "Private DNS servers. DNS queries routed through encrypted tunnel. SmartPlay technology for streaming DNS resolution.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all platforms. Threat Protection Pro adds DNS-level filtering against malware, trackers, and ads.",
   "obfuscationType": "stealth",
-  "postQuantum": false,
+  "postQuantum": true,
   "killSwitch": true,
   "splitTunneling": true,
   "adBlocker": true,
@@ -223,34 +51,12 @@
   "pricing": {
     "currency": "USD",
     "plans": [
-      {
-        "cycle": "monthly",
-        "price": 12.99,
-        "currency": "USD",
-        "effectiveMonthly": 12.99
-      },
-      {
-        "cycle": "yearly",
-        "price": 59.88,
-        "currency": "USD",
-        "effectiveMonthly": 4.99
-      },
-      {
-        "cycle": "biennially",
-        "price": 83.76,
-        "currency": "USD",
-        "effectiveMonthly": 3.49,
-        "featured": true
-      }
+      { "cycle": "monthly", "price": 14.69, "currency": "USD", "effectiveMonthly": 14.69 },
+      { "cycle": "yearly", "price": 64.68, "currency": "USD", "effectiveMonthly": 5.39 },
+      { "cycle": "biennially", "price": 94.23, "currency": "USD", "effectiveMonthly": 3.49, "featured": true }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": [
-      "credit-card",
-      "paypal",
-      "bitcoin",
-      "google-pay",
-      "amazon-pay"
-    ],
+    "paymentMethods": ["credit-card", "paypal", "bitcoin", "google-pay", "amazon-pay"],
     "freeTier": false
   },
   "support": {
@@ -268,24 +74,24 @@
       "independent": true
     },
     {
-      "auditor": "Deloitte",
-      "date": "2023-06-01",
-      "scope": "No-logs policy audit and infrastructure security assessment.",
+      "auditor": "West Coast Labs",
+      "date": "2025-10-01",
+      "scope": "Speed certification — confirmed 817+ Mbps average speeds and fastest VPN designation.",
       "independent": true
     },
     {
-      "auditor": "VerSprite",
-      "date": "2023-01-15",
-      "scope": "Penetration testing of NordVPN applications and server infrastructure.",
-      "reportUrl": "https://nordvpn.com/blog/versprite-security-assessment/",
+      "auditor": "AV-Comparatives",
+      "date": "2026-06-01",
+      "scope": "Anti-phishing protection — 96% detection rate with zero false positives.",
+      "reportUrl": "https://nordvpn.com/blog/nordvpn-q2-roundup-2026/",
       "independent": true
     }
   ],
-  "updatedAt": "2025-12-15",
+  "updatedAt": "2026-07-07",
   "sources": [
-    "https://nordvpn.com/servers",
-    "https://nordvpn.com/blog/nordvpn-no-logs-assurance-engagement-2025/",
-    "https://nordsecurity.com/blog/traffic-routing-in-meshnet-increased-security",
-    "https://en.wikipedia.org/wiki/NordVPN"
+    "https://nordvpn.com/servers/",
+    "https://nordvpn.com/pricing/",
+    "https://nordvpn.com/trust/",
+    "https://nordvpn.com/blog/nordwhisper-protocol/"
   ]
 }

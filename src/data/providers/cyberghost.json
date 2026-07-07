@@ -2,7 +2,7 @@
   "id": "cyberghost",
   "slug": "cyberghost",
   "name": "CyberGhost",
-  "tagline": "Romania-based VPN with streaming-optimized servers, strong privacy protections, and beginner-friendly apps.",
+  "tagline": "Romania-based VPN with 11,690+ servers in 100 countries, dedicated streaming profiles, and strong privacy protections outside 14 Eyes.",
   "websiteUrl": "https://www.cyberghost.com/",
   "foundedYear": 2011,
   "jurisdiction": "RO",
@@ -13,38 +13,38 @@
   "ramOnlyServers": true,
   "transparencyReports": ["https://www.cyberghost.com/blog/tag/transparency/"],
   "serverNetwork": {
-    "serverCount": 11000,
+    "serverCount": 11690,
     "countryCount": 100,
     "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","EG","ES","FI","FR","GB","GE","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LA","LB","LT","LU","LV","MA","MD","ME","MK","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
-    "virtualLocations": false,
+    "virtualLocations": true,
     "ownedInfrastructure": true
   },
   "protocols": ["wireguard", "openvpn", "ikev2"],
   "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension"],
-  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "ad-blocker", "obfuscation"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "obfuscation"],
   "streaming": [
-    { "service": "netflix", "support": "verified", "verifiedAt": "2025-11-20", "notes": "Dedicated streaming servers reliably unblock Netflix US, UK, CA, JP, DE, FR and more.", "regionsTested": ["US","GB","CA","JP","DE","FR"] },
-    { "service": "disney-plus", "support": "verified", "verifiedAt": "2025-11-20", "regionsTested": ["US","GB","CA"] },
-    { "service": "prime-video", "support": "verified", "verifiedAt": "2025-10-15", "regionsTested": ["US","GB","DE"] },
-    { "service": "hbo-max", "support": "verified", "verifiedAt": "2025-10-15", "regionsTested": ["US"] },
-    { "service": "hulu", "support": "verified", "verifiedAt": "2025-10-15", "regionsTested": ["US"] },
-    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2025-09-01", "regionsTested": ["GB"] }
+    { "service": "netflix", "support": "verified", "verifiedAt": "2026-06-01", "notes": "Dedicated streaming servers reliably unblock Netflix in 15+ regional libraries. One-click streaming profiles.", "regionsTested": ["US","GB","CA","JP","DE","FR"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-06-01", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-05-15", "regionsTested": ["US","GB","DE"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-05-15", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "verified", "verifiedAt": "2026-05-15", "regionsTested": ["US"] },
+    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-04-01", "regionsTested": ["GB"] }
   ],
   "torrenting": {
     "supported": true,
     "labeledServers": true,
     "portForwarding": false,
     "rating": 8,
-    "notes": "Dedicated torrenting servers optimized for P2P traffic. Port forwarding not available."
+    "notes": "Dedicated P2P-optimized servers. No port forwarding. NoSpy servers available on 6-month+ plans."
   },
   "loggingPolicy": "no-logs",
-  "dnsHandling": "Private DNS servers with DNS leak protection. DNS queries routed through encrypted tunnel.",
-  "leakProtection": "Built-in DNS and IPv6 leak protection. Automatic kill switch on all platforms.",
+  "dnsHandling": "Private DNS servers with DNS leak protection. DNS queries routed through encrypted tunnel. Smart DNS for consoles and streaming devices.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Automatic Wi-Fi protection activates VPN on public networks. Kill switch on all platforms.",
   "obfuscationType": "stealth",
   "postQuantum": false,
   "killSwitch": true,
   "splitTunneling": true,
-  "adBlocker": true,
+  "adBlocker": false,
   "multiHop": false,
   "dedicatedIp": false,
   "simultaneousConnections": 7,
@@ -52,11 +52,11 @@
     "currency": "USD",
     "plans": [
       { "cycle": "monthly", "price": 12.99, "currency": "USD", "effectiveMonthly": 12.99 },
-      { "cycle": "yearly", "price": 47.88, "currency": "USD", "effectiveMonthly": 3.99 },
-      { "cycle": "biennially", "price": 56.94, "currency": "USD", "effectiveMonthly": 2.37, "featured": true }
+      { "cycle": "half-yearly", "price": 41.94, "currency": "USD", "effectiveMonthly": 6.99 },
+      { "cycle": "biennially", "price": 38.16, "currency": "USD", "effectiveMonthly": 1.59, "featured": true }
     ],
     "moneyBackGuaranteeDays": 45,
-    "paymentMethods": ["credit-card", "paypal", "bitcoin"],
+    "paymentMethods": ["credit-card", "paypal", "google-pay", "amazon-pay", "bitcoin"],
     "freeTier": false
   },
   "support": {
@@ -69,15 +69,15 @@
     {
       "auditor": "Deloitte",
       "date": "2024-03-01",
-      "scope": "No-logs policy audit and infrastructure security assessment.",
+      "scope": "No-logs policy audit and incident management process review.",
       "reportUrl": "https://www.cyberghost.com/blog/deloitte-audit-2024",
       "independent": true
     }
   ],
-  "updatedAt": "2025-12-15",
+  "updatedAt": "2026-07-07",
   "sources": [
     "https://www.cyberghost.com/servers",
     "https://www.cyberghost.com/features",
-    "https://www.cyberghost.com/blog/deloitte-audit-2024"
+    "https://www.cyberghost.com/trust-center"
   ]
 }

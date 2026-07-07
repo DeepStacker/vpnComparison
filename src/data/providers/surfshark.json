@@ -2,7 +2,7 @@
   "id": "surfshark",
   "slug": "surfshark",
   "name": "Surfshark",
-  "tagline": "Feature-packed VPN with unlimited simultaneous connections, RAM-only servers, and CleanWeb ad blocking.",
+  "tagline": "Feature-packed VPN with unlimited simultaneous connections, RAM-only servers, CleanWeb ad blocking, and patented Everlink technology.",
   "websiteUrl": "https://surfshark.com/",
   "foundedYear": 2018,
   "jurisdiction": "NL",
@@ -11,188 +11,24 @@
   "ownership": "private",
   "warrantCanary": false,
   "ramOnlyServers": true,
-  "transparencyReports": [
-    "https://surfshark.com/transparency"
-  ],
+  "transparencyReports": ["https://surfshark.com/transparency"],
   "serverNetwork": {
     "serverCount": 4500,
-    "countryCount": 89,
-    "countries": [
-      "AL",
-      "AR",
-      "AT",
-      "AU",
-      "BA",
-      "BD",
-      "BE",
-      "BG",
-      "BH",
-      "BO",
-      "BR",
-      "CA",
-      "CH",
-      "CL",
-      "CN",
-      "CO",
-      "CR",
-      "CY",
-      "CZ",
-      "DE",
-      "DK",
-      "EC",
-      "EE",
-      "EG",
-      "ES",
-      "FI",
-      "FR",
-      "GB",
-      "GE",
-      "GR",
-      "GT",
-      "HK",
-      "HR",
-      "HU",
-      "ID",
-      "IE",
-      "IL",
-      "IN",
-      "IS",
-      "IT",
-      "JM",
-      "JP",
-      "KE",
-      "KH",
-      "KR",
-      "KZ",
-      "LB",
-      "LK",
-      "LT",
-      "LU",
-      "LV",
-      "MA",
-      "MD",
-      "ME",
-      "MK",
-      "MT",
-      "MX",
-      "MY",
-      "NG",
-      "NI",
-      "NL",
-      "NO",
-      "NP",
-      "NZ",
-      "PA",
-      "PE",
-      "PH",
-      "PK",
-      "PL",
-      "PT",
-      "PY",
-      "QA",
-      "RO",
-      "RS",
-      "SA",
-      "SE",
-      "SG",
-      "SI",
-      "SK",
-      "SV",
-      "TH",
-      "TR",
-      "TW",
-      "UA",
-      "US",
-      "UY",
-      "VE",
-      "VN",
-      "ZA"
-    ],
+    "countryCount": 100,
+    "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","EG","ES","FI","FR","GB","GE","GR","GT","HK","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LB","LK","LT","LU","LV","MA","MD","ME","MK","MT","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
     "virtualLocations": true,
     "ownedInfrastructure": false
   },
-  "protocols": [
-    "wireguard",
-    "openvpn",
-    "ikev2"
-  ],
-  "platforms": [
-    "windows",
-    "macos",
-    "linux",
-    "android",
-    "ios",
-    "android-tv",
-    "browser-extension",
-    "fire-tv"
-  ],
-  "features": [
-    "no-logs",
-    "kill-switch",
-    "split-tunneling",
-    "dns-leak-protection",
-    "multi-hop",
-    "ad-blocker",
-    "obfuscation",
-    "dedicated-ip"
-  ],
+  "protocols": ["wireguard", "openvpn", "ikev2"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension", "fire-tv"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "multi-hop", "ad-blocker", "obfuscation", "dedicated-ip", "quantum-resistant"],
   "streaming": [
-    {
-      "service": "netflix",
-      "support": "verified",
-      "verifiedAt": "2025-11-20",
-      "notes": "Accesses Netflix US, UK, CA, JP and other major libraries. NoBorders mode helps in restricted regions.",
-      "regionsTested": [
-        "US",
-        "GB",
-        "CA",
-        "JP"
-      ]
-    },
-    {
-      "service": "disney-plus",
-      "support": "verified",
-      "verifiedAt": "2025-11-20",
-      "regionsTested": [
-        "US",
-        "GB",
-        "CA"
-      ]
-    },
-    {
-      "service": "prime-video",
-      "support": "verified",
-      "verifiedAt": "2025-11-01",
-      "regionsTested": [
-        "US",
-        "GB",
-        "DE"
-      ]
-    },
-    {
-      "service": "hbo-max",
-      "support": "verified",
-      "verifiedAt": "2025-11-01",
-      "regionsTested": [
-        "US"
-      ]
-    },
-    {
-      "service": "hulu",
-      "support": "verified",
-      "verifiedAt": "2025-11-01",
-      "regionsTested": [
-        "US"
-      ]
-    },
-    {
-      "service": "bbc-iplayer",
-      "support": "verified",
-      "verifiedAt": "2025-10-01",
-      "regionsTested": [
-        "GB"
-      ]
-    }
+    { "service": "netflix", "support": "verified", "verifiedAt": "2026-05-20", "notes": "Accesses Netflix US, UK, CA, JP and other major libraries. NoBorders mode helps in restricted regions.", "regionsTested": ["US","GB","CA","JP"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-05-20", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US","GB","DE"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "verified", "verifiedAt": "2026-05-01", "regionsTested": ["US"] },
+    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2026-04-01", "regionsTested": ["GB"] }
   ],
   "torrenting": {
     "supported": true,
@@ -203,9 +39,9 @@
   },
   "loggingPolicy": "no-logs",
   "dnsHandling": "Private DNS servers. DNS queries routed through encrypted tunnel. CleanWeb adds DNS-level ad and tracker blocking.",
-  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all platforms. Bypasser feature for split tunneling.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all platforms. Bypasser feature for split tunneling. Everlink self-healing connection prevents drop-related leaks.",
   "obfuscationType": "no-borders",
-  "postQuantum": false,
+  "postQuantum": true,
   "killSwitch": true,
   "splitTunneling": true,
   "adBlocker": true,
@@ -215,33 +51,12 @@
   "pricing": {
     "currency": "USD",
     "plans": [
-      {
-        "cycle": "monthly",
-        "price": 16.45,
-        "currency": "USD",
-        "effectiveMonthly": 16.45
-      },
-      {
-        "cycle": "yearly",
-        "price": 40.68,
-        "currency": "USD",
-        "effectiveMonthly": 3.39
-      },
-      {
-        "cycle": "biennially",
-        "price": 53.73,
-        "currency": "USD",
-        "effectiveMonthly": 2.49,
-        "featured": true
-      }
+      { "cycle": "monthly", "price": 16.45, "currency": "USD", "effectiveMonthly": 16.45 },
+      { "cycle": "yearly", "price": 40.68, "currency": "USD", "effectiveMonthly": 3.39 },
+      { "cycle": "biennially", "price": 59.76, "currency": "USD", "effectiveMonthly": 2.49, "featured": true }
     ],
     "moneyBackGuaranteeDays": 30,
-    "paymentMethods": [
-      "credit-card",
-      "paypal",
-      "google-pay",
-      "bitcoin"
-    ],
+    "paymentMethods": ["credit-card", "paypal", "google-pay", "bitcoin"],
     "freeTier": false
   },
   "support": {
@@ -254,23 +69,28 @@
     {
       "auditor": "Deloitte",
       "date": "2025-06-01",
-      "scope": "No-logs policy audit and infrastructure security assessment.",
+      "scope": "No-logs policy re-audit — server configuration, deployment, API, and employee practices confirmed compliant.",
       "reportUrl": "https://surfshark.com/blog/deloitte-audit-nologs",
       "independent": true
     },
     {
       "auditor": "Cure53",
-      "date": "2023-09-01",
-      "scope": "Security audit of Surfshark server infrastructure and VPN applications.",
-      "reportUrl": "https://surfshark.com/blog/surfshark-server-infrastructure-undergoes-independent-audit",
+      "date": "2026-01-01",
+      "scope": "Full infrastructure and Dausos protocol security audit — confirmed stable and resilient platform.",
+      "independent": true
+    },
+    {
+      "auditor": "SecuRing",
+      "date": "2025-03-01",
+      "scope": "Network infrastructure and application security assessment — no critical vulnerabilities.",
       "independent": true
     }
   ],
-  "updatedAt": "2025-11-15",
+  "updatedAt": "2026-07-07",
   "sources": [
     "https://surfshark.com/servers",
     "https://surfshark.com/features",
-    "https://surfshark.com/blog/deloitte-audit-nologs",
+    "https://surfshark.com/trust-center",
     "https://surfshark.com/features/noborders"
   ]
 }

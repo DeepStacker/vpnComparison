@@ -2,7 +2,7 @@
   "id": "pia",
   "slug": "pia",
   "name": "Private Internet Access",
-  "tagline": "Proven no-logs VPN with a massive server network, port forwarding, and the MACE ad-blocker — all at a budget price.",
+  "tagline": "Proven no-logs VPN with unlimited simultaneous connections, port forwarding, MACE ad-blocker, and a massive 10 Gbps server network.",
   "websiteUrl": "https://www.privateinternetaccess.com/",
   "foundedYear": 2010,
   "jurisdiction": "US",
@@ -14,7 +14,7 @@
   "transparencyReports": ["https://www.privateinternetaccess.com/blog/category/transparency/"],
   "serverNetwork": {
     "serverCount": 10000,
-    "countryCount": 84,
+    "countryCount": 90,
     "countries": ["AL","AR","AT","AU","AZ","BD","BE","BG","BH","BO","BR","CA","CH","CL","CO","CR","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GE","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LA","LB","LI","LK","LT","LU","LV","MA","MD","ME","MK","MN","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
     "virtualLocations": true,
     "ownedInfrastructure": false
@@ -23,11 +23,11 @@
   "platforms": ["windows", "macos", "linux", "android", "ios", "browser-extension"],
   "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "port-forwarding", "ad-blocker", "obfuscation"],
   "streaming": [
-    { "service": "netflix", "support": "partial", "verifiedAt": "2025-10-15", "notes": "Access varies by region. Some Netflix libraries are consistently accessible while others require server switching." },
-    { "service": "disney-plus", "support": "partial", "verifiedAt": "2025-10-15" },
-    { "service": "prime-video", "support": "partial", "verifiedAt": "2025-10-01" },
-    { "service": "hbo-max", "support": "partial", "verifiedAt": "2025-10-01" },
-    { "service": "hulu", "support": "unsupported", "verifiedAt": "2025-10-01" },
+    { "service": "netflix", "support": "partial", "verifiedAt": "2026-01-15", "notes": "Access varies by region. Some Netflix libraries consistently accessible, others require server switching." },
+    { "service": "disney-plus", "support": "partial", "verifiedAt": "2026-01-15" },
+    { "service": "prime-video", "support": "partial", "verifiedAt": "2026-01-01" },
+    { "service": "hbo-max", "support": "partial", "verifiedAt": "2026-01-01" },
+    { "service": "hulu", "support": "unsupported" },
     { "service": "bbc-iplayer", "support": "unsupported" }
   ],
   "torrenting": {
@@ -35,11 +35,11 @@
     "labeledServers": true,
     "portForwarding": true,
     "rating": 9,
-    "notes": "Port forwarding supported on all servers. P2P traffic allowed and optimized across the network."
+    "notes": "Port forwarding supported on all servers. P2P traffic allowed and optimized across the network. Best VPN for torrenting."
   },
   "loggingPolicy": "no-logs",
-  "dnsHandling": "Private DNS servers via MACE feature. DNS queries filtered for ads, trackers, and malware.",
-  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all major platforms. PIA MACE provides additional DNS-level filtering.",
+  "dnsHandling": "Private DNS servers via MACE DNS-level filtering. Blocks ads, trackers, and malware at the DNS level across all devices.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Advanced kill switch on all major platforms. Split tunneling available on Windows, Android, and macOS.",
   "obfuscationType": "stealth",
   "postQuantum": false,
   "killSwitch": true,
@@ -67,16 +67,17 @@
   },
   "audits": [
     {
-      "auditor": "Deloitte",
-      "date": "2023-08-01",
-      "scope": "No-logs policy audit covering data collection, retention, and infrastructure controls.",
-      "reportUrl": "https://www.privateinternetaccess.com/blog/pia-completes-annual-no-log-audit-with-deloitte/",
+      "auditor": "Deloitte Audit Romania",
+      "date": "2024-04-01",
+      "scope": "Second no-logs and security audit — VPN server network, management systems, and dedicated IP token system. Conducted under ISAE 3000 (Revised).",
+      "reportUrl": "https://www.privateinternetaccess.com/blog/security-audit-2024/",
       "independent": true
     }
   ],
-  "updatedAt": "2025-12-10",
+  "updatedAt": "2026-07-07",
   "sources": [
     "https://www.privateinternetaccess.com/pages/vpn-servers/",
-    "https://www.privateinternetaccess.com/blog/pia-completes-annual-no-log-audit-with-deloitte/"
+    "https://www.privateinternetaccess.com/blog/security-audit-2024/",
+    "https://www.privateinternetaccess.com/vpn-features"
   ]
 }

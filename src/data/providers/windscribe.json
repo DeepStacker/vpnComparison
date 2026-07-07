@@ -2,7 +2,7 @@
   "id": "windscribe",
   "slug": "windscribe",
   "name": "Windscribe",
-  "tagline": "Generous free tier with 10 GB/month, unique R.O.B.E.R.T. custom DNS blocking, and Build-a-Plan pricing.",
+  "tagline": "Generous free tier with 10 GB/month, unlimited simultaneous connections, unique R.O.B.E.R.T. custom DNS blocking, and IPv6 support.",
   "websiteUrl": "https://windscribe.com/",
   "foundedYear": 2015,
   "jurisdiction": "CA",
@@ -14,7 +14,7 @@
   "transparencyReports": ["https://windscribe.com/transparency"],
   "serverNetwork": {
     "serverCount": 500,
-    "countryCount": 63,
+    "countryCount": 69,
     "countries": ["AL","AR","AT","AU","BA","BE","BG","BR","CA","CH","CL","CO","CR","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GE","GR","HK","HR","HU","ID","IE","IL","IN","IS","IT","JP","KR","LT","LU","LV","MD","MX","MY","NG","NL","NO","NZ","PA","PE","PH","PL","PT","RO","RS","SA","SE","SG","SI","SK","TH","TR","TW","UA","US","VN","ZA"],
     "virtualLocations": false,
     "ownedInfrastructure": false
@@ -23,11 +23,11 @@
   "platforms": ["windows", "macos", "linux", "android", "ios", "browser-extension"],
   "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "ad-blocker", "port-forwarding", "obfuscation"],
   "streaming": [
-    { "service": "netflix", "support": "verified", "verifiedAt": "2025-10-20", "notes": "Windscribe unblocks Netflix US reliably with desktop and mobile apps. Free-tier servers also work for Netflix US.", "regionsTested": ["US"] },
-    { "service": "disney-plus", "support": "verified", "verifiedAt": "2025-10-20", "regionsTested": ["US","GB","CA"] },
-    { "service": "prime-video", "support": "partial", "verifiedAt": "2025-09-15", "regionsTested": ["US","GB"] },
-    { "service": "hbo-max", "support": "verified", "verifiedAt": "2025-09-15", "regionsTested": ["US"] },
-    { "service": "hulu", "support": "partial", "verifiedAt": "2025-09-15" },
+    { "service": "netflix", "support": "verified", "verifiedAt": "2026-06-01", "notes": "Windscribe unblocks Netflix US reliably. Free-tier servers also work for Netflix US.", "regionsTested": ["US"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2026-06-01", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "partial", "verifiedAt": "2026-05-15", "regionsTested": ["US","GB"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2026-05-15", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "partial", "verifiedAt": "2026-05-15" },
     { "service": "bbc-iplayer", "support": "unsupported" }
   ],
   "torrenting": {
@@ -35,11 +35,11 @@
     "labeledServers": false,
     "portForwarding": true,
     "rating": 7,
-    "notes": "P2P allowed on all servers. Port forwarding available on paid plans via WireGuard."
+    "notes": "P2P allowed on all servers. Port forwarding available on paid plans via WireGuard. Unlimited devices even on free tier."
   },
   "loggingPolicy": "no-logs",
-  "dnsHandling": "R.O.B.E.R.T. custom DNS blocking. Users can configure block lists at the account level — ads, trackers, malware, social media, and more.",
-  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch (Firewall) on all platforms. Configurable firewall rules.",
+  "dnsHandling": "R.O.B.E.R.T. customizable DNS blocking. Users configure block lists at the account level — ads, trackers, malware, social media, and more. Config Generator for custom OpenVPN/WireGuard configs.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Firewall kill switch on all platforms blocks all non-VPN traffic. Configurable firewall rules. MAC address spoofing on public networks.",
   "obfuscationType": "stealth",
   "postQuantum": false,
   "killSwitch": true,
@@ -57,7 +57,7 @@
     "moneyBackGuaranteeDays": 30,
     "paymentMethods": ["credit-card", "paypal", "bitcoin"],
     "freeTier": true,
-    "freeTierNotes": "Free plan includes 10 GB/month data, access to servers in 10+ countries, R.O.B.E.R.T. ad blocking, and unlimited bandwidth within the cap. No credit card required."
+    "freeTierNotes": "Free plan includes 10 GB/month data, unlimited simultaneous connections, access to servers in 10 countries, R.O.B.E.R.T. ad blocking, and full feature set. No credit card required."
   },
   "support": {
     "liveChat": true,
@@ -66,10 +66,11 @@
     "averageResponseTime": "Within 6 hours (email)"
   },
   "audits": [],
-  "updatedAt": "2025-12-10",
+  "updatedAt": "2026-07-07",
   "sources": [
     "https://windscribe.com/features",
     "https://windscribe.com/transparency",
-    "https://windscribe.com/upgrade"
+    "https://windscribe.com/upgrade",
+    "https://windscribe.com/blog/windscribe-now-supports-ipv6/"
   ]
 }

@@ -42,7 +42,7 @@ export const scoreSchema = z.number().min(0).max(10);
 
 /** A price plan attached to a provider. */
 export const pricePlanSchema = z.object({
-  cycle: z.enum(["monthly", "quarterly", "yearly", "biennially", "triennially"]),
+  cycle: z.enum(["monthly", "quarterly", "half-yearly", "yearly", "biennially", "triennially"]),
   price: z.number().nonnegative(),
   currency: z.string().min(1).default("USD"),
   effectiveMonthly: z.number().nonnegative(),
