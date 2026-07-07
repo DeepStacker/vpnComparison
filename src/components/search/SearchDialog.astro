@@ -87,14 +87,25 @@ import Icon from "@/components/ui/Icon.astro";
 
       <!-- Empty state -->
       <div id="search-dialog-empty" class="hidden">
-        <div class="flex flex-col items-center justify-center px-8 py-16 text-center">
+        <div class="flex flex-col items-center justify-center px-8 py-12 text-center">
           <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-sunken border border-border mb-4">
             <Icon name="search-x" size={24} class="text-muted-foreground/60" />
           </div>
           <p class="text-lg font-bold text-foreground" id="search-dialog-empty-title">No results found</p>
-          <p class="mt-1 text-sm text-muted-foreground">
+          <p class="mt-1 text-sm text-muted-foreground" id="search-dialog-empty-subtitle">
             Try a different search term or browse our categories.
           </p>
+          <div id="search-dialog-empty-popular" class="mt-6 flex flex-wrap items-center justify-center gap-2 max-w-xl">
+            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mr-1">Popular</span>
+            <button type="button" data-popular="Best VPN for streaming" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">Best VPN for streaming</button>
+            <button type="button" data-popular="NordVPN review" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">NordVPN review</button>
+            <button type="button" data-popular="WireGuard protocol" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">WireGuard protocol</button>
+            <button type="button" data-popular="Kill switch explained" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">Kill switch explained</button>
+            <button type="button" data-popular="VPN for torrenting" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">VPN for torrenting</button>
+            <button type="button" data-popular="Cheap VPN under $3" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">Cheap VPN under $3</button>
+            <button type="button" data-popular="VPN for China" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">VPN for China</button>
+            <button type="button" data-popular="Public Wi-Fi safety" class="rounded-full border border-border bg-surface-sunken/40 px-3 py-1 text-xs font-bold text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">Public Wi-Fi safety</button>
+          </div>
         </div>
       </div>
 
@@ -196,6 +207,7 @@ import Icon from "@/components/ui/Icon.astro";
   const recentList = document.getElementById("search-dialog-recent-list")!;
   const emptyEl = document.getElementById("search-dialog-empty")!;
   const emptyTitle = document.getElementById("search-dialog-empty-title")!;
+  const emptySubtitle = document.getElementById("search-dialog-empty-subtitle")!;
   const errorEl = document.getElementById("search-dialog-error")!;
   const footerEl = document.getElementById("search-dialog-footer")!;
   const clearBtn = document.getElementById("search-dialog-clear") as HTMLButtonElement | null;
@@ -305,9 +317,12 @@ import Icon from "@/components/ui/Icon.astro";
     hideAll();
     hideLoading();
     if (query.length < MIN_QUERY) {
-      emptyTitle.textContent = "Enter a search term to begin";
+      emptyTitle.textContent = "Search the site";
+      emptySubtitle.textContent =
+        "Reviews, guides, comparisons, providers, countries and tools — all in one place.";
     } else {
       emptyTitle.textContent = "No results found";
+      emptySubtitle.textContent = `Nothing matched “${query}”. Try one of the popular searches below.`;
     }
     emptyEl.classList.remove("hidden");
     showFooter();
@@ -623,6 +638,19 @@ import Icon from "@/components/ui/Icon.astro";
     input?.addEventListener("keydown", handleKeydown);
     clearBtn?.addEventListener("click", handleClear);
     recentList.addEventListener("click", handleRecentClick);
+
+    // Popular search chips (empty state) — fill input and run search
+    emptyEl.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement | null;
+      const btn = target?.closest<HTMLElement>("[data-popular]");
+      if (!btn) return;
+      const q = btn.dataset.popular ?? "";
+      if (!q || !input) return;
+      input.value = q;
+      showClearButton();
+      showLoading();
+      performSearch(q);
+    });
 
     // Close on backdrop click
     backdrop.addEventListener("click", closeDialog);

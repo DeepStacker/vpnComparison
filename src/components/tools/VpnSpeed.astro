@@ -1,0 +1,266 @@
+---
+interface VpnSpeedProvider {
+  id: string; slug: string; name: string;
+  serverNetwork: { serverCount: number; countryCount: number; countries: string[] };
+  protocols: string[];
+  multiHop: boolean;
+}
+
+interface VpnSpeedReview {
+  providerId: string;
+  scores: { performance: number; streaming: number; overall: number };
+}
+
+interface Props {
+  providers: VpnSpeedProvider[];
+  reviews: VpnSpeedReview[];
+}
+
+const { providers, reviews } = Astro.props;
+---
+
+<div id="vpn-speed-root" class="grid gap-8 lg:grid-cols-5">
+  <div class="lg:col-span-2 rounded-2xl border border-border bg-surface p-6 shadow-sm">
+    <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Test configuration</p>
+    <h2 class="mt-2 text-xl font-black tracking-tight">Your baseline</h2>
+    <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Enter your connection details. We’ll model the impact for each provider.</p>
+
+    <form id="speed-form" class="mt-6 space-y-5">
+      <div>
+        <label for="baseline-down" class="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Baseline download (Mbps)</label>
+        <input id="baseline-down" type="number" min="1" max="5000" value="250" class="mt-2 w-full rounded-xl border border-border bg-surface-sunken/40 px-4 py-2.5 text-sm font-bold text-foreground focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+      </div>
+      <div>
+        <label for="baseline-up" class="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Baseline upload (Mbps)</label>
+        <input id="baseline-up" type="number" min="1" max="5000" value="50" class="mt-2 w-full rounded-xl border border-border bg-surface-sunken/40 px-4 py-2.5 text-sm font-bold text-foreground focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+      </div>
+      <div>
+        <label for="baseline-ping" class="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Baseline ping (ms)</label>
+        <input id="baseline-ping" type="number" min="1" max="500" value="20" class="mt-2 w-full rounded-xl border border-border bg-surface-sunken/40 px-4 py-2.5 text-sm font-bold text-foreground focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20" />
+      </div>
+      <div>
+        <label for="speed-region" class="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Exit region</label>
+        <select id="speed-region" class="mt-2 w-full rounded-xl border border-border bg-surface-sunken/40 px-4 py-2.5 text-sm font-bold text-foreground focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20">
+          <option value="us">United States (closest)</option>
+          <option value="eu">Europe</option>
+          <option value="uk">United Kingdom</option>
+          <option value="asia">Asia-Pacific</option>
+        </select>
+      </div>
+      <div>
+        <label for="speed-workload" class="block text-xs font-bold uppercase tracking-widest text-muted-foreground">Primary workload</label>
+        <select id="speed-workload" class="mt-2 w-full rounded-xl border border-border bg-surface-sunken/40 px-4 py-2.5 text-sm font-bold text-foreground focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20">
+          <option value="streaming">4K streaming</option>
+          <option value="gaming">Online gaming</option>
+          <option value="browsing">Browsing & calls</option>
+          <option value="torrenting">Large downloads</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full rounded-xl bg-primary px-6 py-3 text-sm font-black uppercase tracking-widest text-primary-foreground transition-all duration-200 hover:brightness-110 shadow-lg">Run analysis</button>
+    </form>
+
+    <div class="mt-6 rounded-xl border border-border bg-surface-sunken/40 p-4 text-xs text-muted-foreground leading-relaxed">
+      Estimates are modeled from each provider’s performance score, server coverage, and protocol mix. Use them to compare providers, not as exact measurements.
+    </div>
+  </div>
+
+  <div class="lg:col-span-3 space-y-6" id="speed-results">
+    <div class="rounded-2xl border border-border bg-surface p-8 shadow-sm text-center">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Idle</p>
+      <h3 class="mt-3 text-2xl font-black tracking-tight">Run the analysis to see results</h3>
+      <p class="mt-3 text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">Adjust your baseline and pick a region to estimate download, upload, latency, and per-workload impact for every provider in our catalog.</p>
+    </div>
+  </div>
+</div>
+
+<script is:inline type="application/json" id="speed-data" set:html={JSON.stringify(providers)}></script>
+<script is:inline type="application/json" id="speed-reviews-data" set:html={JSON.stringify(reviews)}></script>
+
+<script>
+  interface Provider {
+    id: string; slug: string; name: string;
+    serverNetwork: { serverCount: number; countryCount: number; countries: string[] };
+    protocols: string[];
+    multiHop: boolean;
+  }
+  interface ReviewData { providerId: string; scores: { performance: number; streaming: number; overall: number } }
+
+  const allProviders: Provider[] = JSON.parse(document.getElementById("speed-data")!.textContent);
+  const allReviews: ReviewData[] = JSON.parse(document.getElementById("speed-reviews-data")!.textContent);
+  const reviewMap = new Map(allReviews.map((r) => [r.providerId, r]));
+
+  const form = document.getElementById("speed-form") as HTMLFormElement;
+  const results = document.getElementById("speed-results")!;
+
+  function escapeHtml(str: string): string {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  interface Estimate {
+    provider: Provider;
+    downMbps: number;
+    upMbps: number;
+    pingMs: number;
+    overheadPct: number;
+    impact: "Low" | "Moderate" | "High";
+    workloadScore: number;
+  }
+
+  function regionFactor(region: string): number {
+    return region === "us" ? 1.0 : region === "eu" ? 0.9 : region === "uk" ? 0.88 : 0.78;
+  }
+
+  function workloadScoreFor(estimate: { downMbps: number; pingMs: number; }, workload: string, perf: number): number {
+    let s = perf;
+    if (workload === "streaming") s += estimate.downMbps > 25 ? 5 : -10;
+    if (workload === "gaming") s += estimate.pingMs < 80 ? 5 : -15;
+    if (workload === "browsing") s += estimate.pingMs < 120 ? 5 : -5;
+    if (workload === "torrenting") s += estimate.downMbps > 10 ? 5 : -10;
+    return Math.max(20, Math.min(100, Math.round(s)));
+  }
+
+  function computeEstimates(input: { down: number; up: number; ping: number; region: string; workload: string }): Estimate[] {
+    const rf = regionFactor(input.region);
+    const built = allProviders.map((p): Estimate => {
+      const review = reviewMap.get(p.id);
+      const perf = review ? review.scores.performance * 10 : 65;
+      const overhead = Math.max(5, Math.min(45, 8 + Math.round((1 - perf / 100) * 22) + Math.round((1 - rf) * 18) + (p.multiHop ? 6 : 0)));
+      const downMbps = Math.round(input.down * (1 - overhead / 100));
+      const upMbps = Math.round(input.up * (1 - overhead / 100));
+      const pingMs = Math.round(input.ping + overhead * 0.9);
+      const impact: "Low" | "Moderate" | "High" = overhead < 15 ? "Low" : overhead < 25 ? "Moderate" : "High";
+      return { provider: p, downMbps, upMbps, pingMs, overheadPct: overhead, impact, workloadScore: workloadScoreFor({ downMbps, pingMs }, input.workload, perf) };
+    });
+    return built.sort((a, b) => b.workloadScore - a.workloadScore);
+  }
+
+  function renderResults(estimates: Estimate[], input: { down: number; workload: string; region: string }) {
+    if (estimates.length === 0) {
+      results.innerHTML = `<div class="rounded-2xl border border-border bg-surface p-8 shadow-sm text-center"><p class="text-sm text-muted-foreground">No providers match the current filters.</p></div>`;
+      return;
+    }
+    const top = estimates[0]!;
+    const avgOverhead = Math.round(estimates.reduce((s, e) => s + e.overheadPct, 0) / estimates.length);
+    void avgOverhead;
+
+    const barHeight = Math.min(estimates.length * 32, 200);
+    void barHeight;
+    const maxDown = Math.max(...estimates.map(e => e.downMbps), 1);
+
+    results.innerHTML = `
+      <div class="rounded-3xl border border-primary/20 bg-primary/5 p-8 shadow-sm">
+        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Executive summary</p>
+            <h3 class="mt-2 text-2xl font-black tracking-tight">Top pick: ${escapeHtml(top.provider.name)}</h3>
+            <p class="mt-2 text-sm text-muted-foreground leading-relaxed max-w-xl">For a ${input.down} Mbps connection in ${input.region.toUpperCase()} running ${input.workload}, expected overhead is <strong>${top.overheadPct}%</strong> with ${escapeHtml(String(top.pingMs))} ms latency.</p>
+          </div>
+          <div class="shrink-0 text-center">
+            <div class="relative inline-flex items-center justify-center" style="width:90px;height:90px">
+              <svg class="-rotate-90" width="90" height="90" viewBox="0 0 90 90">
+                <circle cx="45" cy="45" r="37" fill="none" stroke="var(--color-border)" stroke-width="7" />
+                <circle cx="45" cy="45" r="37" fill="none" stroke="var(--color-primary)" stroke-width="7" stroke-dasharray="${2 * Math.PI * 37}" stroke-dashoffset="${2 * Math.PI * 37 * (1 - Math.min(top.workloadScore, 100) / 100)}" stroke-linecap="round" class="transition-all duration-1000" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-xl font-black tracking-tighter text-primary">${top.workloadScore}</span>
+                <span class="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">score</span>
+              </div>
+            </div>
+            <p class="mt-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">Workload score</p>
+          </div>
+        </div>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-2xl border border-border/50 bg-surface p-5">
+            <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Estimated download</p>
+            <p class="mt-2 text-2xl font-black tracking-tighter text-foreground">${top.downMbps} <span class="text-sm text-muted-foreground">Mbps</span></p>
+          </div>
+          <div class="rounded-2xl border border-border/50 bg-surface p-5">
+            <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Estimated upload</p>
+            <p class="mt-2 text-2xl font-black tracking-tighter text-foreground">${top.upMbps} <span class="text-sm text-muted-foreground">Mbps</span></p>
+          </div>
+          <div class="rounded-2xl border border-border/50 bg-surface p-5">
+            <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Estimated latency</p>
+            <p class="mt-2 text-2xl font-black tracking-tighter text-foreground">${top.pingMs} <span class="text-sm text-muted-foreground">ms</span></p>
+          </div>
+        </div>
+
+        <!-- Performance comparison chart -->
+        <div class="mt-6 rounded-2xl border border-border/50 bg-surface p-5">
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">Download Speed Comparison</p>
+          <div class="space-y-1.5">
+            ${estimates.slice(0, 8).map((e) => {
+              const pct = (e.downMbps / maxDown) * 100;
+              const color = e.impact === "Low" ? 'var(--color-success)' : e.impact === "Moderate" ? 'var(--color-primary)' : 'var(--color-warning)';
+              return `<div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-muted-foreground w-20 truncate">${escapeHtml(e.provider.name)}</span>
+                <div class="flex-1 h-4 rounded-md bg-surface-sunken border border-border/50 overflow-hidden shadow-inner">
+                  <div class="h-full rounded-md transition-all duration-500" style="width:${pct}%;background:${color}"></div>
+                </div>
+                <span class="text-[10px] font-bold text-foreground w-14 text-right">${e.downMbps} Mbps</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-black tracking-tight">Provider comparison</h3>
+          <span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Workload: ${escapeHtml(input.workload)}</span>
+        </div>
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                <th class="py-2 pr-4">Provider</th>
+                <th class="py-2 pr-4">Overhead</th>
+                <th class="py-2 pr-4">Download</th>
+                <th class="py-2 pr-4">Latency</th>
+                <th class="py-2 pr-4">Impact</th>
+                <th class="py-2 pr-4">Workload score</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${estimates.map((e) => {
+                const tone = e.impact === "Low" ? "text-success" : e.impact === "Moderate" ? "text-primary" : "text-warning";
+                return `
+                  <tr class="border-t border-border/50">
+                    <td class="py-3 pr-4 font-bold text-foreground">${escapeHtml(e.provider.name)}</td>
+                    <td class="py-3 pr-4 text-muted-foreground">${e.overheadPct}%</td>
+                    <td class="py-3 pr-4 text-foreground">${e.downMbps} Mbps</td>
+                    <td class="py-3 pr-4 text-foreground">${e.pingMs} ms</td>
+                    <td class="py-3 pr-4 font-bold ${tone}">${e.impact}</td>
+                    <td class="py-3 pr-4 font-black text-primary">${e.workloadScore}</td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-4 text-xs text-muted-foreground leading-relaxed">All numbers are modeled estimates based on the provider dataset. Run real speed tests from your network before committing.</p>
+      </div>
+
+      <div class="rounded-2xl border border-border bg-surface-sunken/30 p-6">
+        <h3 class="text-base font-black uppercase tracking-widest">Recommended next steps</h3>
+        <ul class="mt-4 space-y-3 text-sm text-foreground/90">
+          <li class="flex gap-3"><span class="mt-0.5 h-5 w-5 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">1</span><span>Try the top provider on a 7-day money-back window to validate the model against your real network.</span></li>
+          <li class="flex gap-3"><span class="mt-0.5 h-5 w-5 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">2</span><span>Test WireGuard vs. OpenVPN for your primary workload. Latency differences are most visible on gaming and calls.</span></li>
+          <li class="flex gap-3"><span class="mt-0.5 h-5 w-5 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">3</span><span>If your top pick is &gt; 25% overhead, retry with a closer region to reduce latency tax.</span></li>
+        </ul>
+      </div>
+    `;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const down = Number((document.getElementById("baseline-down") as HTMLInputElement).value) || 0;
+    const up = Number((document.getElementById("baseline-up") as HTMLInputElement).value) || 0;
+    const ping = Number((document.getElementById("baseline-ping") as HTMLInputElement).value) || 0;
+    const region = (document.getElementById("speed-region") as HTMLSelectElement).value;
+    const workload = (document.getElementById("speed-workload") as HTMLSelectElement).value;
+    if (!down || !ping) return;
+    const estimates = computeEstimates({ down, up, ping, region, workload });
+    renderResults(estimates, { down, workload, region });
+  });
+</script>

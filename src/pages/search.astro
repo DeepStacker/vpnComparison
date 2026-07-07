@@ -1,17 +1,22 @@
 ---
 import SeoLayout from "@/layouts/SeoLayout.astro";
-import Section from "@/components/ui/Section.astro";
-import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
-import Text from "@/components/ui/Text.astro";
-import Badge from "@/components/ui/Badge.astro";
 import Icon from "@/components/ui/Icon.astro";
 import SearchBar from "@/components/search/SearchBar.astro";
-import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import type { Breadcrumb } from "@/types/site";
 
+const categories = [
+  { label: "Reviews", count: 12, href: "/vpn/", icon: "file-text" },
+  { label: "Comparisons", count: 8, href: "/comparisons/", icon: "arrow-left-right" },
+  { label: "Guides", count: 15, href: "/guides/", icon: "book-open" },
+  { label: "FAQs", count: 24, href: "/faq/", icon: "help-circle" },
+  { label: "Best Lists", count: 6, href: "/best-lists/", icon: "list-checks" },
+  { label: "Tools", count: 6, href: "/tools/", icon: "wand-2" },
+];
+
 const seo = normalizeSeoMeta({
-  title: buildTitle("Search — Find VPN Reviews, Guides & Comparisons"),
+  title: "Search — Find VPN Reviews, Guides & Comparisons",
   description: "Search FreeVPN4USA for VPN reviews, comparisons, guides, and FAQs.",
   canonical: canonicalUrl("/search/"),
 });
@@ -22,28 +27,47 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
-    <div class="absolute inset-0 -z-10">
-      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
-      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+  <div class="py-8">
+    <div class="mb-8">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Search</p>
+      <Heading level={1} class="text-3xl font-black tracking-tight mt-1">Find what you need</Heading>
+      <p class="mt-1 text-sm text-muted-foreground max-w-xl">Search across reviews, guides, comparisons, tools, and FAQs.</p>
     </div>
-    <Container>
-      <div class="mx-auto max-w-3xl text-center">
-        <Badge tone="primary" class="mb-6">Global Search</Badge>
-        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
-          Search <span class="text-primary">FreeVPN4USA</span>
-        </Heading>
-        <Text size="xl" tone="muted" class="mt-6 max-w-2xl mx-auto leading-relaxed">
-          Find VPN reviews, comparisons, guides, and FAQs across our entire database.
-        </Text>
-        <div class="mt-10">
-          <SearchBar />
-        </div>
-        <div class="mt-8 flex items-center justify-center gap-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
-          <Icon name="info" size={16} />
-          <span>Requires JavaScript for full functionality</span>
+
+    <div class="mb-10">
+      <SearchBar />
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <Heading level={2} class="text-sm font-black uppercase tracking-widest mb-4">Browse by category</Heading>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {categories.map((cat) => `
+            <a href="${cat.href}" class="flex items-center gap-3 rounded-2xl border border-border bg-surface p-4 no-underline transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5 group">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="/icons/lucide.svg#${cat.icon}"/></svg>
+              </span>
+              <div class="min-w-0">
+                <p class="text-sm font-bold text-foreground group-hover:text-primary transition-colors">${cat.label}</p>
+                <p class="text-xs text-muted-foreground">${cat.count} items</p>
+              </div>
+            </a>
+          `).join('')}
         </div>
       </div>
-    </Container>
-  </Section>
+      <div>
+        <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4">
+            <Icon name="zap" size={16} class="text-primary" />
+            <Heading level={2} class="text-sm font-black uppercase tracking-widest">Quick tips</Heading>
+          </div>
+          <ul class="space-y-3 text-sm text-muted-foreground">
+            <li class="flex gap-3"><span class="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">⌘</span><span>Press <kbd class="inline-flex items-center justify-center rounded-md border border-border bg-surface-sunken px-1.5 py-0.5 text-[10px] font-black">⌘K</kbd> to search from any page.</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">!</span><span>Use quotes for exact phrase matching: "no-logs policy"</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 h-5 w-5 shrink-0 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">#</span><span>Search by category: "privacy", "streaming", "speed"</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </SeoLayout>

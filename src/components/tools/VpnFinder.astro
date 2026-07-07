@@ -517,6 +517,116 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     const scored = scoreProviders();
 
     content.innerHTML = "";
+    const top = scored[0];
+    const confidence = computeFinderConfidence(scored);
+    const risks = computeFinderRisks(scored);
+    const actions = computeFinderActions(scored);
+
+    const exec = document.createElement("div");
+    exec.className =
+      "mb-12 rounded-3xl border border-primary/20 bg-primary/5 p-8 shadow-sm";
+    exec.innerHTML = `
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div class="min-w-0">
+          <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground">Executive Summary</p>
+          <h3 class="mt-2 text-2xl font-black tracking-tight">Recommended: ${escapeHtml(top?.provider.name ?? "—")}</h3>
+          <p class="mt-3 text-base text-muted-foreground leading-relaxed max-w-2xl">
+            Your answers map to privacy, performance, and compatibility criteria. Below is a ranked shortlist with category-level explanations, risks, and next steps.
+          </p>
+        </div>
+
+        <div class="shrink-0 flex items-start gap-4">
+          <!-- Radar chart placeholder -->
+          <div class="rounded-2xl border border-primary/30 bg-primary/10 p-5">
+            <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground">Confidence</p>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="text-4xl font-black tracking-tighter text-primary">${confidence}%</span>
+              <span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">demo</span>
+            </div>
+            <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Higher confidence means more of your selected criteria are strongly supported.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score distribution chart -->
+      <div class="mt-8 rounded-2xl border border-border/50 bg-surface p-6" id="finder-score-chart-container">
+        <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">Match Score Distribution</p>
+        <div id="finder-score-chart" style="height:120px"></div>
+      </div>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-3">
+        <div class="rounded-2xl border border-border/50 bg-surface p-6">
+          <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground">Key Findings</p>
+          <ul class="mt-4 space-y-3 text-sm text-foreground/90">
+            ${renderFinderKeyFindings(scored)}
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-border/50 bg-surface p-6">
+          <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground">Potential Risks</p>
+          <div class="mt-4 space-y-3">
+            ${risks
+              .map(
+                (r) => `
+                <div class="rounded-xl border border-border/50 bg-surface-sunken/40 p-4">
+                  <div class="flex items-center justify-between gap-3">
+                    <p class="text-sm font-black text-foreground">${escapeHtml(r.title)}</p>
+                    <span class="text-xs font-bold uppercase tracking-widest ${r.severity === "High" ? "text-warning" : r.severity === "Medium" ? "text-primary" : "text-success"}">${escapeHtml(r.severity)}</span>
+                  </div>
+                  <p class="mt-2 text-sm text-muted-foreground leading-relaxed">${escapeHtml(r.detail)}</p>
+                </div>
+              `,
+              )
+              .join("")}
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-border/50 bg-surface p-6">
+          <p class="text-sm font-bold uppercase tracking-widest text-muted-foreground">Recommended Actions</p>
+          <div class="mt-4 space-y-3">
+            ${actions
+              .map(
+                (a) => `
+                <div class="rounded-xl border border-border/50 bg-surface-sunken/40 p-4">
+                  <p class="text-sm font-black text-foreground">${escapeHtml(a.action)}</p>
+                  <p class="mt-2 text-sm text-muted-foreground leading-relaxed">${escapeHtml(a.rationale)}</p>
+                </div>
+              `,
+              )
+              .join("")}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Render match score bar chart
+    requestAnimationFrame(function() {
+      var chartEl2 = document.getElementById("finder-score-chart");
+      if (!chartEl2) return;
+      var maxScore = 0;
+      for (var si = 0; si < scored.length; si++) {
+        var s = scored[si];
+        if (s && s.totalScore > maxScore) maxScore = s.totalScore;
+      }
+      if (maxScore < 1) maxScore = 1;
+      var htmlBar = '<div class="flex items-end justify-between gap-1" style="height:120px">';
+      var count = Math.min(scored.length, 6);
+      for (var si2 = 0; si2 < count; si2++) {
+        var sr = scored[si2];
+        if (!sr) break;
+        var pct = (sr.totalScore / maxScore) * 100;
+        var color = si2 === 0 ? 'var(--color-success)' : 'var(--color-primary)';
+        htmlBar += '<div class="flex flex-col items-center flex-1 h-full justify-end">';
+        htmlBar += '<span class="text-[9px] font-bold text-muted-foreground mb-1">' + sr.totalScore + '%</span>';
+        htmlBar += '<div class="w-full rounded-t-md transition-all duration-700 ease-out" style="height:' + pct + '%;background:' + color + ';min-height:4px" title="' + escapeHtml(sr.provider.name) + ': ' + sr.totalScore + '%"></div>';
+        htmlBar += '<span class="mt-1 text-[9px] font-bold text-muted-foreground truncate w-full text-center">' + escapeHtml(sr.provider.name.slice(0, 10)) + '</span>';
+        htmlBar += '</div>';
+      }
+      htmlBar += '</div>';
+      chartEl2.innerHTML = htmlBar;
+    });
+
+    content.appendChild(exec);
 
     const summary = document.createElement("div");
     summary.className = "mb-12 text-center";
@@ -569,9 +679,21 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
       const detailsDiv = document.createElement("div");
       detailsDiv.className = "mt-10 grid gap-6 sm:grid-cols-2";
 
+      const breakdown = document.createElement("div");
+      breakdown.className = "mb-8 flex flex-wrap gap-2";
+      breakdown.innerHTML = result.details
+        .slice(0, 4)
+        .map((d) => {
+          const tone = d.score >= 80 ? "text-success border-success/20 bg-success/10" : d.score >= 60 ? "text-primary border-primary/20 bg-primary/10" : "text-warning border-warning/20 bg-warning/10";
+          return `<button type="button" class="finder-chip inline-flex items-center rounded-full border ${tone} px-3 py-1 text-xs font-bold uppercase tracking-widest" data-detail-label="${escapeHtml(d.label)}" aria-pressed="false">${escapeHtml(d.label)}: ${d.score}%</button>`;
+        })
+        .join("");
+      card.appendChild(breakdown);
+
       for (const detail of result.details) {
         const detailCard = document.createElement("div");
         detailCard.className = "rounded-2xl bg-surface-sunken/50 border border-border/50 p-5";
+        detailCard.dataset.detailLabel = detail.label;
 
         const header = document.createElement("div");
         header.className = "flex items-center justify-between mb-3";
@@ -598,7 +720,41 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
         detailsDiv.appendChild(detailCard);
       }
 
+      // Chip toggle: highlight and reveal the matching detail card.
+      const chipButtons = Array.from(breakdown.querySelectorAll<HTMLButtonElement>(".finder-chip"));
+      for (const btn of chipButtons) {
+        btn.addEventListener("click", () => {
+          const label = btn.dataset.detailLabel ?? "";
+          const pressed = btn.getAttribute("aria-pressed") === "true";
+
+          for (const other of chipButtons) {
+            other.setAttribute("aria-pressed", "false");
+          }
+
+          for (const el of Array.from(detailsDiv.querySelectorAll<HTMLElement>("[data-detail-label]"))) {
+            el.style.display = "";
+            el.style.borderColor = "";
+          }
+
+          if (!pressed) {
+            btn.setAttribute("aria-pressed", "true");
+            for (const el of Array.from(detailsDiv.querySelectorAll<HTMLElement>("[data-detail-label]"))) {
+              if ((el.dataset.detailLabel ?? "") !== label) el.style.display = "none";
+              else el.style.borderColor = "rgba(var(--primary-rgb), 0.45)";
+            }
+          }
+        });
+      }
+
       card.appendChild(detailsDiv);
+
+      const nextSteps = document.createElement("div");
+      nextSteps.className = "mt-8 rounded-2xl border border-border/50 bg-surface-sunken/40 p-5";
+      nextSteps.innerHTML = `
+        <p class="text-sm font-black text-foreground">Next step</p>
+        <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Start with the top recommendation, then validate streaming and privacy behavior on your devices. If you need a second option, compare the top two match scores.</p>
+      `;
+      card.appendChild(nextSteps);
 
       const ctaRow = document.createElement("div");
       ctaRow.className = "mt-10 flex flex-wrap items-center gap-4 pt-8 border-t border-border";
@@ -649,6 +805,105 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
 
   function escapeHtml(str: string): string {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function computeFinderConfidence(scored: ScoredProvider[]): number {
+    const top = scored[0];
+    if (!top) return 60;
+    const spread = top.totalScore - (scored[1]?.totalScore ?? top.totalScore);
+    const base = Math.round(55 + (top.totalScore / 100) * 35);
+    const bonus = Math.min(15, Math.max(0, spread));
+    return Math.max(55, Math.min(98, base + bonus));
+  }
+
+  function computeFinderRisks(scored: ScoredProvider[]): Array<{ title: string; detail: string; severity: "Low" | "Medium" | "High" }> {
+    const top = scored[0];
+    const risks: Array<{ title: string; detail: string; severity: "Low" | "Medium" | "High" }> = [];
+    if (!top) return risks;
+
+    const privacyDetail = top.details.find((d) => d.label.toLowerCase().includes("privacy"));
+    if (privacyDetail && privacyDetail.score < 60) {
+      risks.push({
+        title: "Privacy fit may be uneven",
+        detail: "Your top match is strong overall, but privacy category support is not uniformly high. Validate no-logs behavior and audit coverage for your threat model.",
+        severity: "Medium",
+      });
+    } else {
+      risks.push({
+        title: "Privacy coverage looks strong",
+        detail: "Privacy-related criteria are well supported in the top recommendation based on this dataset.",
+        severity: "Low",
+      });
+    }
+
+    const streamingDetail = top.details.find((d) => d.label.toLowerCase().includes("streaming"));
+    if (streamingDetail && streamingDetail.score < 60) {
+      risks.push({
+        title: "Streaming compatibility needs validation",
+        detail: "Streaming support is present but not consistently high. Test your specific services and peak-hour performance before committing.",
+        severity: "Medium",
+      });
+    } else {
+      risks.push({
+        title: "Streaming compatibility is likely",
+        detail: "Streaming-related criteria are supported strongly in the top recommendation for the selected services.",
+        severity: "Low",
+      });
+    }
+
+    risks.push({
+      title: "Device and usage constraints",
+      detail: "Even strong VPNs can underperform if device limits or simultaneous connections don’t match your household or workflow. Confirm device limits and router support.",
+      severity: "Low",
+    });
+
+    return risks.slice(0, 3);
+  }
+
+  function computeFinderActions(scored: ScoredProvider[]): Array<{ action: string; rationale: string }> {
+    const top = scored[0];
+    const second = scored[1];
+    if (!top) return [];
+
+    const actions: Array<{ action: string; rationale: string }> = [
+      {
+        action: "Validate on your primary device",
+        rationale: "Start with the top recommendation and test connection stability, streaming behavior, and privacy settings on your main device.",
+      },
+      {
+        action: "Compare the top two match scores",
+        rationale: "If you need a backup, the second-best match often covers edge cases (streaming vs. privacy vs. usability).",
+      },
+      {
+        action: "Confirm plan economics",
+        rationale: "Check effective monthly pricing and any money-back terms before committing to a longer cycle.",
+      },
+    ];
+
+    if (second && top.totalScore - second.totalScore < 8) {
+      actions[1] = {
+        action: "Both top options are close",
+        rationale: "The top two providers are within a narrow margin. Choose based on your highest-priority category (privacy vs. streaming vs. usability).",
+      };
+    }
+
+    return actions;
+  }
+
+  function renderFinderKeyFindings(scored: ScoredProvider[]): string {
+    const top = scored[0];
+    const second = scored[1];
+    if (!top) return "";
+
+    const topPrivacy = top.details.find((d) => d.label.toLowerCase().includes("privacy"));
+    const topStreaming = top.details.find((d) => d.label.toLowerCase().includes("streaming"));
+    const topValue = top.details.find((d) => d.label.toLowerCase().includes("overall")) ?? top.details[0];
+
+    return [
+      `<li class="flex gap-3"><span class="mt-0.5 h-5 w-5 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">1</span><span>Privacy: ${escapeHtml(String(topPrivacy?.score ?? 0))}%</span></li>`,
+      `<li class="flex gap-3"><span class="mt-0.5 h-5 w-5 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">2</span><span>Streaming: ${escapeHtml(String(topStreaming?.score ?? 0))}%</span></li>`,
+      `<li class="flex gap-3"><span class="mt-0.5 h-5 w-5 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-black text-primary">3</span><span>Overall strength: ${escapeHtml(String(topValue?.score ?? top.totalScore))}% (runner-up: ${escapeHtml(second?.provider.name ?? "—")})</span></li>`,
+    ].join("");
   }
 
   render();

@@ -14,6 +14,11 @@ import type { NavItem, NavSection } from "@/types/site";
  */
 export const PRIMARY_NAV: NavItem[] = [
   {
+    label: "Dashboard",
+    href: "/dashboard/",
+    description: "Executive overview with KPIs, trends, and insights.",
+  },
+  {
     label: "Reviews",
     href: "/vpn/",
     description: "In-depth VPN reviews with real test data and scores.",
@@ -24,24 +29,19 @@ export const PRIMARY_NAV: NavItem[] = [
     description: "Side-by-side comparisons across features, price, and privacy.",
   },
   {
-    label: "Best VPNs",
-    href: "/best-lists/",
-    description: "Curated shortlists by use case, with transparent criteria.",
+    label: "Tools",
+    href: "/tools/",
+    description: "Interactive recommender, comparisons, audits, speed tests and more.",
+  },
+  {
+    label: "Insights",
+    href: "/insights/",
+    description: "Industry analytics, benchmarks, and aggregated intelligence.",
   },
   {
     label: "Guides",
     href: "/guides/",
     description: "Educational explainers to understand how VPNs actually work.",
-  },
-  {
-    label: "Tools",
-    href: "/tools/",
-    description: "Interactive VPN recommender and comparison builder.",
-  },
-  {
-    label: "FAQ",
-    href: "/faq/",
-    description: "Answers to the most common VPN questions.",
   },
 ];
 
@@ -52,11 +52,22 @@ export const FOOTER_NAV: NavSection[] = [
   {
     title: "Discover",
     links: [
+      { label: "Dashboard", href: "/dashboard/" },
       { label: "All providers", href: "/vpn/" },
-      { label: "Best VPNs", href: "/best-lists/" },
       { label: "Comparisons", href: "/comparisons/" },
-      { label: "Tools", href: "/tools/" },
-      { label: "Reviews", href: "/vpn/" },
+      { label: "Insights", href: "/insights/" },
+      { label: "Best VPNs", href: "/best-lists/" },
+    ],
+  },
+  {
+    title: "Tools",
+    links: [
+      { label: "VPN Recommender", href: "/tools/finder/" },
+      { label: "Comparison Builder", href: "/tools/compare/" },
+      { label: "Speed Analyzer", href: "/tools/speed/" },
+      { label: "Privacy Audit", href: "/tools/audit/" },
+      { label: "Health Check", href: "/tools/health/" },
+      { label: "Leak Test", href: "/tools/leak-test/" },
     ],
   },
   {
@@ -65,7 +76,9 @@ export const FOOTER_NAV: NavSection[] = [
       { label: "Guides", href: "/guides/" },
       { label: "FAQ", href: "/faq/" },
       { label: "Methodology", href: "/methodology/" },
+      { label: "Activity", href: "/activity/" },
       { label: "Search", href: "/search/" },
+      { label: "Settings", href: "/settings/" },
     ],
   },
   {

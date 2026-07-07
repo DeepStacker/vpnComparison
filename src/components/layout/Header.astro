@@ -45,7 +45,28 @@ const isActive = (href: string) =>
       </ul>
     </nav>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1">
+      <!-- Quick actions dropdown -->
+      <details class="group relative">
+        <summary
+          class="inline-flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-raised border border-transparent hover:border-border transition-all focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+          aria-label="Quick actions"
+          title="Quick actions"
+        >
+          <Icon name="zap" size={18} />
+        </summary>
+        <div class="absolute right-0 top-12 w-56 rounded-2xl bg-glass-strong border border-glass-strong-border p-2 shadow-glass-inner shadow-2xl backdrop-blur-xl after-glass-shine">
+          <ul class="flex flex-col gap-0.5">
+            <li><a href="/dashboard/" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-foreground no-underline transition-all hover:bg-primary/5 hover:text-primary"><Icon name="layout-dashboard" size={16} class="text-muted-foreground" /> Dashboard</a></li>
+            <li><a href="/insights/" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-foreground no-underline transition-all hover:bg-primary/5 hover:text-primary"><Icon name="bar-chart-3" size={16} class="text-muted-foreground" /> Insights</a></li>
+            <li><a href="/activity/" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-foreground no-underline transition-all hover:bg-primary/5 hover:text-primary"><Icon name="activity" size={16} class="text-muted-foreground" /> Activity</a></li>
+            <li><hr class="my-1 border-border/50" /></li>
+            <li><a href="/settings/" class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-foreground no-underline transition-all hover:bg-primary/5 hover:text-primary"><Icon name="settings" size={16} class="text-muted-foreground" /> Settings</a></li>
+            <li><button type="button" id="shortcuts-dialog-trigger" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-foreground no-underline transition-all hover:bg-primary/5 hover:text-primary cursor-pointer"><Icon name="keyboard" size={16} class="text-muted-foreground" /> Shortcuts</button></li>
+          </ul>
+        </div>
+      </details>
+
       <button
         type="button"
         id="search-dialog-trigger"
@@ -95,10 +116,16 @@ const isActive = (href: string) =>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const trigger = document.getElementById("search-dialog-trigger");
-    if (trigger && typeof (window as any).openSearchDialog === "function") {
-      trigger.addEventListener("click", () => {
+    const searchTrigger = document.getElementById("search-dialog-trigger");
+    if (searchTrigger && typeof (window as any).openSearchDialog === "function") {
+      searchTrigger.addEventListener("click", () => {
         (window as any).openSearchDialog();
+      });
+    }
+    const shortcutsTrigger = document.getElementById("shortcuts-dialog-trigger");
+    if (shortcutsTrigger && typeof (window as any).openShortcutsDialog === "function") {
+      shortcutsTrigger.addEventListener("click", () => {
+        (window as any).openShortcutsDialog();
       });
     }
   });

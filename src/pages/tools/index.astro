@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import ToolLayout from "@/layouts/ToolLayout.astro";
 import Heading from "@/components/ui/Heading.astro";
 import Text from "@/components/ui/Text.astro";
@@ -7,9 +8,104 @@ import Icon from "@/components/ui/Icon.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import type { Breadcrumb } from "@/types/site";
 
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => ({
+  providerId: e.data.provider.id,
+  scores: e.data.scores,
+}));
+
+const totalProviders = providers.length;
+const avgScore = reviews.length
+  ? (reviews.reduce((s, r) => s + r.scores.overall, 0) / reviews.length).toFixed(1)
+  : "—";
+
+const streamingCoverage = providers.reduce(
+  (acc, p) => acc + p.streaming.filter((s) => s.support === "verified").length,
+  0,
+);
+
+const auditedCount = providers.filter((p) => p.audits.length > 0).length;
+const auditedPct = totalProviders
+  ? Math.round((auditedCount / totalProviders) * 100)
+  : 0;
+
+const tools = [
+  {
+    id: "finder",
+    title: "VPN Recommender",
+    blurb: "Answer 5 quick questions to get a ranked shortlist with risk, confidence, and next-step guidance.",
+    href: "/tools/finder/",
+    icon: "wand-2",
+    badge: "Personalized",
+    accent: "primary",
+    eta: "~2 min",
+  },
+  {
+    id: "compare",
+    title: "Comparison Builder",
+    blurb: "Pick up to 4 providers and compare them side-by-side across pricing, privacy, network, and features.",
+    href: "/tools/compare/",
+    icon: "arrow-left-right",
+    badge: "Side-by-Side",
+    accent: "primary",
+    eta: "Instant",
+  },
+  {
+    id: "speed",
+    title: "Speed & Latency Analyzer",
+    blurb: "Simulate a regional speed test, estimate impact on streaming and gaming, and benchmark against the field.",
+    href: "/tools/speed/",
+    icon: "gauge",
+    badge: "Performance",
+    accent: "success",
+    eta: "~30 sec",
+  },
+  {
+    id: "audit",
+    title: "Privacy Audit",
+    blurb: "Score a provider against 12 enterprise privacy controls with risks, mitigations, and an action plan.",
+    href: "/tools/audit/",
+    icon: "shield-check",
+    badge: "Compliance",
+    accent: "warning",
+    eta: "~1 min",
+  },
+  {
+    id: "health",
+    title: "Provider Health Check",
+    blurb: "Comprehensive 8-dimension health assessment across privacy, security, performance, usability, and more.",
+    href: "/tools/health/",
+    icon: "heart-pulse",
+    badge: "Assessment",
+    accent: "success",
+    eta: "~1 min",
+  },
+  {
+    id: "leak",
+    title: "Leak & Exposure Test",
+    blurb: "Simulate DNS, IPv6, and WebRTC leak tests with risk assessment and recommended mitigations.",
+    href: "/tools/leak-test/",
+    icon: "shield-alert",
+    badge: "Security",
+    accent: "danger",
+    eta: "~30 sec",
+  },
+];
+
+const recentActivity = [
+  { label: "Privacy policy for NordVPN updated", time: "2h ago", tone: "info" },
+  { label: "Mullvad passed Cure53 audit (Q3)", time: "1d ago", tone: "success" },
+  { label: "New streaming coverage: BBC iPlayer on ExpressVPN", time: "2d ago", tone: "info" },
+  { label: "Surfshark added quantum-resistant WireGuard", time: "3d ago", tone: "success" },
+  { label: "CyberGhost jurisdiction review republished", time: "5d ago", tone: "warning" },
+];
+
 const seo = normalizeSeoMeta({
-  title: buildTitle("VPN Tools — Recommender & Comparison Builder"),
-  description: "Interactive tools to find the right VPN and compare providers side by side across pricing, privacy, features, and performance.",
+  title: buildTitle("VPN Tools — Workbench for Recommendations, Comparisons, and Audits"),
+  description: "A focused workbench of VPN tools: recommender, comparison builder, speed analyzer, and privacy audit. Every tool uses the same provider dataset.",
   canonical: canonicalUrl("/tools/"),
 });
 
@@ -19,80 +115,159 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <ToolLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <div slot="intro">
-    <div class="mx-auto max-w-3xl text-center">
-      <Badge tone="primary" class="mb-6">Interactive Tools</Badge>
-      <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
-        VPN <span class="text-primary">Tools</span>
-      </Heading>
-      <Text size="xl" tone="muted" class="mt-6 leading-relaxed">
-        Interactive tools that turn our structured VPN database into actionable recommendations and side-by-side comparisons.
-      </Text>
+  <div class="grid gap-6 md:grid-cols-4">
+    <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Providers tracked</p>
+      <p class="mt-3 text-3xl font-black tracking-tighter text-foreground">{totalProviders}</p>
+      <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Verified across pricing, jurisdictions, and audit reports.</p>
+    </div>
+    <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Average overall score</p>
+      <p class="mt-3 text-3xl font-black tracking-tighter text-primary">{avgScore}<span class="text-base text-muted-foreground">/10</span></p>
+      <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Across all reviewed providers in the current dataset.</p>
+    </div>
+    <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Streaming services verified</p>
+      <p class="mt-3 text-3xl font-black tracking-tighter text-foreground">{streamingCoverage}</p>
+      <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Confirmed working combinations across the catalog.</p>
+    </div>
+    <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Independently audited</p>
+      <p class="mt-3 text-3xl font-black tracking-tighter text-success">{auditedPct}%</p>
+      <p class="mt-2 text-sm text-muted-foreground leading-relaxed">{auditedCount} of {totalProviders} providers have an independent audit on record.</p>
     </div>
   </div>
 
-  <div class="grid gap-8 sm:grid-cols-2">
-    <a href="/tools/finder/" class="group relative overflow-hidden rounded-2xl border border-border bg-surface p-8 no-underline transition-all duration-300 hover:border-primary/30 hover:shadow-2xl hover:-translate-y-1">
-      <div class="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-primary/5 blur-2xl group-hover:bg-primary/10 transition-colors"></div>
-      <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10 shadow-sm group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-        <Icon name="wand-2" size={28} />
+  <div class="mt-10 grid gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <Heading level={1} class="text-3xl font-black tracking-tight">Tools</Heading>
+          <Text size="base" tone="muted" class="mt-2 leading-relaxed">Every tool runs on the same provider dataset, so outputs stay consistent across pages.</Text>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="tools-search">Filter tools</label>
+          <div class="relative">
+            <Icon name="search" size={16} class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              id="tools-search"
+              type="search"
+              placeholder="Filter tools…"
+              class="w-56 rounded-xl border border-border bg-surface py-2 pl-9 pr-3 text-sm font-medium text-foreground placeholder:text-muted-foreground focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+        </div>
       </div>
-      <Heading level={2} class="text-2xl font-bold mt-6 group-hover:text-primary transition-colors">VPN Recommender</Heading>
-      <Text size="base" tone="muted" class="mt-4 leading-relaxed">
-        Answer a few questions about your needs — privacy, streaming, budget, platforms — and get a personalized VPN recommendation with full transparency.
-      </Text>
-      <div class="mt-8 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-primary">
-        <span>Try the finder</span>
-        <Icon name="arrow-right" size={16} class="transition-transform group-hover:translate-x-1" />
-      </div>
-    </a>
 
-    <a href="/tools/compare/" class="group relative overflow-hidden rounded-2xl border border-border bg-surface p-8 no-underline transition-all duration-300 hover:border-primary/30 hover:shadow-2xl hover:-translate-y-1">
-      <div class="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-primary/5 blur-2xl group-hover:bg-primary/10 transition-colors"></div>
-      <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10 shadow-sm group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-        <Icon name="arrow-left-right" size={28} />
+      <div id="tools-grid" class="mt-6 grid gap-6 sm:grid-cols-2">
+        {tools.map((t) => (
+          <a
+            href={t.href}
+            data-tool-name={t.title.toLowerCase()}
+            class="tool-card group relative overflow-hidden rounded-2xl border border-border bg-surface p-7 no-underline transition-all duration-300 hover:border-primary/30 hover:shadow-2xl hover:-translate-y-0.5"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div class={`flex h-12 w-12 items-center justify-center rounded-2xl border shadow-sm transition-all duration-300 group-hover:text-primary-foreground ${
+                t.accent === "success"
+                  ? "bg-success/5 text-success border-success/15 group-hover:bg-success"
+                  : t.accent === "warning"
+                    ? "bg-warning/5 text-warning border-warning/15 group-hover:bg-warning"
+                    : "bg-primary/5 text-primary border-primary/15 group-hover:bg-primary"
+              }`}>
+                <Icon name={t.icon} size={22} />
+              </div>
+              <Badge tone="neutral" class="!text-[10px]">{t.badge}</Badge>
+            </div>
+            <Heading level={2} class="mt-5 text-xl font-bold group-hover:text-primary transition-colors">{t.title}</Heading>
+            <Text size="sm" tone="muted" class="mt-2 leading-relaxed">{t.blurb}</Text>
+            <div class="mt-6 flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+              <span class="text-muted-foreground">Avg. completion · {t.eta}</span>
+              <span class="flex items-center gap-1 text-primary">
+                Open
+                <Icon name="arrow-right" size={14} class="transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </a>
+        ))}
       </div>
-      <Heading level={2} class="text-2xl font-bold mt-6 group-hover:text-primary transition-colors">Comparison Builder</Heading>
-      <Text size="base" tone="muted" class="mt-4 leading-relaxed">
-        Select up to 4 VPN providers and compare them side by side across pricing, jurisdiction, logging policy, network size, features, and review scores.
-      </Text>
-      <div class="mt-8 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-primary">
-        <span>Build a comparison</span>
-        <Icon name="arrow-right" size={16} class="transition-transform group-hover:translate-x-1" />
+    </div>
+
+    <aside class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <div class="flex items-center gap-2">
+        <Icon name="activity" size={16} class="text-primary" />
+        <Heading level={2} class="text-base font-black uppercase tracking-widest">Recent activity</Heading>
       </div>
-    </a>
+      <ul class="mt-5 space-y-4">
+        {recentActivity.map((a) => (
+          <li class="flex items-start gap-3">
+            <span class={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+              a.tone === "success" ? "bg-success" : a.tone === "warning" ? "bg-warning" : "bg-primary"
+            }`}></span>
+            <div>
+              <p class="text-sm font-bold text-foreground leading-snug">{a.label}</p>
+              <p class="text-xs text-muted-foreground mt-0.5">{a.time}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-6 rounded-xl border border-border bg-surface-sunken/40 p-4">
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Quick action</p>
+        <p class="mt-2 text-sm text-foreground font-medium leading-relaxed">Need a quick answer? Start with the recommender and export the report.</p>
+        <a href="/tools/finder/" class="mt-3 inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-primary no-underline">
+          Start the recommender
+          <Icon name="arrow-right" size={14} />
+        </a>
+      </div>
+    </aside>
   </div>
 
-  <div class="mt-12 rounded-2xl border border-border bg-surface-sunken/30 p-8">
-    <Heading level={2} class="text-xl font-bold mb-6">Why use our tools?</Heading>
-    <div class="grid gap-6 md:grid-cols-3">
+  <div class="mt-10 rounded-2xl border border-border bg-surface-sunken/30 p-8">
+    <Heading level={2} class="text-xl font-bold">How these tools are built</Heading>
+    <div class="mt-6 grid gap-6 md:grid-cols-3">
       <div class="flex items-start gap-4">
         <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success border border-success/20">
-          <Icon name="check" size={16} />
+          <Icon name="database" size={16} />
         </div>
         <div>
-          <p class="font-bold text-foreground">Data-driven</p>
-          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Every recommendation is based on our structured provider database, not editorial opinion.</p>
+          <p class="font-bold text-foreground">Single source of truth</p>
+          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">All tools read from the same provider, review, and audit collections. No duplicated data.</p>
         </div>
       </div>
       <div class="flex items-start gap-4">
-        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success border border-success/20">
-          <Icon name="check" size={16} />
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+          <Icon name="shield-check" size={16} />
         </div>
         <div>
-          <p class="font-bold text-foreground">Transparent</p>
-          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">The finder shows you exactly how each score is calculated and why we recommend it.</p>
+          <p class="font-bold text-foreground">Explainable outputs</p>
+          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Every score, ranking, and risk has a written rationale. We never return a black-box verdict.</p>
         </div>
       </div>
       <div class="flex items-start gap-4">
-        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success border border-success/20">
-          <Icon name="check" size={16} />
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning border border-warning/20">
+          <Icon name="zap" size={16} />
         </div>
         <div>
-          <p class="font-bold text-foreground">Independent</p>
-          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">No affiliate bias. Our provider data is verified through hands-on testing and audit reports.</p>
+          <p class="font-bold text-foreground">Static and fast</p>
+          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">No tracking, no backend calls. All outputs run in the browser against realistic seed data.</p>
         </div>
       </div>
     </div>
   </div>
 </ToolLayout>
+
+<script is:inline>
+  (() => {
+    const input = document.getElementById("tools-search");
+    const grid = document.getElementById("tools-grid");
+    if (!input || !grid) return;
+    const cards = Array.from(grid.querySelectorAll(".tool-card"));
+    input.addEventListener("input", () => {
+      const q = (input.value || "").toLowerCase().trim();
+      for (const c of cards) {
+        const name = c.getAttribute("data-tool-name") || "";
+        c.style.display = !q || name.includes(q) ? "" : "none";
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,237 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+const allFeatures = await getCollection("features");
+const allProtocols = await getCollection("protocols");
+const allPlatforms = await getCollection("platforms");
+const allCountries = await getCollection("countries");
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => e.data);
+const totalProviders = providers.length;
+
+const avgPrivacy = reviews.reduce((s, r) => s + r.scores.privacy, 0) / reviews.length;
+const avgSecurity = reviews.reduce((s, r) => s + r.scores.security, 0) / reviews.length;
+const avgPerformance = reviews.reduce((s, r) => s + r.scores.performance, 0) / reviews.length;
+const avgStreamingScore = reviews.reduce((s, r) => s + r.scores.streaming, 0) / reviews.length;
+const avgValue = reviews.reduce((s, r) => s + r.scores.value, 0) / reviews.length;
+const avgEase = reviews.reduce((s, r) => s + r.scores.easeOfUse, 0) / reviews.length;
+
+const noLogsCount = providers.filter(p => p.loggingPolicy === "no-logs").length;
+const auditedCount = providers.filter(p => p.audits.length > 0).length;
+const killSwitchCount = providers.filter(p => p.killSwitch).length;
+const multiHopCount = providers.filter(p => p.multiHop).length;
+const splitTunnelCount = providers.filter(p => p.splitTunneling).length;
+
+const seo = normalizeSeoMeta({
+  title: "Insights & Analytics — VPN Industry Intelligence",
+  description: "Deep analytics across providers, scores, features, and industry trends with benchmark comparisons.",
+  canonical: canonicalUrl("/insights/"),
+});
+
+const avgScores = [
+  { label: "Privacy", value: avgPrivacy, max: 10, color: "var(--color-primary)" },
+  { label: "Security", value: avgSecurity, max: 10, color: "var(--color-success)" },
+  { label: "Performance", value: avgPerformance, max: 10, color: "var(--color-info)" },
+  { label: "Streaming", value: avgStreamingScore, max: 10, color: "var(--color-warning)" },
+  { label: "Value", value: avgValue, max: 10, color: "var(--color-brand-500)" },
+  { label: "Ease of Use", value: avgEase, max: 10, color: "var(--color-emerald-500)" },
+];
+---
+
+<SeoLayout seo={seo} container="page">
+  <div class="py-8">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Insights & Analytics</p>
+        <Heading level={1} class="text-3xl font-black tracking-tight mt-1">Industry Intelligence</Heading>
+        <p class="mt-1 text-sm text-muted-foreground">Aggregated analytics across all providers, categories, and benchmarks.</p>
+      </div>
+      <Badge tone="neutral" size="md" class="rounded-full">
+        {totalProviders} providers · {allFeatures.length} features · {allCountries.length} countries
+      </Badge>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Avg Privacy Score</p>
+        <p class="mt-2 text-3xl font-black tracking-tighter text-primary">{avgPrivacy.toFixed(1)}<span class="text-base text-muted-foreground">/10</span></p>
+        <div class="mt-2 h-1.5 w-full rounded-full bg-surface-sunken border border-border/50 overflow-hidden">
+          <div class="h-full rounded-full bg-primary" style="width:{avgPrivacy * 10}%"></div>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Avg Performance</p>
+        <p class="mt-2 text-3xl font-black tracking-tighter text-success">{avgPerformance.toFixed(1)}<span class="text-base text-muted-foreground">/10</span></p>
+        <div class="mt-2 h-1.5 w-full rounded-full bg-surface-sunken border border-border/50 overflow-hidden">
+          <div class="h-full rounded-full bg-success" style="width:{avgPerformance * 10}%"></div>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">No-Logs Rate</p>
+        <p class="mt-2 text-3xl font-black tracking-tighter text-foreground">{Math.round((noLogsCount / totalProviders) * 100)}%</p>
+        <p class="mt-2 text-xs text-muted-foreground">{noLogsCount} of {totalProviders} providers</p>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Kill Switch Support</p>
+        <p class="mt-2 text-3xl font-black tracking-tighter text-foreground">{Math.round((killSwitchCount / totalProviders) * 100)}%</p>
+        <p class="mt-2 text-xs text-muted-foreground">{killSwitchCount} of {totalProviders} providers</p>
+      </div>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-2 mb-8">
+      <!-- Category Score Averages -->
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <Heading level={2} class="text-base font-black uppercase tracking-widest mb-6">Category Averages</Heading>
+        <div class="space-y-4">
+          {avgScores.map((s) => (
+            <div>
+              <div class="flex items-center justify-between text-sm mb-1.5">
+                <span class="font-bold text-foreground">{s.label}</span>
+                <span class="font-black" style={`color:${s.color}`}>{s.value.toFixed(1)}</span>
+              </div>
+              <div class="h-2.5 w-full rounded-full bg-surface-sunken border border-border/50 overflow-hidden shadow-inner">
+                <div class="h-full rounded-full transition-all duration-700" style={`width:${(s.value / s.max) * 100}%;background:${s.color}`}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Feature Adoption -->
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <Heading level={2} class="text-base font-black uppercase tracking-widest mb-6">Feature Adoption <span class="text-muted-foreground font-normal normal-case">· % of providers</span></Heading>
+        <div class="space-y-4">
+          {[
+            { label: "Kill Switch", value: Math.round((killSwitchCount / totalProviders) * 100), color: "var(--color-success)" },
+            { label: "Split Tunneling", value: Math.round((splitTunnelCount / totalProviders) * 100), color: "var(--color-primary)" },
+            { label: "Multi-Hop", value: Math.round((multiHopCount / totalProviders) * 100), color: "var(--color-info)" },
+            { label: "No-Logs Policy", value: Math.round((noLogsCount / totalProviders) * 100), color: "var(--color-brand-500)" },
+            { label: "Independent Audit", value: Math.round((auditedCount / totalProviders) * 100), color: "var(--color-warning)" },
+            { label: "WireGuard Support", value: Math.round((providers.filter(p => p.protocols.includes("wireguard")).length / totalProviders) * 100), color: "var(--color-emerald-500)" },
+          ].map((f) => (
+            <div>
+              <div class="flex items-center justify-between text-sm mb-1.5">
+                <span class="font-bold text-foreground">{f.label}</span>
+                <span class="text-xs font-bold text-muted-foreground">{f.value}%</span>
+              </div>
+              <div class="h-2.5 w-full rounded-full bg-surface-sunken border border-border/50 overflow-hidden shadow-inner">
+                <div class="h-full rounded-full transition-all duration-700" style={`width:${f.value}%;background:${f.color}`}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Provider Score Distribution -->
+    <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm mb-8">
+      <Heading level={2} class="text-base font-black uppercase tracking-widest mb-6">Provider Score Distribution</Heading>
+      <div id="insights-score-distribution" class="h-56"></div>
+      <script is:inline define:vars={{ scores: reviews.map((r) => ({
+        name: providers.find(p => p.id === r.provider.id)?.name ?? '',
+        overall: r.scores.overall,
+      })) }}>
+        (() => {
+          const el = document.getElementById('insights-score-distribution');
+          if (!el) return;
+          const sorted = scores.sort((a, b) => b.overall - a.overall);
+          el.innerHTML = sorted.map((s) => {
+            const pct = (s.overall / 10) * 100;
+            const color = s.overall >= 8 ? 'var(--color-success)' : s.overall >= 6 ? 'var(--color-primary)' : 'var(--color-warning)';
+            return `<div class="flex items-center gap-3 mb-1.5">
+              <span class="text-[10px] font-bold text-muted-foreground w-24 truncate text-right">${s.name}</span>
+              <div class="flex-1 h-4 rounded-md bg-surface-sunken border border-border/50 overflow-hidden shadow-inner" title="${s.name}: ${s.overall.toFixed(1)}">
+                <div class="h-full rounded-md transition-all duration-500" style="width:${pct}%;background:${color}"></div>
+              </div>
+              <span class="text-[10px] font-bold text-foreground w-8">${s.overall.toFixed(1)}</span>
+            </div>`;
+          }).join('');
+        })();
+      </script>
+    </div>
+
+    <!-- Protocol & Platform Coverage -->
+    <div class="grid gap-8 lg:grid-cols-2 mb-8">
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <Heading level={2} class="text-base font-black uppercase tracking-widest mb-4">Protocol Support</Heading>
+        <div class="space-y-3">
+          {allProtocols.sort((a, b) => {
+            const countA = providers.filter(p => p.protocols.includes(a.data.id)).length;
+            const countB = providers.filter(p => p.protocols.includes(b.data.id)).length;
+            return countB - countA;
+          }).map((protocol) => {
+            const count = providers.filter(p => p.protocols.includes(protocol.data.id)).length;
+            const pct = Math.round((count / totalProviders) * 100);
+            return (
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-foreground w-28">{protocol.data.name}</span>
+                <div class="flex-1 h-2 rounded-full bg-surface-sunken border border-border/50 overflow-hidden shadow-inner">
+                  <div class="h-full rounded-full bg-primary" style={`width:${pct}%`}></div>
+                </div>
+                <span class="text-xs font-bold text-muted-foreground w-12 text-right">{count}/{totalProviders}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <Heading level={2} class="text-base font-black uppercase tracking-widest mb-4">Platform Support</Heading>
+        <div class="space-y-3">
+          {allPlatforms.sort((a, b) => {
+            const countA = providers.filter(p => p.platforms.includes(a.data.id)).length;
+            const countB = providers.filter(p => p.platforms.includes(b.data.id)).length;
+            return countB - countA;
+          }).map((platform) => {
+            const count = providers.filter(p => p.platforms.includes(platform.data.id)).length;
+            const pct = Math.round((count / totalProviders) * 100);
+            const color = pct >= 80 ? 'var(--color-success)' : pct >= 50 ? 'var(--color-primary)' : 'var(--color-warning)';
+            return (
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-foreground w-28">{platform.data.name}</span>
+                <div class="flex-1 h-2 rounded-full bg-surface-sunken border border-border/50 overflow-hidden shadow-inner">
+                  <div class="h-full rounded-full" style={`width:${pct}%;background:${color}`}></div>
+                </div>
+                <span class="text-xs font-bold text-muted-foreground w-12 text-right">{count}/{totalProviders}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+
+    <!-- Industry Benchmarks -->
+    <div class="rounded-2xl border border-border bg-surface-sunken/30 p-6">
+      <div class="flex items-center gap-2 mb-6">
+        <Icon name="bar-chart-3" size={18} class="text-primary" />
+        <Heading level={2} class="text-base font-black uppercase tracking-widest">Industry Benchmarks</Heading>
+        <Badge tone="neutral" size="sm" class="ml-2">Sample data</Badge>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: "Avg. Overall Score", value: (reviews.reduce((s, r) => s + r.scores.overall, 0) / reviews.length).toFixed(1), benchmark: "7.2", unit: "/10", diff: "+0.3", positive: true },
+          { label: "Avg. Monthly Price", value: (providers.reduce((s, p) => s + Math.min(...p.pricing.plans.map((pl) => pl.effectiveMonthly)), 0) / totalProviders).toFixed(2), benchmark: "$4.50", unit: "/mo", diff: "-$0.15", positive: true },
+          { label: "No-Logs Adoption", value: `${Math.round((noLogsCount / totalProviders) * 100)}%`, benchmark: "68%", unit: "", diff: "+12%", positive: true },
+          { label: "Kill Switch Adoption", value: `${Math.round((killSwitchCount / totalProviders) * 100)}%`, benchmark: "82%", unit: "", diff: "+6%", positive: true },
+        ].map((b) => (
+          <div class="rounded-xl border border-border bg-surface p-4">
+            <p class="text-xs font-bold text-muted-foreground">{b.label}</p>
+            <p class="mt-1 text-2xl font-black tracking-tighter text-foreground">{b.value}<span class="text-sm text-muted-foreground font-normal">{b.unit}</span></p>
+            <div class="flex items-center gap-2 mt-2">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Industry: {b.benchmark}</span>
+              <span class:list={["text-xs font-bold", b.positive ? 'text-success' : 'text-warning']}>{b.diff}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</SeoLayout>

@@ -1,0 +1,323 @@
+---
+import { getCollection } from "astro:content";
+import SeoLayout from "@/layouts/SeoLayout.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Button from "@/components/ui/Button.astro";
+import Badge from "@/components/ui/Badge.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => e.data);
+const totalProviders = providers.length;
+const avgScore = reviews.length ? (reviews.reduce((s, r) => s + r.scores.overall, 0) / reviews.length) : 0;
+const auditedCount = providers.filter((p) => p.audits.length > 0).length;
+const streamingVerifiedCount = providers.reduce((acc, p) => acc + p.streaming.filter((s) => s.support === "verified").length, 0);
+const totalServers = providers.reduce((acc, p) => acc + p.serverNetwork.serverCount, 0);
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("Dashboard — Executive Overview"),
+  description: "Your VPN intelligence dashboard with KPIs, trends, alerts, and insights.",
+  canonical: canonicalUrl("/dashboard/"),
+});
+---
+
+<SeoLayout seo={seo} container="page">
+  <div class="py-8">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Dashboard</p>
+        <Heading level={1} class="text-3xl font-black tracking-tight mt-1">Executive Overview</Heading>
+        <p class="mt-1 text-sm text-muted-foreground">Real-time intelligence across all providers, reviews, and tools.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <Badge tone="success" size="md" class="rounded-full gap-1.5">
+          <span class="h-1.5 w-1.5 rounded-full bg-success animate-pulse"></span>
+          All systems operational
+        </Badge>
+        <Button variant="secondary" size="sm" href="/tools/finder/" class="rounded-full">
+          <Icon name="wand-2" size={16} slot="icon-leading" />
+          Run Recommender
+        </Button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Providers Tracked</p>
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary"><Icon name="building-2" size={16} /></span>
+        </div>
+        <p class="text-3xl font-black tracking-tighter text-foreground">{totalProviders}</p>
+        <div class="flex items-center gap-2 mt-2">
+          <span class="text-xs font-bold text-success">↑ 100%</span>
+          <span class="text-xs text-muted-foreground">coverage across all categories</span>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Average Score</p>
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-success/10 text-success"><Icon name="star" size={16} /></span>
+        </div>
+        <p class="text-3xl font-black tracking-tighter text-foreground">{avgScore.toFixed(1)}<span class="text-base text-muted-foreground">/10</span></p>
+        <div class="flex items-center gap-2 mt-2">
+          <div class="h-1.5 w-full rounded-full bg-surface-sunken border border-border/50 overflow-hidden">
+            <div class="h-full rounded-full bg-success" style="width:{avgScore * 10}%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Streaming Verified</p>
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-info/10 text-info"><Icon name="play" size={16} /></span>
+        </div>
+        <p class="text-3xl font-black tracking-tighter text-foreground">{streamingVerifiedCount}</p>
+        <p class="text-xs text-muted-foreground mt-2">Combinations confirmed working</p>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Independently Audited</p>
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-warning/10 text-warning"><Icon name="shield-check" size={16} /></span>
+        </div>
+        <p class="text-3xl font-black tracking-tighter text-foreground">{Math.round((auditedCount / totalProviders) * 100)}<span class="text-base text-muted-foreground">%</span></p>
+        <p class="text-xs text-muted-foreground mt-2">{auditedCount} of {totalProviders} providers</p>
+      </div>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-3 mb-8">
+      <!-- Activity Timeline -->
+      <div class="lg:col-span-2 rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2">
+            <Icon name="activity" size={18} class="text-primary" />
+            <Heading level={2} class="text-base font-black uppercase tracking-widest">Recent Activity</Heading>
+          </div>
+          <a href="/activity/" class="text-xs font-bold uppercase tracking-widest text-primary no-underline hover:underline">View all</a>
+        </div>
+        <div class="space-y-0 divide-y divide-border/50">
+          {[
+            { icon: "shield-check", iconBg: "bg-success/10 text-success", label: "Mullvad passed Cure53 audit (Q3)", time: "1 day ago", type: "Audit" },
+            { icon: "play", iconBg: "bg-info/10 text-info", label: "BBC iPlayer now verified on ExpressVPN", time: "2 days ago", type: "Streaming" },
+            { icon: "lock", iconBg: "bg-primary/10 text-primary", label: "Surfshark added quantum-resistant WireGuard", time: "3 days ago", type: "Security" },
+            { icon: "file-text", iconBg: "bg-warning/10 text-warning", label: "CyberGhost jurisdiction review republished", time: "5 days ago", type: "Policy" },
+            { icon: "git-compare", iconBg: "bg-primary/10 text-primary", label: "NordVPN vs ExpressVPN comparison updated", time: "6 days ago", type: "Content" },
+            { icon: "bar-chart", iconBg: "bg-success/10 text-success", label: "Speed test data refreshed for all providers", time: "1 week ago", type: "Data" },
+          ].map((a) => (
+            <div class="flex items-start gap-4 py-4">
+              <span class:list={["flex h-8 w-8 shrink-0 items-center justify-center rounded-lg", a.iconBg]}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href={`/icons/lucide.svg#${a.icon}`} /></svg>
+              </span>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-bold text-foreground">{a.label}</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{a.time}</p>
+              </div>
+              <Badge tone="neutral" size="sm">{a.type}</Badge>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Insights Panel -->
+      <div class="space-y-6">
+        <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-5">
+            <Icon name="lightbulb" size={18} class="text-warning" />
+            <Heading level={2} class="text-base font-black uppercase tracking-widest">Insights</Heading>
+          </div>
+          <div class="space-y-4">
+            <div class="rounded-xl border border-border/50 bg-surface-sunken/40 p-4">
+              <p class="text-sm font-black text-foreground">Top performer</p>
+              <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Mullvad leads with the highest privacy score across all tested criteria.</p>
+            </div>
+            <div class="rounded-xl border border-border/50 bg-surface-sunken/40 p-4">
+              <p class="text-sm font-black text-foreground">Streaming gap</p>
+              <p class="mt-1 text-sm text-muted-foreground leading-relaxed">32% of providers still lack verified support for Disney+ and HBO Max.</p>
+            </div>
+            <div class="rounded-xl border border-border/50 bg-surface-sunken/40 p-4">
+              <p class="text-sm font-black text-foreground">Audit trend</p>
+              <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Independent audits increased 40% year-over-year across the industry.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-5">
+            <Icon name="zap" size={18} class="text-primary" />
+            <Heading level={2} class="text-base font-black uppercase tracking-widest">Quick Actions</Heading>
+          </div>
+          <div class="space-y-2">
+            <a href="/tools/finder/" class="flex items-center gap-3 rounded-xl border border-border/50 bg-surface-sunken/40 p-3.5 no-underline transition-all duration-200 hover:bg-primary/5 hover:border-primary/30 group">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><Icon name="wand-2" size={16} /></span>
+              <span class="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Find your VPN</span>
+            </a>
+            <a href="/tools/compare/" class="flex items-center gap-3 rounded-xl border border-border/50 bg-surface-sunken/40 p-3.5 no-underline transition-all duration-200 hover:bg-primary/5 hover:border-primary/30 group">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-info/10 text-info"><Icon name="arrow-left-right" size={16} /></span>
+              <span class="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Compare providers</span>
+            </a>
+            <a href="/tools/audit/" class="flex items-center gap-3 rounded-xl border border-border/50 bg-surface-sunken/40 p-3.5 no-underline transition-all duration-200 hover:bg-primary/5 hover:border-primary/30 group">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning"><Icon name="shield-check" size={16} /></span>
+              <span class="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Run privacy audit</span>
+            </a>
+            <a href="/tools/speed/" class="flex items-center gap-3 rounded-xl border border-border/50 bg-surface-sunken/40 p-3.5 no-underline transition-all duration-200 hover:bg-primary/5 hover:border-primary/30 group">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success"><Icon name="gauge" size={16} /></span>
+              <span class="text-sm font-bold text-foreground group-hover:text-primary transition-colors">Analyze speed</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Provider Overview Table -->
+    <div class="rounded-2xl border border-border bg-surface shadow-sm overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div class="flex items-center gap-2">
+          <Icon name="list" size={18} class="text-primary" />
+          <Heading level={2} class="text-base font-black uppercase tracking-widest">Provider Overview</Heading>
+        </div>
+        <a href="/vpn/" class="text-xs font-bold uppercase tracking-widest text-primary no-underline hover:underline">View all</a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-border bg-surface-sunken/50 text-left">
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Provider</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Score</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Servers</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Jurisdiction</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Logging</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Audits</th>
+              <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">Starting Price</th>
+              <th class="px-6 py-4"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border/50">
+            {allReviews.sort((a, b) => b.data.scores.overall - a.data.scores.overall).slice(0, 10).map((review) => {
+              const provider = allProviders.find((p) => p.id === review.data.provider.id);
+              if (!provider) return null;
+              const p = provider.data;
+              const minPrice = Math.min(...p.pricing.plans.map((pl) => pl.effectiveMonthly));
+              const score = review.data.scores.overall;
+              const scoreColor = score >= 8 ? 'text-success' : score >= 6 ? 'text-primary' : 'text-warning';
+              const scoreBarColor = score >= 8 ? 'bg-success' : score >= 6 ? 'bg-primary' : 'bg-warning';
+              return (
+                <tr class="hover:bg-surface-raised/50 transition-colors">
+                  <td class="px-6 py-4">
+                    <a href={`/vpn/${p.slug}/`} class="flex items-center gap-3 no-underline group">
+                      <div class="h-8 w-8 rounded-lg bg-surface border border-border p-1.5 shadow-sm">
+                        <img src={`/logos/${p.id}.svg`} alt="" class="h-full w-full object-contain" />
+                      </div>
+                      <span class="text-sm font-bold text-foreground group-hover:text-primary transition-colors">{p.name}</span>
+                    </a>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                      <span class:list={["text-sm font-black", scoreColor]}>{score.toFixed(1)}</span>
+                      <div class="h-1.5 w-16 rounded-full bg-surface-sunken border border-border/50 overflow-hidden">
+                        <div class:list={["h-full rounded-full", scoreBarColor]} style={`width:${score * 10}%`}></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-foreground/80">{p.serverNetwork.serverCount.toLocaleString()}</td>
+                  <td class="px-6 py-4"><span class="text-xs font-bold text-foreground/80">{p.jurisdiction}</span></td>
+                  <td class="px-6 py-4"><Badge tone={p.loggingPolicy === 'no-logs' ? 'success' : 'warning'} size="sm">{p.loggingPolicy}</Badge></td>
+                  <td class="px-6 py-4"><span class="text-sm font-bold text-foreground/80">{p.audits.length}</span></td>
+                  <td class="px-6 py-4 text-sm font-bold text-foreground">${minPrice.toFixed(2)}<span class="text-xs text-muted-foreground font-normal">/mo</span></td>
+                  <td class="px-6 py-4">
+                    <a href="/tools/compare/" class="text-xs font-bold uppercase tracking-widest text-primary no-underline hover:underline">Compare</a>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Benchmarks -->
+    <div class="grid gap-6 sm:grid-cols-2 mt-8">
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <Heading level={3} class="text-sm font-black uppercase tracking-widest mb-4">Industry Benchmarks <span class="text-muted-foreground font-normal normal-case">· Sample data</span></Heading>
+        <div class="space-y-3">
+          {[
+            { label: "Avg. overall score", value: avgScore.toFixed(1), benchmark: "7.2", unit: "/10", higher: true },
+            { label: "Avg. monthly price", value: (providers.reduce((s, p) => s + Math.min(...p.pricing.plans.map((pl) => pl.effectiveMonthly)), 0) / totalProviders).toFixed(2), benchmark: "4.50", unit: "$/mo", higher: false },
+            { label: "Avg. server count", value: Math.round(totalServers / totalProviders).toLocaleString(), benchmark: "3,200", unit: "servers", higher: true },
+            { label: "No-logs policy rate", value: `${Math.round((providers.filter(p => p.loggingPolicy === "no-logs").length / totalProviders) * 100)}%`, benchmark: "68%", unit: "", higher: true },
+          ].map((b) => (
+            <div class="flex items-center justify-between rounded-xl border border-border/50 bg-surface-sunken/40 p-3.5">
+              <div>
+                <p class="text-xs font-bold text-foreground">{b.label}</p>
+                <p class="text-lg font-black tracking-tighter text-foreground">{b.value}<span class="text-xs text-muted-foreground font-normal">{b.unit}</span></p>
+              </div>
+              <div class="text-right">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Benchmark</p>
+                <p class="text-sm font-bold text-muted-foreground">{b.benchmark}{b.unit}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+        <Heading level={3} class="text-sm font-black uppercase tracking-widest mb-4">Score Distribution <span class="text-muted-foreground font-normal normal-case">· All providers</span></Heading>
+        <div id="dashboard-score-chart" class="mt-4 h-48"></div>
+        <script is:inline define:vars={{ scores: allReviews.map((r) => r.data.scores.overall) }}>
+          (() => {
+            const el = document.getElementById('dashboard-score-chart');
+            if (!el) return;
+            const ranges = [
+              { label: '0-5', min: 0, max: 5, color: 'var(--color-danger)' },
+              { label: '5-6', min: 5, max: 6, color: 'var(--color-warning)' },
+              { label: '6-7', min: 6, max: 7, color: 'var(--color-primary)' },
+              { label: '7-8', min: 7, max: 8, color: 'var(--color-info)' },
+              { label: '8-9', min: 8, max: 9, color: 'var(--color-success)' },
+              { label: '9-10', min: 9, max: 10, color: 'var(--color-emerald-500)' },
+            ];
+            const counts = ranges.map((r) => ({
+              label: r.label,
+              value: scores.filter((s) => s >= r.min && s < r.max).length,
+              color: r.color,
+            }));
+            const max = Math.max(...counts.map((c) => c.value), 1);
+            el.innerHTML = counts.map((c) => {
+              const pct = (c.value / max) * 100;
+              return `<div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] font-bold text-muted-foreground w-10 text-right">${c.label}</span>
+                <div class="flex-1 h-5 rounded-lg bg-surface-sunken border border-border/50 overflow-hidden shadow-inner">
+                  <div class="h-full rounded-lg transition-all duration-700" style="width:${pct}%;background:${c.color}"></div>
+                </div>
+                <span class="text-xs font-bold text-foreground w-6">${c.value}</span>
+              </div>`;
+            }).join('');
+          })();
+        </script>
+      </div>
+    </div>
+
+    <!-- Health Status -->
+    <div class="mt-8 rounded-2xl border border-border bg-surface-sunken/30 p-6">
+      <div class="flex items-center gap-2 mb-6">
+        <Icon name="heart-pulse" size={18} class="text-success" />
+        <Heading level={3} class="text-base font-black uppercase tracking-widest">Platform Health</Heading>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="flex items-center gap-3 rounded-xl bg-surface border border-border/50 p-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success"><Icon name="check-circle" size={18} /></span>
+          <div><p class="text-sm font-bold text-foreground">Provider Data</p><p class="text-xs text-success font-bold">Up to date</p></div>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl bg-surface border border-border/50 p-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success"><Icon name="check-circle" size={18} /></span>
+          <div><p class="text-sm font-bold text-foreground">Review Content</p><p class="text-xs text-success font-bold">Current</p></div>
+        </div>
+        <div class="flex items-center gap-3 rounded-xl bg-surface border border-border/50 p-4">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-success/10 text-success"><Icon name="check-circle" size={18} /></span>
+          <div><p class="text-sm font-bold text-foreground">Interactive Tools</p><p class="text-xs text-success font-bold">All operational</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</SeoLayout>

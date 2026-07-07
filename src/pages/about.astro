@@ -1,11 +1,6 @@
 ---
 import SeoLayout from "@/layouts/SeoLayout.astro";
-import Section from "@/components/ui/Section.astro";
-import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
-import Text from "@/components/ui/Text.astro";
-import Card from "@/components/ui/Card.astro";
-import Badge from "@/components/ui/Badge.astro";
 import Icon from "@/components/ui/Icon.astro";
 import Button from "@/components/ui/Button.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
@@ -21,92 +16,98 @@ const seo = normalizeSeoMeta({
 const breadcrumbs: Breadcrumb[] = [
   { label: "About", href: "/about/" },
 ];
+
+const stats = [
+  { value: "12+", label: "Providers tested", icon: "building-2" },
+  { value: "50+", label: "Features compared", icon: "list-checks" },
+  { value: "100%", label: "Independent", icon: "shield-check" },
+  { value: "0", label: "Paid reviews", icon: "x-circle" },
+];
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
-    <div class="absolute inset-0 -z-10">
-      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
-      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+  <div class="py-8">
+    <div class="mb-8">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">About</p>
+      <Heading level={1} class="text-3xl font-black tracking-tight mt-1">{SITE.name}</Heading>
+      <p class="mt-1 text-sm text-muted-foreground max-w-xl">{SITE.description}</p>
     </div>
-    <Container>
-      <div class="mx-auto max-w-3xl text-center">
-        <Badge tone="primary" class="mb-6">Our Story</Badge>
-        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
-          About <span class="text-primary">{SITE.name}</span>
-        </Heading>
-        <Text size="xl" tone="muted" class="mt-6 max-w-2xl mx-auto leading-relaxed">
-          {SITE.description}
-        </Text>
+
+    <div class="grid gap-4 sm:grid-cols-4 mb-10">
+      {stats.map((s) => `
+        <div class="rounded-2xl border border-border bg-surface p-5 text-center shadow-sm">
+          <span class="flex h-10 w-10 mx-auto items-center justify-center rounded-xl bg-primary/5 text-primary border border-primary/10 mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="/icons/lucide.svg#${s.icon}"/></svg>
+          </span>
+          <p class="text-2xl font-black tracking-tighter text-foreground">${s.value}</p>
+          <p class="text-xs text-muted-foreground mt-1">${s.label}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-3">
+      <div class="lg:col-span-2 space-y-8">
+        <section class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <Heading level={2} class="text-lg font-black tracking-tight mb-4">Our Mission</Heading>
+          <div class="space-y-4 text-sm text-muted-foreground leading-relaxed">
+            <p>The VPN industry is awash in affiliate playbooks, recycled "best of" lists, and vanishingly little actual testing. FreeVPN4USA exists to change that. Every review on this site is based on hands-on measurement — speed tests from multiple locations, privacy policy verification against audit reports, and real-world streaming checks on every major platform.</p>
+            <p>Our goal: help you choose a VPN with confidence, whether you need privacy, streaming access, torrenting support, or just the fastest connection for your dollar.</p>
+          </div>
+        </section>
+
+        <section class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <Heading level={2} class="text-lg font-black tracking-tight mb-4">Editorial Independence</Heading>
+          <p class="text-sm text-muted-foreground leading-relaxed">No VPN can pay for a favorable review, influence a ranking, or review content before publication. We purchase our own subscriptions and disclose affiliate relationships clearly. Those relationships never determine scores or editorial coverage — our methodology is published in full and open to scrutiny.</p>
+        </section>
+
+        <section class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <Heading level={2} class="text-lg font-black tracking-tight mb-4">How We Test</Heading>
+          <p class="text-sm text-muted-foreground leading-relaxed mb-4">Every VPN is tested against a standardized rubric across five critical dimensions:</p>
+          <div class="grid gap-3 sm:grid-cols-2">
+            {[
+              { icon: "zap", label: "Speed", desc: "WireGuard, OpenVPN, proprietary protocols" },
+              { icon: "shield", label: "Privacy", desc: "Logging policy, audits, jurisdiction" },
+              { icon: "lock", label: "Security", desc: "Encryption, kill switch, leak protection" },
+              { icon: "play", label: "Streaming", desc: "Netflix, Prime Video, Disney+, HBO Max" },
+              { icon: "download", label: "Torrenting", desc: "P2P support, labeled servers" },
+              { icon: "smartphone", label: "Usability", desc: "App design, setup complexity" },
+            ].map((d) => `
+              <div class="flex items-start gap-3 rounded-xl bg-surface-sunken/40 border border-border/50 p-3.5">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/5 text-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="/icons/lucide.svg#${d.icon}"/></svg></span>
+                <div class="min-w-0">
+                  <p class="text-sm font-bold text-foreground">${d.label}</p>
+                  <p class="text-xs text-muted-foreground">${d.desc}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="mt-6">
+            <Button variant="secondary" size="sm" href="/methodology/" class="rounded-full">Read our full methodology</Button>
+          </div>
+        </section>
       </div>
-    </Container>
-  </Section>
 
-  <Section class="pb-32">
-    <Container size="prose">
-      <div class="prose prose-premium max-w-none">
-        <Heading level={2}>Our Mission</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          The VPN industry is awash in affiliate playbooks, recycled "best of" lists, and vanishingly little actual testing.
-          FreeVPN4USA exists to change that. Every review on this site is based on hands-on measurement — speed tests
-          from multiple locations, privacy policy verification against audit reports, and real-world streaming checks
-          on every major platform.
-        </Text>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          Our goal: help you choose a VPN with confidence, whether you need privacy, streaming access, torrenting support,
-          or just the fastest connection for your dollar.
-        </Text>
-
-        <Heading level={2} class="mt-16">Editorial Independence</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          No VPN can pay for a favorable review, influence a ranking, or review content before publication. We purchase
-          our own subscriptions and disclose affiliate relationships clearly. Those relationships never determine scores
-          or editorial coverage — our methodology is published in full and open to scrutiny.
-        </Text>
-
-        <Heading level={2} class="mt-16">How We Test</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          Every VPN is tested against a standardized rubric: speed (WireGuard, OpenVPN, proprietary protocols),
-          privacy (logging policy, audits, jurisdiction), security (encryption, kill switch, leak protection),
-          streaming (Netflix, Prime Video, Disney+, HBO Max, Hulu, BBC iPlayer), torrenting, and ease of use.
-          We purchase our own subscriptions — no free trials or review accounts.
-        </Text>
-        <div class="mt-8">
-          <Button variant="glass" href="/methodology/" class="rounded-xl">
-            Read our full methodology &rarr;
-          </Button>
+      <div class="space-y-6">
+        <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4">
+            <Icon name="users" size={16} class="text-primary" />
+            <Heading level={2} class="text-sm font-black uppercase tracking-widest">Our Team</Heading>
+          </div>
+          <p class="text-sm text-muted-foreground leading-relaxed">Built by a small team of privacy advocates, security researchers, and tech journalists — backgrounds in cybersecurity, networking, and digital rights. United by a commitment to honest, transparent VPN analysis.</p>
         </div>
 
-        <Heading level={2} class="mt-16">Our Team</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          Built by a small team of privacy advocates, security researchers, and tech journalists — backgrounds in
-          cybersecurity, networking, and digital rights. United by a commitment to honest, transparent VPN analysis.
-        </Text>
-      </div>
-    </Container>
-  </Section>
-
-  <Section class="bg-glass-subtle/50 py-32 overflow-hidden">
-    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.02]" aria-hidden="true" />
-    <div class="pointer-events-none absolute inset-0 after-glass-shine" aria-hidden="true" />
-    <Container>
-      <Card variant="glass" padding="none" class="mx-auto max-w-3xl overflow-hidden">
-        <div class="p-12 text-center">
-          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-glass-strong text-primary border border-glass-border shadow-glass-inner mx-auto mb-8 backdrop-blur-xl">
-            <Icon name="mail" size={32} />
+        <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <div class="flex items-center gap-2 mb-4">
+            <Icon name="mail" size={16} class="text-primary" />
+            <Heading level={2} class="text-sm font-black uppercase tracking-widest">Get in Touch</Heading>
           </div>
-          <Heading level={2} class="text-3xl font-black tracking-tight">Get in Touch</Heading>
-          <Text size="lg" tone="muted" class="mt-6 leading-relaxed">
-            Have a question, suggestion, or correction? We'd love to hear from you.
-            Reach out to us at <span class="text-foreground font-bold">{SITE.contactEmail}</span>.
-          </Text>
-          <div class="mt-10">
-            <Button variant="primary" href="/contact/" class="rounded-xl px-8">
-              Contact Us
-            </Button>
+          <p class="text-sm text-muted-foreground leading-relaxed mb-4">Have a question, suggestion, or correction? We'd love to hear from you.</p>
+          <a href="mailto:hello@freevpn4usa.com" class="text-sm font-bold text-primary no-underline hover:underline">hello@freevpn4usa.com</a>
+          <div class="mt-4">
+            <Button variant="glass" href="/contact/" size="sm" class="rounded-full">Contact Us</Button>
           </div>
         </div>
-      </Card>
-    </Container>
-  </Section>
+      </div>
+    </div>
+  </div>
 </SeoLayout>

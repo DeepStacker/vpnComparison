@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import ToolLayout from "@/layouts/ToolLayout.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Badge from "@/components/ui/Badge.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import VpnSpeed from "@/components/tools/VpnSpeed.astro";
+import type { Breadcrumb } from "@/types/site";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => ({
+  providerId: e.data.provider.id,
+  scores: e.data.scores,
+}));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("Speed & Latency Analyzer — Estimate VPN Performance Impact"),
+  description: "Estimate how a VPN affects your download, upload, and latency across regions, and benchmark providers against the field.",
+  canonical: canonicalUrl("/tools/speed/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Tools", href: "/tools/" },
+  { label: "Speed & Latency Analyzer", href: "/tools/speed/" },
+];
+---
+
+<ToolLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <div class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <Badge tone="primary" class="mb-3">Performance tool</Badge>
+      <Heading level={1} class="text-3xl font-black tracking-tight md:text-4xl">Speed & Latency Analyzer</Heading>
+      <Text size="base" tone="muted" class="mt-2 max-w-2xl leading-relaxed">
+        Enter your baseline connection, pick a region, and we’ll estimate the impact of each provider on your streaming, gaming, and general browsing performance.
+      </Text>
+    </div>
+    <a href="/tools/" class="text-sm font-bold uppercase tracking-widest text-primary no-underline">← Back to tools</a>
+  </div>
+
+  <VpnSpeed providers={providers} reviews={reviews} />
+</ToolLayout>

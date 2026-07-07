@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import ToolLayout from "@/layouts/ToolLayout.astro";
+import Heading from "@/components/ui/Heading.astro";
+import Text from "@/components/ui/Text.astro";
+import Badge from "@/components/ui/Badge.astro";
+import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
+import VpnAudit from "@/components/tools/VpnAudit.astro";
+import type { Breadcrumb } from "@/types/site";
+
+const allProviders = await getCollection("providers");
+const allReviews = await getCollection("reviews");
+
+const providers = allProviders.map((e) => e.data);
+const reviews = allReviews.map((e) => ({
+  providerId: e.data.provider.id,
+  scores: e.data.scores,
+  verdict: e.data.verdict,
+}));
+
+const seo = normalizeSeoMeta({
+  title: buildTitle("Privacy Audit — Score a VPN Against 12 Enterprise Controls"),
+  description: "Run a privacy audit against any provider in our catalog. Get a scored report, risks, mitigations, and an action plan.",
+  canonical: canonicalUrl("/tools/audit/"),
+});
+
+const breadcrumbs: Breadcrumb[] = [
+  { label: "VPN Tools", href: "/tools/" },
+  { label: "Privacy Audit", href: "/tools/audit/" },
+];
+---
+
+<ToolLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <div class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <Badge tone="warning" class="mb-3">Compliance tool</Badge>
+      <Heading level={1} class="text-3xl font-black tracking-tight md:text-4xl">Privacy Audit</Heading>
+      <Text size="base" tone="muted" class="mt-2 max-w-2xl leading-relaxed">
+        Score a provider against 12 enterprise privacy controls. Receive a written report with risks, mitigations, and a recommended action plan.
+      </Text>
+    </div>
+    <a href="/tools/" class="text-sm font-bold uppercase tracking-widest text-primary no-underline">← Back to tools</a>
+  </div>
+
+  <VpnAudit providers={providers} reviews={reviews} />
+</ToolLayout>

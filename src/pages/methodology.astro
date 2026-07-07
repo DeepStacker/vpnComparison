@@ -1,10 +1,6 @@
 ---
 import SeoLayout from "@/layouts/SeoLayout.astro";
-import Section from "@/components/ui/Section.astro";
-import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
-import Text from "@/components/ui/Text.astro";
-import Badge from "@/components/ui/Badge.astro";
 import Icon from "@/components/ui/Icon.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import type { Breadcrumb } from "@/types/site";
@@ -18,129 +14,111 @@ const seo = normalizeSeoMeta({
 const breadcrumbs: Breadcrumb[] = [
   { label: "Methodology", href: "/methodology/" },
 ];
+
+const dimensions = [
+  {
+    title: "Speed Testing", icon: "zap",
+    items: [
+      "Download speed reduction percentage compared to baseline",
+      "Upload speed impact for streaming and torrenting",
+      "Latency increase for real-time applications like gaming and video calls",
+      "Connection stability and consistency across multiple tests",
+    ]
+  },
+  {
+    title: "Privacy & Security", icon: "shield",
+    items: [
+      "DNS leak testing across multiple server connections",
+      "IPv6 and WebRTC leak verification",
+      "Kill switch reliability testing",
+      "Independent audit report verification",
+    ]
+  },
+  {
+    title: "Streaming Support", icon: "play",
+    items: [
+      "Verified access to Netflix, Prime Video, Disney+",
+      "HBO Max, Hulu, and BBC iPlayer compatibility",
+      "Regional content unblocking effectiveness",
+      "Consistency across different server locations",
+    ]
+  },
+  {
+    title: "Torrenting & P2P", icon: "download",
+    items: [
+      "P2P traffic support and labeled servers",
+      "Download and upload speed for torrenting",
+      "Port forwarding availability",
+      "Compatibility with major torrent clients",
+    ]
+  },
+];
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
-    <div class="absolute inset-0 -z-10">
-      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
-      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+  <div class="py-8">
+    <div class="mb-8">
+      <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Methodology</p>
+      <Heading level={1} class="text-3xl font-black tracking-tight mt-1">How We Test VPNs</Heading>
+      <p class="mt-1 text-sm text-muted-foreground max-w-xl">Transparent, consistent, and reproducible — every VPN review is fair, accurate, and useful.</p>
     </div>
-    <Container>
-      <div class="mx-auto max-w-3xl text-center">
-        <Badge tone="primary" class="mb-6">Editorial Standards</Badge>
-        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
-          How We <span class="text-primary">Test VPNs</span>
-        </Heading>
-        <Text size="xl" tone="muted" class="mt-6 max-w-2xl mx-auto leading-relaxed">
-          Transparent, consistent, and reproducible — our testing methodology ensures every VPN review is fair, accurate, and useful.
-        </Text>
+
+    <div class="grid gap-6 lg:grid-cols-2 mb-10">
+      <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm lg:col-span-2">
+        <Heading level={2} class="text-base font-black uppercase tracking-widest mb-4">Testing Environment</Heading>
+        <p class="text-sm text-muted-foreground leading-relaxed mb-6">All VPN tests are conducted from multiple geographic locations using standardized hardware and connection types. Our primary test bench uses a 1 Gbps fiber connection in North America, supplemented by 100 Mbps connections in Europe and Asia-Pacific regions. Tests run on Windows, macOS, iOS, and Android to ensure cross-platform accuracy.</p>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {[
+            "Clean test environment with no other VPN software installed",
+            "Baseline speed measured before each test session",
+            "Multiple server locations tested per provider",
+            "Tests at different times of day for network congestion",
+          ].map((item) => `
+            <div class="flex items-start gap-3 rounded-xl bg-surface-sunken/40 border border-border/50 p-3.5">
+              <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span class="text-sm text-foreground">${item}</span>
+            </div>
+          `).join('')}
+        </div>
       </div>
-    </Container>
-  </Section>
 
-  <Section class="pb-32">
-    <Container size="prose">
-      <div class="prose prose-premium max-w-none">
-        <Heading level={2}>Testing Environment</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          All VPN tests are conducted from multiple geographic locations using standardized hardware and connection types.
-          Our primary test bench uses a 1 Gbps fiber connection in North America, supplemented by 100 Mbps connections
-          in Europe and Asia-Pacific regions. Tests run on Windows, macOS, iOS, and Android to ensure cross-platform accuracy.
-        </Text>
-        <ul class="mt-8 space-y-4">
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Clean test environment with no other VPN software installed</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Baseline speed measured before each test session</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Multiple server locations tested per provider</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Tests performed at different times of day to account for network congestion</span>
-          </li>
-        </ul>
+      {dimensions.map((dim) => `
+        <div class="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/5 text-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><use href="/icons/lucide.svg#${dim.icon}"/></svg>
+            </span>
+            <Heading level={2} class="text-base font-black uppercase tracking-widest">${dim.title}</Heading>
+          </div>
+          <ul class="space-y-2">
+            ${dim.items.map((item) => `
+              <li class="flex items-start gap-3 text-sm text-muted-foreground">
+                <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"></span>
+                <span>${item}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      `).join('')}
+    </div>
 
-        <Heading level={2} class="mt-16">Speed Testing</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          Speed tests measure download speed, upload speed, and latency (ping) for each VPN connection.
-          We use a custom script that runs multiple speed tests via Speedtest.net's CLI tool and averages the results.
-          Each provider is tested across at least three different server locations, with five runs per location.
-        </Text>
-        <ul class="mt-8 space-y-4">
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Download speed reduction percentage compared to baseline</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Upload speed impact for streaming and torrenting</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Latency increase for real-time applications like gaming and video calls</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Connection stability and consistency across multiple tests</span>
-          </li>
-        </ul>
-
-        <Heading level={2} class="mt-16">Privacy & Security Testing</Heading>
-        <Text tone="muted" class="mt-4 leading-relaxed">
-          Privacy and security are verified through multiple independent tests. We check for DNS leaks, IPv6 leaks,
-          WebRTC leaks, and verify that the kill switch functions correctly under various failure scenarios.
-          Logging policies are evaluated against the provider's published privacy policy and independent audit reports.
-        </Text>
-        <ul class="mt-8 space-y-4">
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>DNS leak testing across multiple server connections</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>IPv6 and WebRTC leak verification</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Kill switch reliability testing</span>
-          </li>
-          <li class="flex items-start gap-3 text-base text-foreground">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success border border-success/20 mt-0.5">
-              <Icon name="check" size={14} />
-            </div>
-            <span>Independent audit report verification</span>
-          </li>
-        </ul>
+    <div class="rounded-2xl border border-border bg-surface-sunken/30 p-6">
+      <div class="flex items-center gap-2 mb-4">
+        <Icon name="star" size={16} class="text-warning" />
+        <Heading level={2} class="text-base font-black uppercase tracking-widest">Scoring Rubric</Heading>
       </div>
-    </Container>
-  </Section>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {[
+          { label: "Score Range", desc: "Each dimension scored 0-10, overall score is a weighted average" },
+          { label: "Weighting", desc: "Privacy & Security weighted highest (30%), followed by Performance (25%)" },
+          { label: "Verification", desc: "All claims verified through independent testing and audit report review" },
+        ].map((r) => `
+          <div class="rounded-xl border border-border bg-surface p-4">
+            <p class="text-sm font-bold text-foreground">${r.label}</p>
+            <p class="text-xs text-muted-foreground mt-1">${r.desc}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  </div>
 </SeoLayout>
