@@ -4,13 +4,10 @@ import SeoLayout from "@/layouts/SeoLayout.astro";
 import Section from "@/components/ui/Section.astro";
 import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
-import Text from "@/components/ui/Text.astro";
-import Card from "@/components/ui/Card.astro";
 import Button from "@/components/ui/Button.astro";
 import Badge from "@/components/ui/Badge.astro";
-import Grid from "@/components/ui/Grid.astro";
 import Icon from "@/components/ui/Icon.astro";
-import ProviderCard from "@/components/ui/ProviderCard.astro";
+import ScoreRing from "@/components/ui/ScoreRing.astro";
 import { SITE } from "@/constants/site";
 import { canonicalUrl, normalizeSeoMeta } from "@/lib/seo/meta";
 
@@ -26,274 +23,223 @@ const allCountries = await getCollection("countries");
 const allStreaming = await getCollection("streaming-services");
 
 const reviewMap = new Map(allReviews.map((r) => [r.data.provider.id, r.data]));
-const countryNameMap = new Map(allCountries.map((c) => [c.data.code, c.data.name]));
-const avgScore =
-  allReviews.reduce((sum, r) => sum + r.data.scores.overall, 0) / allReviews.length;
+const avgScore = allReviews.reduce((sum, r) => sum + r.data.scores.overall, 0) / allReviews.length;
+
+const sortedByScore = allProviders
+  .map((p) => ({ entry: p, review: reviewMap.get(p.id) }))
+  .sort((a, b) => (b.review?.scores.overall ?? 0) - (a.review?.scores.overall ?? 0));
+
+const editorChoice = sortedByScore.find((s) => s.review?.verdict.recommendation === "recommended");
 
 const seo = normalizeSeoMeta({ title: SITE.tagline, description: SITE.description, canonical: canonicalUrl("/") });
 
-interface ExplorerEntry {
-  href: string;
-  icon: string;
-  title: string;
-  count: number;
-  desc: string;
-}
-
-const explorers: ExplorerEntry[] = [
-  { href: "/countries/", icon: "globe", title: "Countries", count: allCountries.length, desc: "Server locations & jurisdiction notes" },
-  { href: "/features/", icon: "list-checks", title: "Features", count: allFeatures.length, desc: "Security, privacy & advanced features" },
-  { href: "/protocols/", icon: "terminal", title: "Protocols", count: allProtocols.length, desc: "Encryption, transport & performance" },
-  { href: "/platforms/", icon: "laptop", title: "Platforms", count: allPlatforms.length, desc: "Desktop, mobile, router & TV apps" },
-  { href: "/streaming/", icon: "play", title: "Streaming Services", count: allStreaming.length, desc: "Verified unblocking per service" },
+const explorerLinks = [
+  { href: "/countries/", icon: "globe", label: "Countries", count: allCountries.length },
+  { href: "/features/", icon: "list-checks", label: "Features", count: allFeatures.length },
+  { href: "/protocols/", icon: "terminal", label: "Protocols", count: allProtocols.length },
+  { href: "/platforms/", icon: "monitor-smartphone", label: "Platforms", count: allPlatforms.length },
+  { href: "/streaming/", icon: "play", label: "Streaming", count: allStreaming.length },
+  { href: "/comparisons/", icon: "arrow-left-right", label: "Comparisons", count: allComparisons.length },
+  { href: "/best-lists/", icon: "list-checks", label: "Best Lists", count: allBestLists.length },
+  { href: "/guides/", icon: "book-open", label: "Guides", count: allGuides.length },
 ];
 ---
 
 <SeoLayout seo={seo}>
-  <Section class="relative overflow-hidden bg-gradient-hero">
-    <!-- Decorative grid overlay -->
+  <!-- ============ HERO ============ -->
+  <Section class="relative overflow-hidden bg-gradient-hero" padding="loose">
     <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.04]" aria-hidden="true" />
-    <!-- Decorative gradient orbs -->
     <div class="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl" aria-hidden="true" />
     <div class="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-brand-300/8 blur-3xl" aria-hidden="true" />
     <Container>
       <div class="relative mx-auto max-w-2xl text-center">
-        <Badge tone="primary" class="border border-brand-400/20">VPN Intelligence Platform</Badge>
-        <Heading level={1} class="mt-5 text-balance leading-tight !text-white">VPN Intelligence, Not Noise</Heading>
-        <Text size="lg" class="mt-3 max-w-prose mx-auto leading-relaxed !text-white/75">
-          Discover, explore, and compare VPN services through structured data, interactive tools, and unbiased analysis — no affiliate filler, just facts.
-        </Text>
+        <Badge tone="primary" class="border border-brand-400/20">FreeVPN4USA — VPN Intelligence Platform</Badge>
+        <h1 class="mt-5 text-4xl font-bold tracking-tight text-balance leading-tight text-white sm:text-5xl">Find the Right VPN, Not the Right Ad</h1>
+        <p class="mt-4 text-lg leading-relaxed text-white/75 max-w-prose mx-auto">
+          We test every VPN with the same methodology, present the data transparently, and never let affiliate commissions influence our recommendations.
+        </p>
         <div class="mt-8 flex flex-wrap justify-center gap-3">
           <Button href="/tools/finder/" class="shadow-glow">Find Your VPN</Button>
-          <Button variant="outline" href="/tools/compare/" class="border-white/20 text-white hover:bg-white/10">Compare VPNs</Button>
-          <Button variant="outline" href="/best-lists/" class="border-white/20 text-white hover:bg-white/10">Browse Lists</Button>
+          <Button variant="outline" href="/vpn/" class="border-white/20 text-white hover:bg-white/10">Browse All Reviews</Button>
+          <Button variant="outline" href="/best-lists/" class="border-white/20 text-white hover:bg-white/10">Best VPN Lists</Button>
         </div>
       </div>
     </Container>
   </Section>
 
-  <Section id="explore">
+  <!-- ============ TRUST STATS BAND ============ -->
+  <Section padding="tight">
     <Container>
-      <div class="mx-auto mb-2 max-w-xl text-center">
-        <Badge tone="primary" size="sm">Explore by dimension</Badge>
+      <div class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
+        <div class="bg-surface p-5 text-center">
+          <div class="text-2xl font-bold text-foreground">{allProviders.length}</div>
+          <div class="text-xs text-muted-foreground mt-0.5">VPNs tested</div>
+        </div>
+        <div class="bg-surface p-5 text-center">
+          <div class="text-2xl font-bold text-foreground">{avgScore.toFixed(1)}</div>
+          <div class="text-xs text-muted-foreground mt-0.5">Avg score</div>
+        </div>
+        <div class="bg-surface p-5 text-center">
+          <div class="text-2xl font-bold text-foreground">{allCountries.length}</div>
+          <div class="text-xs text-muted-foreground mt-0.5">Countries</div>
+        </div>
+        <div class="bg-surface p-5 text-center">
+          <div class="text-2xl font-bold text-foreground">{allFeatures.length}</div>
+          <div class="text-xs text-muted-foreground mt-0.5">Features tracked</div>
+        </div>
       </div>
-      <Heading level={2} class="text-center">Explore VPN Intelligence</Heading>
-      <Text tone="muted" class="mx-auto mt-2 max-w-xl text-center">
-        Browse our structured VPN database through any dimension — every page connects to related intelligence.
-      </Text>
-      <Grid cols={5} class="mt-8" colsSm={2} colsMd={3} colsLg={5}>
-        {explorers.map((ex) => (
-          <a
-            href={ex.href}
-            class="group flex flex-col items-center rounded-xl border border-border bg-surface p-6 text-center no-underline transition-all hover:border-primary hover:shadow-md"
-          >
-            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-              <Icon name={ex.icon} size={22} />
-            </div>
-            <Heading level={3} class="mt-4 text-sm font-semibold">{ex.title}</Heading>
-            <Text size="xs" tone="muted" class="mt-1">{ex.count} entries</Text>
-            <Text size="xs" tone="muted" class="mt-1 leading-snug">{ex.desc}</Text>
-          </a>
-        ))}
-      </Grid>
     </Container>
   </Section>
 
-  <Section background id="tools">
+  <!-- ============ EDITOR'S CHOICE / TOP PICK ============ -->
+  {editorChoice && (
+    <Section background>
+      <Container>
+        <div class="mx-auto mb-2 max-w-xl text-center">
+          <Badge tone="primary" size="sm">Editor's Choice</Badge>
+        </div>
+        <Heading level={2} class="text-center">Our Top-Rated VPN</Heading>
+        <div class="mt-8 mx-auto max-w-lg">
+          <a href={`/vpn/${editorChoice.entry.data.slug}/`} class="group block rounded-xl border-2 border-primary/30 bg-surface p-8 no-underline transition-all hover:border-primary hover:shadow-lg motion-safe:duration-200">
+            <div class="flex flex-col items-center text-center">
+              <img src={`/logos/${editorChoice.entry.data.slug}.svg`} alt="" class="h-12 w-12 object-contain" width={48} height={48} loading="eager" />
+              <Heading level={3} class="mt-4 text-xl">{editorChoice.entry.data.name}</Heading>
+              <p class="mt-2 text-sm text-muted-foreground leading-relaxed max-w-sm">{editorChoice.entry.data.tagline}</p>
+              {editorChoice.review && (
+                <div class="mt-4">
+                  <ScoreRing value={editorChoice.review.scores.overall} size={80} strokeWidth={6} label="Overall score" />
+                </div>
+              )}
+              {editorChoice.review?.verdict && (
+                <p class="mt-3 text-sm font-medium text-primary">{editorChoice.review.verdict.headline}</p>
+              )}
+              <div class="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                Read full review <Icon name="arrow-right" size={14} />
+              </div>
+            </div>
+          </a>
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <!-- ============ TOOLS ============ -->
+  <Section>
     <Container>
       <div class="mx-auto mb-2 max-w-xl text-center">
         <Badge tone="primary" size="sm">Interactive tools</Badge>
       </div>
-      <Heading level={2} class="text-center">Decision Support Tools</Heading>
-      <Text tone="muted" class="mx-auto mt-2 max-w-xl text-center">
-        Not sure which VPN is right for you? Try our interactive tools — every recommendation is explained, not guessed.
-      </Text>
-      <Grid cols={2} class="mt-8" colsSm={1}>
+      <Heading level={2} class="text-center">Know Which VPN to Pick</Heading>
+      <p class="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
+        Not sure where to start? Our tools turn data into decisions — no guesswork.
+      </p>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
         <a href="/tools/finder/" class="group rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-md">
-          <div class="flex items-center gap-4">
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-              <Icon name="wand-2" size={26} />
-            </div>
-            <div class="min-w-0">
-              <Heading level={3} class="text-base font-semibold">VPN Recommender</Heading>
-              <Text size="sm" tone="muted" class="mt-1 leading-snug">Answer a few questions and get a personalized recommendation with full transparency on how each score is calculated.</Text>
-            </div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <Icon name="wand-2" size={22} />
           </div>
+          <Heading level={3} class="mt-4 text-base font-semibold">VPN Recommender</Heading>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Answer a few questions about your needs and get a personalized recommendation with full transparency.</p>
         </a>
         <a href="/tools/compare/" class="group rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-md">
-          <div class="flex items-center gap-4">
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-              <Icon name="arrow-left-right" size={26} />
-            </div>
-            <div class="min-w-0">
-              <Heading level={3} class="text-base font-semibold">Comparison Builder</Heading>
-              <Text size="sm" tone="muted" class="mt-1 leading-snug">Select any providers to compare side by side across pricing, privacy, network size, features, and more.</Text>
-            </div>
+          <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <Icon name="arrow-left-right" size={22} />
           </div>
+          <Heading level={3} class="mt-4 text-base font-semibold">Comparison Builder</Heading>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Select any providers and compare them side by side across pricing, privacy, network, features, and more.</p>
         </a>
-      </Grid>
-    </Container>
-  </Section>
-
-  <Section id="providers">
-    <Container>
-      <div class="flex items-center justify-between">
-        <div>
-          <Badge tone="primary" size="sm">Reviewed providers</Badge>
-          <Heading level={2} class="mt-2">Tested VPN Services</Heading>
-        </div>
-        <Button variant="ghost" size="sm" href="/vpn/">View all →</Button>
       </div>
-      <Text tone="muted" class="mt-2 max-w-xl">
-        Every VPN on this site has been independently tested. We measure speed, verify privacy claims, and assess real-world streaming performance.
-      </Text>
-      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
-        {allProviders.slice(0, 5).map((e) => {
-          const p = e.data;
-          const review = reviewMap.get(p.id);
-          return (
-            <ProviderCard
-              name={p.name}
-              slug={p.slug}
-              tagline={p.tagline}
-              logoSlug={p.slug}
-              review={review ? { scores: review.scores, verdict: review.verdict } : undefined}
-              servers={p.serverNetwork.serverCount}
-              countries={p.serverNetwork.countryCount}
-              jurisdiction={p.jurisdiction}
-              jurisdictionName={countryNameMap.get(p.jurisdiction)}
-              plans={p.pricing.plans}
-            />
-          );
-        })}
-      </Grid>
     </Container>
   </Section>
 
+  <!-- ============ EXPLORER LINKS ============ -->
   <Section background>
     <Container>
-      <div class="flex items-center justify-between">
-        <div>
-          <Badge tone="primary" size="sm">Curated recommendations</Badge>
-          <Heading level={2} class="mt-2">Best VPN Lists</Heading>
-        </div>
-        <Button variant="ghost" size="sm" href="/best-lists/">View all →</Button>
+      <div class="mx-auto mb-2 max-w-xl text-center">
+        <Badge tone="primary" size="sm">Browse by category</Badge>
       </div>
-      <Text tone="muted" class="mt-2 max-w-xl">Shortlists for every need — streaming, privacy, speed, and budget — ranked by transparent criteria.</Text>
-      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
-        {allBestLists.slice(0, 3).map((bl) => (
-          <Card class="flex flex-col">
-            <Heading level={3}>{bl.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{bl.data.summary}</Text>
-            <div class="mt-2 flex items-center gap-2">
-              <Badge tone="neutral" size="sm">{bl.data.entries.length} entries</Badge>
-            </div>
-            <div class="mt-auto pt-4">
-              <Button variant="outline" size="sm" href={`/best-lists/${bl.id}/`}>
-                View List <Icon name="arrow-right" size={14} class="ml-1" />
-              </Button>
-            </div>
-          </Card>
+      <Heading level={2} class="text-center">Explore Our Database</Heading>
+      <p class="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
+        Dive into any dimension of our VPN intelligence — every page is cross-linked and data-rich.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {explorerLinks.map((link) => (
+          <a
+            href={link.href}
+            class="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm font-medium no-underline text-foreground transition-all hover:border-primary hover:text-primary hover:shadow-sm"
+          >
+            <Icon name={link.icon} size={16} class="text-primary shrink-0" />
+            {link.label}
+            <Badge tone="neutral" size="sm">{link.count}</Badge>
+          </a>
         ))}
-      </Grid>
+      </div>
     </Container>
   </Section>
 
+  <!-- ============ BEST LISTS + GUIDES ============ -->
   <Section>
     <Container>
-      <div class="flex items-center justify-between">
+      <div class="grid gap-8 lg:grid-cols-2">
         <div>
-          <Badge tone="primary" size="sm">Head-to-head</Badge>
-          <Heading level={2} class="mt-2">VPN Comparisons</Heading>
+          <Heading level={2} class="text-lg">Best VPN Lists</Heading>
+          <p class="mt-1 text-sm text-muted-foreground">Curated by use case with transparent criteria</p>
+          <div class="mt-4 space-y-3">
+            {allBestLists.slice(0, 4).map((bl) => (
+              <a href={`/best-lists/${bl.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-4 no-underline transition-all hover:border-primary hover:shadow-sm">
+                <div class="min-w-0">
+                  <div class="text-sm font-medium text-foreground">{bl.data.title}</div>
+                  <div class="text-xs text-muted-foreground mt-0.5">{bl.data.entries.length} entries</div>
+                </div>
+                <Icon name="arrow-right" size={16} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+              </a>
+            ))}
+          </div>
+          <div class="mt-4">
+            <Button variant="ghost" size="sm" href="/best-lists/">View all lists</Button>
+          </div>
         </div>
-        <Button variant="ghost" size="sm" href="/comparisons/">View all →</Button>
+        <div>
+          <Heading level={2} class="text-lg">Popular Guides</Heading>
+          <p class="mt-1 text-sm text-muted-foreground">Learn how VPNs work and how to choose one</p>
+          <div class="mt-4 space-y-3">
+            {allGuides.slice(0, 4).map((g) => (
+              <a href={`/guides/${g.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-4 no-underline transition-all hover:border-primary hover:shadow-sm">
+                <div class="min-w-0">
+                  <div class="text-sm font-medium text-foreground">{g.data.title}</div>
+                  <div class="text-xs text-muted-foreground mt-0.5 capitalize">{g.data.difficulty}</div>
+                </div>
+                <Icon name="arrow-right" size={16} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+              </a>
+            ))}
+          </div>
+          <div class="mt-4">
+            <Button variant="ghost" size="sm" href="/guides/">View all guides</Button>
+          </div>
+        </div>
       </div>
-      <Text tone="muted" class="mt-2 max-w-xl">Side-by-side matchups across speed, privacy, features, and value.</Text>
-      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
-        {allComparisons.map((c) => (
-          <Card class="flex flex-col">
-            {c.data.winner && (
-              <Badge tone="success" size="sm" class="mb-2 self-start">
-                <Icon name="trophy" size={12} class="mr-1" />
-                Winner
-              </Badge>
-            )}
-            <Heading level={3}>{c.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{c.data.summary}</Text>
-            <div class="mt-auto pt-4">
-              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>
-                Read Comparison <Icon name="arrow-right" size={14} class="ml-1" />
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </Grid>
     </Container>
   </Section>
 
-  <Section background>
-    <Container>
-      <div class="flex items-center justify-between">
-        <div>
-          <Badge tone="primary" size="sm">Educational resources</Badge>
-          <Heading level={2} class="mt-2">Latest Guides</Heading>
-        </div>
-        <Button variant="ghost" size="sm" href="/guides/">View all →</Button>
-      </div>
-      <Text tone="muted" class="mt-2 max-w-xl">Learn how VPNs work, how to choose one, and how to set it up.</Text>
-      <Grid cols={3} class="mt-8" colsSm={1} colsMd={2}>
-        {allGuides.slice(0, 3).map((g) => (
-          <Card class="flex flex-col">
-            <Heading level={3}>{g.data.title}</Heading>
-            <Text size="sm" tone="muted" class="mt-1 leading-relaxed">{g.data.summary}</Text>
-            <div class="mt-2 flex items-center gap-2">
-              <Badge
-                tone={g.data.difficulty === "beginner" ? "success" : g.data.difficulty === "intermediate" ? "primary" : "warning"}
-                size="sm"
-              >
-                {g.data.difficulty}
-              </Badge>
-            </div>
-            <div class="mt-auto pt-4">
-              <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>
-                Read Guide <Icon name="arrow-right" size={14} class="ml-1" />
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </Grid>
-    </Container>
-  </Section>
-
-  <Section padding="loose">
+  <!-- ============ TRUST / METHODOLOGY ============ -->
+  <Section background padding="loose">
     <Container>
       <div class="mx-auto max-w-xl text-center">
-        <Icon name="shield-check" size={32} class="mx-auto text-primary" />
-        <Heading level={2} class="mt-4">Why Trust Our Intelligence?</Heading>
-        <Text tone="muted" class="mt-3 leading-relaxed">
-          Every VPN is tested using a consistent methodology. We measure speeds from multiple locations, verify privacy claims against audit reports, and test streaming unblocking on every major platform. Our editorial team maintains full independence — no payment or partnership influences our scores or recommendations.
-        </Text>
-        <div class="mt-6 flex flex-wrap justify-center gap-6">
-          <div class="text-center">
-            <Text size="xl" weight="semibold">{allProviders.length}</Text>
-            <Text size="sm" tone="muted">VPNs in database</Text>
-          </div>
-          <div class="text-center">
-            <Text size="xl" weight="semibold">{avgScore.toFixed(1)}</Text>
-            <Text size="sm" tone="muted">Avg. score</Text>
-          </div>
-          <div class="text-center">
-            <Text size="xl" weight="semibold">{allCountries.length}</Text>
-            <Text size="sm" tone="muted">Countries mapped</Text>
-          </div>
-          <div class="text-center">
-            <Text size="xl" weight="semibold">{allFeatures.length}</Text>
-            <Text size="sm" tone="muted">Features tracked</Text>
-          </div>
+        <Icon name="shield-check" size={28} class="mx-auto text-primary" />
+        <Heading level={2} class="mt-4">Independent, Methodical, Transparent</Heading>
+        <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
+          Every VPN is tested using a consistent methodology across:
+        </p>
+        <div class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm">
+          <span class="flex items-center gap-1.5"><Icon name="zap" size={14} class="text-success" /> Speed</span>
+          <span class="flex items-center gap-1.5"><Icon name="shield" size={14} class="text-success" /> Privacy</span>
+          <span class="flex items-center gap-1.5"><Icon name="lock" size={14} class="text-success" /> Security</span>
+          <span class="flex items-center gap-1.5"><Icon name="play" size={14} class="text-success" /> Streaming</span>
+          <span class="flex items-center gap-1.5"><Icon name="download" size={14} class="text-success" /> Torrenting</span>
         </div>
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
-          <Button variant="outline" href="/methodology/">View Methodology</Button>
-          <Button variant="outline" href="/tools/finder/">Try VPN Finder</Button>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <Button variant="outline" size="sm" href="/methodology/">View Methodology</Button>
+          <Button variant="outline" size="sm" href="/tools/finder/">Try VPN Finder</Button>
         </div>
       </div>
     </Container>
