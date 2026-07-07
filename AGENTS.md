@@ -17,6 +17,12 @@ npm run check    # astro check — must report 0 errors, 0 warnings
 npm run build    # astro build — must succeed
 ```
 
+## Custom Agents
+
+This project includes a custom agent in `.github/agents/`:
+
+- **Network Coder** (`.github/agents/network-coder.agent.md`) — General-purpose coding agent powered by NetworkHome models. Select it from the agent picker dropdown in Copilot Chat.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

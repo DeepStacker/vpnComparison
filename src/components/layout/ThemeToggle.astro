@@ -1,9 +1,4 @@
 ---
-/**
- * ThemeToggle — button that flips light/dark and persists the choice.
- * No hydration; a single inline script wires up all [data-theme-toggle].
- * The correct icon is shown via CSS based on `html.dark` (set pre-paint).
- */
 import Icon from "@/components/ui/Icon.astro";
 ---
 
@@ -11,25 +6,27 @@ import Icon from "@/components/ui/Icon.astro";
   type="button"
   data-theme-toggle
   aria-label="Toggle color theme"
-  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-foreground hover:bg-surface-raised transition-colors focus-visible:outline-none"
+  class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-surface text-foreground hover:bg-surface-raised transition-all focus-visible:outline-none"
 >
-  <Icon name="moon" size={18} class="dark:hidden" />
-  <Icon name="sun" size={18} class="hidden dark:block" />
+  <span data-theme-icon="moon" class="inline dark:hidden"><Icon name="moon" size={20} /></span>
+  <span data-theme-icon="sun" class="hidden dark:inline"><Icon name="sun" size={20} /></span>
 </button>
 
 <script is:inline>
   (function () {
-    function setTheme(theme) {
-      if (theme === "dark") document.documentElement.classList.add("dark");
-      else document.documentElement.classList.remove("dark");
-      document.documentElement.style.colorScheme = theme;
-      try { localStorage.setItem("nh-theme", theme); } catch (e) {}
-    }
-    document.addEventListener("click", function (event) {
-      var target = event.target instanceof Element ? event.target.closest("[data-theme-toggle]") : null;
-      if (!target) return;
-      var isDark = document.documentElement.classList.contains("dark");
-      setTheme(isDark ? "light" : "dark");
+    document.addEventListener("click", function (e) {
+      var btn = e.target instanceof Element ? e.target.closest("[data-theme-toggle]") : null;
+      if (!btn) return;
+      var root = document.documentElement;
+      var isDark = root.classList.contains("dark");
+      if (isDark) {
+        root.classList.remove("dark");
+        root.style.colorScheme = "light";
+      } else {
+        root.classList.add("dark");
+        root.style.colorScheme = "dark";
+      }
+      try { localStorage.setItem("nh-theme", isDark ? "light" : "dark"); } catch (e) {}
     });
   })();
 </script>

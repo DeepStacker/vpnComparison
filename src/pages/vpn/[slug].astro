@@ -104,26 +104,26 @@ function capitalize(s: string): string {
   <!-- ============================================================
        PROVIDER HERO
        ============================================================ -->
-  <Section class="relative overflow-hidden bg-gradient-hero" padding="none">
-    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.04]" aria-hidden="true" />
-    <div class="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-brand-400/8 blur-3xl" aria-hidden="true" />
-    <div class="pointer-events-none absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-brand-300/6 blur-3xl" aria-hidden="true" />
+  <Section class="relative overflow-hidden bg-gradient-hero pt-24 pb-16" padding="none">
+    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.05]" aria-hidden="true" />
+    <div class="pointer-events-none absolute -left-20 -top-20 h-96 w-96 rounded-full bg-white/5 blur-[120px]" aria-hidden="true" />
+    <div class="pointer-events-none absolute -bottom-16 -right-16 h-80 w-80 rounded-full bg-primary/10 blur-[100px]" aria-hidden="true" />
     <Container>
-      <div class="flex flex-col gap-8 py-12 lg:flex-row lg:items-center lg:justify-between lg:py-16">
+      <div class="flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
         <!-- Left: identity + meta -->
         <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10">
-              <img src={`/logos/${slug}.svg`} alt={`${provider.name} logo`} class="h-9 w-9 object-contain" width={36} height={36} loading="eager" />
+          <div class="flex items-center gap-6 mb-6">
+            <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md ring-1 ring-white/20 shadow-xl">
+              <img src={`/logos/${slug}.svg`} alt={`${provider.name} logo`} class="h-12 w-12 object-contain" width={48} height={48} loading="eager" />
             </div>
             <div>
-              <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">{provider.name} Review</h1>
+              <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">{provider.name} Review</h1>
               {reviewData && (
-                <div class="mt-1.5 flex items-center gap-3">
+                <div class="mt-3 flex items-center gap-4">
                   {reviewData.verdict.recommendation === "recommended" && (
-                    <Badge tone="success" size="sm" class="border border-white/10">Editor's Choice</Badge>
+                    <Badge tone="success" size="md" class="rounded-full border border-white/20 bg-white/10 text-white">Editor's Choice</Badge>
                   )}
-                  <Text size="xs" class="text-white/50">
+                  <Text size="sm" class="text-white/60 font-medium">
                     Updated {reviewData.updatedAt ?? provider.updatedAt}
                   </Text>
                 </div>
@@ -133,32 +133,32 @@ function capitalize(s: string): string {
 
           <!-- Verdict headline -->
           {reviewData?.verdict && (
-            <p class="max-w-2xl text-lg leading-relaxed text-white/85 font-medium">
+            <p class="max-w-3xl text-xl leading-relaxed text-white/90 font-bold">
               {reviewData.verdict.headline}
             </p>
           )}
-          <p class="mt-2 max-w-2xl text-base leading-relaxed text-white/65">
+          <p class="mt-4 max-w-2xl text-lg leading-relaxed text-white/70">
             {provider.tagline}
           </p>
 
           <!-- CTA row -->
-          <div class="mt-6 flex flex-wrap items-center gap-3">
+          <div class="mt-10 flex flex-wrap items-center gap-4">
             {cheapest && (
-              <div class="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-2.5">
-                <div class="flex items-baseline gap-0.5 text-white">
-                  <span class="text-2xl font-bold tracking-tight">${cheapest.effectiveMonthly.toFixed(2)}</span>
-                  <span class="text-sm text-white/60">/mo</span>
+              <div class="flex items-center gap-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 px-6 py-3">
+                <div class="flex items-baseline gap-1 text-white">
+                  <span class="text-3xl font-bold tracking-tight">${cheapest.effectiveMonthly.toFixed(2)}</span>
+                  <span class="text-sm font-medium text-white/60">/mo</span>
                 </div>
-                <div class="text-xs text-white/50">
+                <div class="text-xs font-bold uppercase tracking-widest text-white/50">
                   {cheapest.cycle === "monthly" ? "Monthly" : cheapest.cycle === "yearly" ? "Annual" : "2-year"} plan
                 </div>
               </div>
             )}
-            <Button href={provider.websiteUrl} variant="outline" size="lg" target="_blank" rel="noopener noreferrer" class="border-white/20 text-white hover:bg-white/10">
-              Visit Website <Icon name="external-link" size={14} />
+            <Button href={provider.websiteUrl} variant="glass" size="lg" target="_blank" rel="noopener noreferrer" class="rounded-xl px-8">
+              Visit Website <Icon name="external-link" size={18} />
             </Button>
             {review && (
-              <Button href="#scores" size="lg" class="shadow-glow">
+              <Button href="#scores" size="lg" class="rounded-xl px-8 shadow-xl">
                 Read Review
               </Button>
             )}
@@ -167,21 +167,21 @@ function capitalize(s: string): string {
 
         <!-- Right: score ring -->
         {allScores && (
-          <a href="#scores" class="flex shrink-0 flex-col items-center gap-2 no-underline group/score">
-            <svg width="140" height="140" viewBox="0 0 140 140" role="img" aria-label={`Overall score ${allScores.overall.toFixed(1)} out of 10`}>
-              <circle cx="70" cy="70" r="60" fill="none" stroke="rgb(255 255 255 / 0.12)" stroke-width="8" />
-              <circle cx="70" cy="70" r="60" fill="none" stroke="rgb(255 255 255 / 0.9)" stroke-width="8"
-                stroke-dasharray={`${2 * Math.PI * 60}`}
-                stroke-dashoffset={`${2 * Math.PI * 60 * (1 - allScores.overall / 10)}`}
-                stroke-linecap="round" transform="rotate(-90 70 70)"
-                class="transition-all motion-safe:duration-700 motion-safe:ease-emphasized" />
-              <text x="50%" y="44%" text-anchor="middle" dominant-baseline="central" font-size="36" font-weight="700" fill="white">
-                {allScores.overall.toFixed(1)}
-              </text>
-              <text x="50%" y="62%" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="rgb(255 255 255 / 0.55)">
-                OUT OF 10
-              </text>
-            </svg>
+          <a href="#scores" class="flex shrink-0 flex-col items-center gap-4 no-underline group/score transition-transform hover:scale-105">
+            <div class="relative flex items-center justify-center">
+              <svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label={`Overall score ${allScores.overall.toFixed(1)} out of 10`}>
+                <circle cx="90" cy="90" r="80" fill="none" stroke="rgb(255 255 255 / 0.1)" stroke-width="10" />
+                <circle cx="90" cy="90" r="80" fill="none" stroke="white" stroke-width="10"
+                  stroke-dasharray={`${2 * Math.PI * 80}`}
+                  stroke-dashoffset={`${2 * Math.PI * 80 * (1 - allScores.overall / 10)}`}
+                  stroke-linecap="round" transform="rotate(-90 90 90)"
+                  class="transition-all motion-safe:duration-1000 motion-safe:ease-emphasized" />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-5xl font-bold text-white">{allScores.overall.toFixed(1)}</span>
+                <span class="text-xs font-bold tracking-widest text-white/50 uppercase mt-1">Score</span>
+              </div>
+            </div>
           </a>
         )}
       </div>
@@ -193,57 +193,57 @@ function capitalize(s: string): string {
        ============================================================ -->
   <Section padding="tight">
     <Container>
-      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
-            <Icon name="server" size={16} />
+      <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <div class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Icon name="server" size={20} />
           </div>
           <div class="min-w-0">
-            <Text size="sm" weight="semibold" class="tabular-nums">{provider.serverNetwork.serverCount.toLocaleString()}</Text>
-            <Text size="xs" tone="muted">Servers</Text>
+            <Text size="base" weight="semibold" class="tabular-nums leading-none">{provider.serverNetwork.serverCount.toLocaleString()}</Text>
+            <Text size="xs" tone="muted" class="mt-1 font-bold uppercase tracking-widest">Servers</Text>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
-            <Icon name="globe" size={16} />
+        <div class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Icon name="globe" size={20} />
           </div>
           <div class="min-w-0">
-            <Text size="sm" weight="semibold" class="tabular-nums">{provider.serverNetwork.countryCount}</Text>
-            <Text size="xs" tone="muted">Countries</Text>
+            <Text size="base" weight="semibold" class="tabular-nums leading-none">{provider.serverNetwork.countryCount}</Text>
+            <Text size="xs" tone="muted" class="mt-1 font-bold uppercase tracking-widest">Countries</Text>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
-            <Icon name="monitor-smartphone" size={16} />
+        <div class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Icon name="monitor-smartphone" size={20} />
           </div>
           <div class="min-w-0">
-            <Text size="sm" weight="semibold" class="tabular-nums">{provider.simultaneousConnections === 0 ? "∞" : provider.simultaneousConnections}</Text>
-            <Text size="xs" tone="muted">Devices</Text>
+            <Text size="base" weight="semibold" class="tabular-nums leading-none">{provider.simultaneousConnections === 0 ? "∞" : provider.simultaneousConnections}</Text>
+            <Text size="xs" tone="muted" class="mt-1 font-bold uppercase tracking-widest">Devices</Text>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
-            <Icon name="shield" size={16} />
+        <div class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Icon name="shield" size={20} />
           </div>
           <div class="min-w-0">
-            <Text size="sm" weight="semibold">{provider.loggingPolicy === "no-logs" ? "No-logs" : capitalize(provider.loggingPolicy)}</Text>
-            <Text size="xs" tone="muted">Logging</Text>
+            <Text size="base" weight="semibold" class="leading-none">{provider.loggingPolicy === "no-logs" ? "No-logs" : capitalize(provider.loggingPolicy)}</Text>
+            <Text size="xs" tone="muted" class="mt-1 font-bold uppercase tracking-widest">Logging</Text>
           </div>
         </div>
 
-        <div class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3">
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
-            <Icon name="landmark" size={16} />
+        <div class="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm">
+          <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Icon name="landmark" size={20} />
           </div>
           <div class="min-w-0">
             {jurisdictionCountrySlug
-              ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline"><Text size="sm" weight="semibold" class="text-primary hover:underline">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text></a>
-              : <Text size="sm" weight="semibold">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
+              ? <a href={countryHref(jurisdictionCountrySlug)} class="no-underline"><Text size="base" weight="semibold" class="text-primary hover:underline leading-none">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text></a>
+              : <Text size="base" weight="semibold" class="leading-none">{countryNameMap.get(provider.jurisdiction) ?? provider.jurisdiction}</Text>
             }
-            <Text size="xs" tone="muted">Jurisdiction</Text>
+            <Text size="xs" tone="muted" class="mt-1 font-bold uppercase tracking-widest">Jurisdiction</Text>
           </div>
         </div>
       </div>
@@ -254,17 +254,18 @@ function capitalize(s: string): string {
        SCORE BREAKDOWN
        ============================================================ -->
   {allScores && (
-    <Section background id="scores">
+    <Section background id="scores" padding="loose">
       <Container>
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <Badge tone="primary" size="sm">Review scores</Badge>
-            <Heading level={2} class="mt-2">Score Breakdown — {allScores.overall.toFixed(1)} / 10</Heading>
-            {reviewData?.testDate && <Text size="sm" tone="muted">Tested {reviewData.testDate}</Text>}
+            <Badge tone="primary" size="md" class="rounded-full mb-4">Review scores</Badge>
+            <Heading level={2} class="text-4xl font-bold">Score Breakdown — {allScores.overall.toFixed(1)} / 10</Heading>
+            {reviewData?.testDate && <Text size="sm" tone="muted" class="mt-2 font-medium">Last tested on {reviewData.testDate}</Text>}
           </div>
+          <Button variant="outline" size="sm" href="/methodology/" class="rounded-full">Our Methodology</Button>
         </div>
-        <div class="mt-6 grid gap-6 lg:grid-cols-3">
-          <div class="lg:col-span-2 space-y-4">
+        <div class="grid gap-12 lg:grid-cols-3">
+          <div class="lg:col-span-2 space-y-2">
             <ScoreBar value={allScores.performance} label="Performance" />
             <ScoreBar value={allScores.privacy} label="Privacy" />
             <ScoreBar value={allScores.security} label="Security" />
@@ -274,27 +275,37 @@ function capitalize(s: string): string {
             <ScoreBar value={allScores.value} label="Value" />
           </div>
           <div>
-            {reviewData?.verdict && reviewData?.methodology && (
-              <Card variant="raised" padding="lg" class="h-full flex flex-col">
-                <div class="flex items-center gap-2 mb-3">
-                  <div class="flex h-8 w-8 items-center justify-center rounded-full"
+            {reviewData?.verdict && (
+              <Card variant="default" padding="lg" class="h-full flex flex-col rounded-3xl border-2 border-primary/10 shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                  <Icon name="quote" size={64} />
+                </div>
+                <div class="flex items-center gap-3 mb-6">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full shadow-sm"
                     class:list={{
-                      "bg-success-surface text-success": reviewData.verdict.recommendation === "recommended",
-                      "bg-warning-surface text-warning": reviewData.verdict.recommendation === "conditional",
-                      "bg-danger-surface text-danger": reviewData.verdict.recommendation === "not-recommended",
+                      "bg-success text-success-foreground": reviewData.verdict.recommendation === "recommended",
+                      "bg-warning text-warning-foreground": reviewData.verdict.recommendation === "conditional",
+                      "bg-danger text-danger-foreground": reviewData.verdict.recommendation === "not-recommended",
                     }}
                   >
-                    <Icon name={reviewData.verdict.recommendation === "recommended" ? "circle-check" : "alert-circle"} size={18} />
+                    <Icon name={reviewData.verdict.recommendation === "recommended" ? "check" : "alert-triangle"} size={20} />
                   </div>
                   <Badge
-                    tone={reviewData.verdict.recommendation === "recommended" ? "success" : reviewData.verdict.recommendation === "conditional" ? "warning" : "danger"}>
+                    tone={reviewData.verdict.recommendation === "recommended" ? "success" : reviewData.verdict.recommendation === "conditional" ? "warning" : "danger"}
+                    class="rounded-full px-4 py-1"
+                  >
                     {reviewData.verdict.recommendation === "recommended" ? "Recommended" : capitalize(reviewData.verdict.recommendation)}
                   </Badge>
                 </div>
-                <Heading level={3} class="text-lg">{reviewData.verdict.headline}</Heading>
-                <Text size="sm" tone="muted" class="mt-2 leading-relaxed flex-1">{reviewData.verdict.summary}</Text>
-                <Text size="xs" tone="muted" class="mt-3 leading-relaxed border-t border-border pt-3">{reviewData.methodology}</Text>
-                <Button variant="outline" size="sm" href="/methodology/" class="mt-3">Full methodology</Button>
+                <Heading level={3} class="text-2xl font-bold leading-tight">{reviewData.verdict.headline}</Heading>
+                <Text size="base" tone="muted" class="mt-4 leading-relaxed flex-1">{reviewData.verdict.summary}</Text>
+                
+                <div class="mt-8 pt-6 border-t border-border">
+                  <Text size="xs" tone="muted" class="italic leading-relaxed mb-6">{reviewData.methodology}</Text>
+                  <Button href={provider.websiteUrl} fullWidth size="lg" class="rounded-xl shadow-md">
+                    Get {provider.name} <Icon name="arrow-right" size={18} />
+                  </Button>
+                </div>
               </Card>
             )}
           </div>
@@ -309,44 +320,43 @@ function capitalize(s: string): string {
   {reviewData && (reviewData.pros.length > 0 || reviewData.cons.length > 0) ? (
     <Section>
       <Container>
-        <Heading level={2}>Pros & Cons</Heading>
-        <Text tone="muted" class="mt-2">What sets {provider.name} apart — and where it falls short.</Text>
-        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
+        <div class="mb-8">
+          <Badge tone="primary" size="md" class="rounded-full mb-4">Pros & Cons</Badge>
+          <Heading level={2} class="text-3xl font-bold">The Good & The Bad</Heading>
+          <Text tone="muted" class="mt-2 text-lg">What sets {provider.name} apart — and where it falls short.</Text>
+        </div>
+        <Grid cols={1} colsMd={2} gap={8}>
           {reviewData.pros.length > 0 && (
-            <Card variant="raised" padding="lg" class="border-t-4 border-success">
-              <Heading level={3}>
-                <span class="flex items-center gap-2 text-success">
-                  <Icon name="circle-check" size={20} />
-                  Pros
-                </span>
+            <Card variant="default" padding="lg" class="border-t-4 border-success rounded-2xl shadow-sm">
+              <Heading level={3} class="text-xl font-bold flex items-center gap-3 text-success mb-6">
+                <Icon name="check-circle" size={24} />
+                Pros
               </Heading>
-              <ul class="mt-4 space-y-3">
+              <ul class="space-y-4">
                 {reviewData.pros.map((pro) => (
-                  <li class="flex items-start gap-3">
-                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success-surface text-success">
-                      <Icon name="check" size={12} />
-                    </span>
-                    <Text size="sm" class="leading-relaxed">{pro}</Text>
+                  <li class="flex items-start gap-4">
+                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
+                      <Icon name="check" size={14} />
+                    </div>
+                    <Text size="base" class="leading-relaxed font-medium">{pro}</Text>
                   </li>
                 ))}
               </ul>
             </Card>
           )}
           {reviewData.cons.length > 0 && (
-            <Card variant="raised" padding="lg" class="border-t-4 border-danger">
-              <Heading level={3}>
-                <span class="flex items-center gap-2 text-danger">
-                  <Icon name="circle-x" size={20} />
-                  Cons
-                </span>
+            <Card variant="default" padding="lg" class="border-t-4 border-danger rounded-2xl shadow-sm">
+              <Heading level={3} class="text-xl font-bold flex items-center gap-3 text-danger mb-6">
+                <Icon name="alert-circle" size={24} />
+                Cons
               </Heading>
-              <ul class="mt-4 space-y-3">
+              <ul class="space-y-4">
                 {reviewData.cons.map((con) => (
-                  <li class="flex items-start gap-3">
-                    <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-danger-surface text-danger">
-                      <Icon name="x" size={12} />
-                    </span>
-                    <Text size="sm" class="leading-relaxed">{con}</Text>
+                  <li class="flex items-start gap-4">
+                    <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-danger/10 text-danger">
+                      <Icon name="x" size={14} />
+                    </div>
+                    <Text size="base" class="leading-relaxed font-medium">{con}</Text>
                   </li>
                 ))}
               </ul>
@@ -360,130 +370,144 @@ function capitalize(s: string): string {
   <!-- ============================================================
        PRICING
        ============================================================ -->
-  <Section background>
+  <Section background padding="loose">
     <Container>
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-          <Badge tone="primary" size="sm">Pricing</Badge>
-          <Heading level={2} class="mt-2">Plans &amp; Pricing</Heading>
+          <Badge tone="primary" size="md" class="rounded-full mb-4">Pricing</Badge>
+          <Heading level={2} class="text-3xl font-bold">Plans & Pricing</Heading>
+          <Text tone="muted" class="mt-2 text-lg">
+            {provider.pricing.freeTier ? "Free tier available" : "Transparent pricing for every need."}
+          </Text>
         </div>
         {provider.pricing.moneyBackGuaranteeDays > 0 && (
-          <Badge tone="success" size="sm">{provider.pricing.moneyBackGuaranteeDays}-day guarantee</Badge>
+          <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-success/10 text-success text-sm font-bold border border-success/20">
+            <Icon name="shield-check" size={18} />
+            {provider.pricing.moneyBackGuaranteeDays}-day money-back guarantee
+          </div>
         )}
       </div>
-      <Text tone="muted" class="mt-2">
-        {provider.pricing.freeTier ? "Free tier available" : ""}
-      </Text>
-      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+      <div class="grid gap-6 sm:grid-cols-3">
         {provider.pricing.plans.map((plan) => (
-          <Card padding="lg" variant={plan.featured ? "raised" : "default"} class={cx(plan.featured && "border-primary/50 ring-1 ring-primary/20")}>
-            <Badge tone={plan.featured ? "primary" : "neutral"} size="sm">{capitalize(plan.cycle)}</Badge>
-            <div class="mt-3">
+          <Card padding="lg" variant="default" class={cx("rounded-3xl transition-all duration-300", plan.featured ? "border-2 border-primary shadow-xl scale-105 z-10 bg-surface" : "border border-border shadow-sm hover:shadow-md")}>
+            {plan.featured && (
+              <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow-sm">
+                Best Value
+              </div>
+            )}
+            <div class="text-center">
+              <Badge tone={plan.featured ? "primary" : "neutral"} size="md" class="rounded-full mb-6">{capitalize(plan.cycle)}</Badge>
               <PriceTag price={plan.effectiveMonthly} cycle={plan.cycle} featured={plan.featured} />
-              <Text size="sm" tone="muted" class="mt-1">${plan.price.toFixed(2)} billed {plan.cycle === "monthly" ? "monthly" : plan.cycle === "yearly" ? "annually" : "every 2 years"}</Text>
+              <Text size="sm" tone="muted" class="mt-4 font-medium">${plan.price.toFixed(2)} billed {plan.cycle === "monthly" ? "monthly" : plan.cycle === "yearly" ? "annually" : "every 2 years"}</Text>
+              <Button href={provider.websiteUrl} variant={plan.featured ? "primary" : "outline"} fullWidth size="md" class="mt-8 rounded-xl">
+                Get Started
+              </Button>
             </div>
           </Card>
         ))}
       </div>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <Text size="sm" tone="muted" element="span" class="mr-1">Payment: </Text>
-        {provider.pricing.paymentMethods.map((m) => (
-          <Badge tone="neutral" size="sm">{m}</Badge>
-        ))}
+      <div class="mt-12 flex flex-col items-center gap-6">
+        <div class="flex flex-wrap justify-center gap-3">
+          <Text size="sm" tone="muted" weight="semibold" class="mr-2">Accepted Payment Methods:</Text>
+          {provider.pricing.paymentMethods.map((m) => (
+            <Badge tone="neutral" size="sm" class="rounded-full px-3">{m}</Badge>
+          ))}
+        </div>
+        {provider.pricing.freeTierNotes && (
+          <div class="max-w-2xl text-center p-4 rounded-xl bg-info/5 border border-info/10 text-info text-sm font-medium">
+            <Icon name="info" size={16} class="inline-block mr-2" />
+            {provider.pricing.freeTierNotes}
+          </div>
+        )}
       </div>
-      {provider.pricing.freeTierNotes && (
-        <Text size="sm" tone="info" class="mt-2">{provider.pricing.freeTierNotes}</Text>
-      )}
     </Container>
   </Section>
 
   <!-- ============================================================
        GROUPED SPECIFICATION PANEL
        ============================================================ -->
-  <Section>
+  <Section padding="loose">
     <Container>
-      <div class="flex items-center justify-between">
-        <div>
-          <Badge tone="primary" size="sm">Specifications</Badge>
-          <Heading level={2} class="mt-2">Features & Compatibility</Heading>
-        </div>
+      <div class="mb-10">
+        <Badge tone="primary" size="md" class="rounded-full mb-4">Specifications</Badge>
+        <Heading level={2} class="text-3xl font-bold">Features & Compatibility</Heading>
+        <Text tone="muted" class="mt-2 text-lg">Technical details and platform support.</Text>
       </div>
 
-      <!-- Single grouped panel with labeled sections -->
-      <Card variant="raised" padding="lg" class="mt-6">
-        <div class="grid gap-8 lg:grid-cols-2">
+      <Card variant="default" padding="lg" class="rounded-3xl border border-border shadow-sm bg-surface">
+        <div class="grid gap-12 lg:grid-cols-2">
           <!-- Left column: Features + Protocols + Platforms -->
-          <div class="space-y-6">
+          <div class="space-y-10">
             <!-- Features -->
             <div>
-              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
-                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
-                  <Icon name="list-checks" size={13} />
-                </span>
-                Features
+              <Heading level={3} class="text-xs font-bold uppercase tracking-widest flex items-center gap-3 mb-6 text-foreground">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Icon name="list-checks" size={16} />
+                </div>
+                Core Features
               </Heading>
-              <div class="flex flex-wrap gap-1.5">
+              <div class="flex flex-wrap gap-2">
                 {provider.features.map((fid) => {
                   const name = featureNameMap.get(fid);
                   const fslug = featureSlugMap.get(fid);
                   if (!name || !fslug) return null;
-                  return <a href={featureHref(fslug)} class="no-underline"><Badge tone="neutral" size="sm">{name}</Badge></a>;
+                  return <a href={featureHref(fslug)} class="no-underline"><Badge tone="neutral" size="md" class="rounded-full px-4 py-1.5 hover:bg-primary/10 hover:text-primary transition-colors">{name}</Badge></a>;
                 })}
               </div>
             </div>
 
             <!-- Protocols -->
             <div>
-              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
-                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
-                  <Icon name="terminal" size={13} />
-                </span>
-                Protocols
+              <Heading level={3} class="text-xs font-bold uppercase tracking-widest flex items-center gap-3 mb-6 text-foreground">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Icon name="terminal" size={16} />
+                </div>
+                Supported Protocols
               </Heading>
-              <div class="flex flex-wrap gap-1.5">
+              <div class="flex flex-wrap gap-2">
                 {provider.protocols.map((pid) => {
                   const name = protocolNameMap.get(pid);
                   const pslug = protocolSlugMap.get(pid);
                   if (!name || !pslug) return null;
-                  return <a href={protocolHref(pslug)} class="no-underline"><Badge tone="neutral" size="sm">{name}</Badge></a>;
+                  return <a href={protocolHref(pslug)} class="no-underline"><Badge tone="neutral" size="md" class="rounded-full px-4 py-1.5 hover:bg-primary/10 hover:text-primary transition-colors">{name}</Badge></a>;
                 })}
               </div>
             </div>
 
             <!-- Platforms -->
             <div>
-              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
-                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
-                  <Icon name="monitor-smartphone" size={13} />
-                </span>
-                Platforms
+              <Heading level={3} class="text-xs font-bold uppercase tracking-widest flex items-center gap-3 mb-6 text-foreground">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Icon name="monitor-smartphone" size={16} />
+                </div>
+                Platform Support
               </Heading>
-              <div class="flex flex-wrap gap-1.5">
+              <div class="flex flex-wrap gap-2">
                 {provider.platforms.map((pid) => {
                   const name = platformNameMap.get(pid);
                   const pslug = platformSlugMap.get(pid);
                   if (!name || !pslug) return null;
-                  return <a href={platformHref(pslug)} class="no-underline"><Chip>{name}</Chip></a>;
+                  return <a href={platformHref(pslug)} class="no-underline"><Chip class="rounded-full px-4 py-1.5 hover:bg-primary/10 hover:text-primary transition-colors">{name}</Chip></a>;
                 })}
               </div>
             </div>
           </div>
 
           <!-- Right column: Server locations + DNS/Leak/Obfuscation -->
-          <div class="space-y-6">
+          <div class="space-y-10">
             <!-- Server locations -->
             <div>
-              <Heading level={3} class="text-sm font-semibold flex items-center gap-2 mb-3">
-                <span class="flex h-6 w-6 items-center justify-center rounded bg-primary/10 text-primary">
-                  <Icon name="globe" size={13} />
-                </span>
+              <Heading level={3} class="text-xs font-bold uppercase tracking-widest flex items-center gap-3 mb-6 text-foreground">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Icon name="globe" size={16} />
+                </div>
                 Server Locations ({provider.serverNetwork.countries.length})
               </Heading>
-              <div class="flex flex-wrap gap-1.5">
+              <div class="flex flex-wrap gap-2">
                 {provider.serverNetwork.countries.map((code) => {
                   const cslug = countrySlugMap.get(code);
-                  if (!cslug) return <Chip>{code}</Chip>;
-                  return <a href={countryHref(cslug)} class="no-underline"><Chip>{code}</Chip></a>;
+                  if (!cslug) return <Chip class="rounded-full px-3 py-1">{code}</Chip>;
+                  return <a href={countryHref(cslug)} class="no-underline"><Chip class="rounded-full px-3 py-1 hover:bg-primary/10 hover:text-primary transition-colors">{code}</Chip></a>;
                 })}
               </div>
             </div>
@@ -527,16 +551,14 @@ function capitalize(s: string): string {
        STREAMING
        ============================================================ -->
   {provider.streaming.length > 0 && (
-    <Section background>
+    <Section background padding="loose">
       <Container>
-        <div class="flex items-center justify-between">
-          <div>
-            <Badge tone="primary" size="sm">Streaming</Badge>
-            <Heading level={2} class="mt-2">Streaming Support</Heading>
-          </div>
+        <div class="mb-10">
+          <Badge tone="primary" size="md" class="rounded-full mb-4">Streaming</Badge>
+          <Heading level={2} class="text-3xl font-bold">Streaming Support</Heading>
+          <Text tone="muted" class="mt-2 text-lg">Verified compatibility with major streaming platforms.</Text>
         </div>
-        <Text tone="muted" class="mt-2">Verified compatibility with major streaming platforms</Text>
-        <div class="mt-6">
+        <div class="rounded-3xl border border-border bg-surface p-8 shadow-sm">
           <StreamingMatrix items={provider.streaming} serviceNames={Object.fromEntries(streamingNameMap)} />
         </div>
       </Container>
@@ -547,24 +569,27 @@ function capitalize(s: string): string {
        TORRENTING
        ============================================================ -->
   {provider.torrenting.supported && (
-    <Section>
+    <Section padding="loose">
       <Container>
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
-            <Badge tone="primary" size="sm">Torrenting</Badge>
-            <Heading level={2} class="mt-2">P2P & Torrenting</Heading>
+            <Badge tone="primary" size="md" class="rounded-full mb-4">Torrenting</Badge>
+            <Heading level={2} class="text-3xl font-bold">P2P & Torrenting</Heading>
+            <Text tone="muted" class="mt-2 text-lg">Optimized for secure and fast file sharing.</Text>
           </div>
           {provider.torrenting.rating != null && (
-            <ScoreRing value={provider.torrenting.rating} size={56} strokeWidth={4} label="Rating" />
+            <ScoreRing value={provider.torrenting.rating} size={64} strokeWidth={5} label="Rating" />
           )}
         </div>
-        <div class="mt-4 flex flex-wrap gap-3">
-          <Badge tone="success">P2P Supported</Badge>
-          {provider.torrenting.labeledServers && <Badge tone="info">Labeled P2P Servers</Badge>}
-          {provider.torrenting.portForwarding && <Badge tone="primary">Port Forwarding</Badge>}
+        <div class="flex flex-wrap gap-3 mb-6">
+          <Badge tone="success" size="md" class="rounded-full px-4 py-1.5">P2P Supported</Badge>
+          {provider.torrenting.labeledServers && <Badge tone="info" size="md" class="rounded-full px-4 py-1.5">Labeled P2P Servers</Badge>}
+          {provider.torrenting.portForwarding && <Badge tone="primary" size="md" class="rounded-full px-4 py-1.5">Port Forwarding</Badge>}
         </div>
         {provider.torrenting.notes && (
-          <Text size="sm" tone="muted" class="mt-3 leading-relaxed max-w-2xl">{provider.torrenting.notes}</Text>
+          <div class="p-6 rounded-2xl bg-surface-raised border border-border text-base text-muted-foreground leading-relaxed max-w-3xl">
+            {provider.torrenting.notes}
+          </div>
         )}
       </Container>
     </Section>
@@ -574,15 +599,13 @@ function capitalize(s: string): string {
        OVERVIEW (factual MDX)
        ============================================================ -->
   {OverviewContent && (
-    <Section background>
+    <Section background padding="loose">
       <Container size="prose">
-        <div class="flex items-center justify-between">
-          <div>
-            <Badge tone="primary" size="sm">Factual overview</Badge>
-            <Heading level={2} class="mt-2">In-Depth Overview</Heading>
-          </div>
+        <div class="mb-10">
+          <Badge tone="primary" size="md" class="rounded-full mb-4">Factual overview</Badge>
+          <Heading level={2} class="text-3xl font-bold">In-Depth Overview</Heading>
         </div>
-        <div class="mt-6">
+        <div class="prose prose-slate dark:prose-invert max-w-none">
           <OverviewContent />
         </div>
       </Container>
@@ -592,42 +615,46 @@ function capitalize(s: string): string {
   <!-- ============================================================
        RELATED CONTENT
        ============================================================ -->
-  <Section>
+  <Section padding="loose">
     <Container>
-      <Heading level={2}>Explore More</Heading>
-      <Text tone="muted" class="mt-2">Browse VPNs by feature, protocol, platform, country, or streaming service.</Text>
-      <div class="mt-4 flex flex-wrap gap-3">
-        <Button variant="outline" size="sm" href="/features/">Browse Features</Button>
-        <Button variant="outline" size="sm" href="/protocols/">Browse Protocols</Button>
-        <Button variant="outline" size="sm" href="/platforms/">Browse Platforms</Button>
-        <Button variant="outline" size="sm" href="/countries/">Browse Countries</Button>
-        <Button variant="outline" size="sm" href="/streaming/">Browse Streaming Services</Button>
-        <Button variant="outline" size="sm" href="/comparisons/">Compare Providers</Button>
+      <div class="mb-10">
+        <Heading level={2} class="text-3xl font-bold">Explore More</Heading>
+        <Text tone="muted" class="mt-2 text-lg">Browse VPNs by feature, protocol, platform, country, or streaming service.</Text>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <Button variant="secondary" size="md" href="/features/" class="rounded-full">Browse Features</Button>
+        <Button variant="secondary" size="md" href="/protocols/" class="rounded-full">Browse Protocols</Button>
+        <Button variant="secondary" size="md" href="/platforms/" class="rounded-full">Browse Platforms</Button>
+        <Button variant="secondary" size="md" href="/countries/" class="rounded-full">Browse Countries</Button>
+        <Button variant="secondary" size="md" href="/streaming/" class="rounded-full">Browse Streaming</Button>
+        <Button variant="secondary" size="md" href="/comparisons/" class="rounded-full">Compare Providers</Button>
       </div>
     </Container>
   </Section>
 
   {(relatedComparisons.length > 0 || relatedGuides.length > 0) && (
-    <Section background>
+    <Section background padding="loose">
       <Container>
-        <Heading level={2}>Related Content</Heading>
-        <Grid cols={1} colsMd={2} gap={6} class="mt-6">
+        <div class="mb-10">
+          <Heading level={2} class="text-3xl font-bold">Related Content</Heading>
+        </div>
+        <Grid cols={1} colsMd={2} gap={8}>
           {relatedComparisons.map((c) => (
-            <Card>
-              <Heading level={3}>{c.data.title}</Heading>
-              <Text size="sm" tone="muted" class="mt-1">{c.data.summary}</Text>
-              <div class="mt-4">
-                <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>Read Comparison</Button>
+            <Card variant="default" padding="lg" class="rounded-3xl border border-border shadow-sm hover:shadow-md transition-all">
+              <Heading level={3} class="text-xl font-bold">{c.data.title}</Heading>
+              <Text size="base" tone="muted" class="mt-3 leading-relaxed">{c.data.summary}</Text>
+              <div class="mt-6">
+                <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`} class="rounded-full">Read Comparison</Button>
               </div>
             </Card>
           ))}
           {relatedGuides.map((g) => (
-            <Card>
-              <Heading level={3}>{g.data.title}</Heading>
-              <Text size="sm" tone="muted" class="mt-1">{g.data.summary}</Text>
-              <Badge tone="neutral" class="mt-2">{capitalize(g.data.difficulty)}</Badge>
-              <div class="mt-4">
-                <Button variant="outline" size="sm" href={`/guides/${g.id}/`}>Read Guide</Button>
+            <Card variant="default" padding="lg" class="rounded-3xl border border-border shadow-sm hover:shadow-md transition-all">
+              <Heading level={3} class="text-xl font-bold">{g.data.title}</Heading>
+              <Text size="base" tone="muted" class="mt-3 leading-relaxed">{g.data.summary}</Text>
+              <div class="mt-4 flex items-center justify-between">
+                <Badge tone="neutral" size="sm" class="rounded-full px-3">{capitalize(g.data.difficulty)}</Badge>
+                <Button variant="outline" size="sm" href={`/guides/${g.id}/`} class="rounded-full">Read Guide</Button>
               </div>
             </Card>
           ))}

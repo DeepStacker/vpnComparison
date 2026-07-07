@@ -24,10 +24,19 @@ const { seo, breadcrumbs = [], jsonLd } = Astro.props;
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs} renderBreadcrumbs={false} container="full" jsonLd={jsonLd}>
-  <div class="container-page">
-    {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} class="mb-6" />}
-    <slot name="intro" />
-    <section class="mt-8 rounded-xl border border-border bg-surface p-4 shadow-sm sm:p-6">
+  <div class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+    </div>
+    <div class="container-page">
+      {breadcrumbs.length > 0 && <Breadcrumbs items={breadcrumbs} class="mb-8" />}
+      <slot name="intro" />
+    </div>
+  </div>
+
+  <div class="container-page pb-32">
+    <section class="rounded-3xl border border-border bg-surface p-6 shadow-xl sm:p-10">
       <slot />
     </section>
   </div>

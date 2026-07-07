@@ -2,7 +2,7 @@
 /**
  * Button — primary interactive primitive.
  * Renders <a> when `href` is set, otherwise <button>.
- * @prop variant - "primary" | "secondary" | "outline" | "ghost" | "danger".
+ * @prop variant - "primary" | "secondary" | "outline" | "ghost" | "danger" | "glass".
  * @prop size - "sm" | "md" | "lg".
  * @prop href - turns the button into a link.
  * @prop fullWidth - stretch to container width.
@@ -12,12 +12,13 @@
 import { cx } from "@/lib/utils/string";
 
 interface Props {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "glass" | "glass-subtle";
   size?: "sm" | "md" | "lg";
   href?: string;
   fullWidth?: boolean;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  loading?: boolean;
   target?: string;
   rel?: string;
   "aria-label"?: string;
@@ -31,6 +32,7 @@ const {
   fullWidth = false,
   type = "button",
   disabled = false,
+  loading = false,
   target,
   rel,
   "aria-label": ariaLabel,
@@ -43,22 +45,24 @@ const resolvedTarget = target ?? (isExternal ? "_blank" : undefined);
 const resolvedRel = rel ?? (isExternal ? "noopener noreferrer" : undefined);
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-md font-medium no-underline transition-colors duration-base ease-standard focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap";
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold no-underline transition-all duration-200 ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap active:scale-[0.98]";
 
 const sizeClass: Record<string, string> = {
-  sm: "text-sm px-3 py-1.5",
+  sm: "text-xs px-3 py-1.5",
   md: "text-sm px-4 py-2",
-  lg: "text-base px-5 py-2.5",
+  lg: "text-base px-6 py-3",
 };
 
 const variantClass: Record<string, string> = {
-  primary: "bg-gradient-brand text-primary-foreground hover:brightness-110 shadow-sm",
+  primary: "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm",
   secondary:
-    "bg-surface-raised text-foreground border border-border hover:bg-surface-sunken",
+    "bg-surface-raised text-foreground border border-border hover:bg-surface-sunken hover:border-border-strong",
   outline:
     "bg-transparent text-foreground border border-border-strong hover:bg-surface-raised",
   ghost: "bg-transparent text-foreground hover:bg-surface-raised",
   danger: "bg-danger text-danger-foreground hover:opacity-90",
+  glass: "bg-glass backdrop-blur-xl text-foreground border border-glass-border shadow-glass-inner hover:bg-glass-strong hover:border-glass-strong-border hover:shadow-glass-strong transition-all duration-300",
+  "glass-subtle": "bg-glass-subtle backdrop-blur-lg text-foreground border border-glass-subtle-border shadow-glass-inner hover:bg-glass hover:border-glass-border transition-all duration-300",
 };
 
 const classes = cx(
@@ -66,6 +70,7 @@ const classes = cx(
   sizeClass[size],
   variantClass[variant],
   fullWidth && "w-full",
+  loading && "relative !text-transparent pointer-events-none",
   className,
 );
 ---
@@ -73,13 +78,21 @@ const classes = cx(
 <Tag
   href={href}
   type={Tag === "button" ? type : undefined}
-  disabled={Tag === "button" ? disabled : undefined}
+  disabled={Tag === "button" ? (disabled || loading) : undefined}
   target={Tag === "a" ? resolvedTarget : undefined}
   rel={Tag === "a" ? resolvedRel : undefined}
-  aria-disabled={Tag === "a" && disabled ? true : undefined}
+  aria-disabled={Tag === "a" && (disabled || loading) ? true : undefined}
   aria-label={ariaLabel}
   class={classes}
 >
+  {loading && (
+    <span class="absolute inset-0 flex items-center justify-center">
+      <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </span>
+  )}
   <slot name="icon-leading" />
   <slot />
   <slot name="icon-trailing" />

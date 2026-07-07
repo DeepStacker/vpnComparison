@@ -58,65 +58,79 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section background padding="loose">
+  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+    </div>
     <Container>
-      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div class="flex items-center gap-3">
-            <span class="flex h-12 w-12 items-center justify-center rounded-full bg-surface-sunken text-2xl leading-none">
-              {country.flagEmoji}
-            </span>
-            <div>
-              <Heading level={1}>{country.name}</Heading>
-              <div class="flex items-center gap-2 mt-1">
-                {regionLabels[country.region] && (
-                  <Badge tone="neutral" size="sm">{regionLabels[country.region]}</Badge>
-                )}
-                {country.privacyFriendly ? (
-                  <Badge tone="success" size="sm">
-                    <Icon name="shield-check" size={11} class="mr-1" />Privacy-Friendly
-                  </Badge>
-                ) : (
-                  <Badge tone="warning" size="sm">
-                    <Icon name="alert-triangle" size={11} class="mr-1" />Surveillance Risk
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </div>
+      <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+        <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-surface border border-border shadow-sm text-4xl mb-8">
+          {country.flagEmoji}
         </div>
+        
+        <div class="flex items-center justify-center gap-2 mb-6">
+          {regionLabels[country.region] && (
+            <Badge tone="neutral" size="md" class="shadow-sm">{regionLabels[country.region]}</Badge>
+          )}
+          {country.privacyFriendly ? (
+            <Badge tone="success" size="md" class="shadow-sm">
+              <Icon name="shield-check" size={14} class="mr-2" />Privacy-Friendly
+            </Badge>
+          ) : (
+            <Badge tone="warning" size="md" class="shadow-sm">
+              <Icon name="alert-triangle" size={14} class="mr-2" />Surveillance Risk
+            </Badge>
+          )}
+        </div>
+        
+        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
+          VPNs in <span class="text-primary">{country.name}</span>
+        </Heading>
+        
+        <Text size="xl" tone="muted" class="mt-6 leading-relaxed">
+          Find VPN providers with servers in {country.name}. Compare {matches.length} VPNs available in {country.name} and learn about the local privacy jurisdiction.
+        </Text>
       </div>
     </Container>
   </Section>
 
   {country.censorshipLevel && (
-    <Section>
+    <Section class="pb-20">
       <Container>
-        <Heading level={2}>Privacy & Internet Profile</Heading>
-        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="rounded-lg border border-border bg-surface p-4">
-            <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Censorship Level</Text>
-            <div class="mt-1">
-              <Badge tone={censorshipTone[country.censorshipLevel] ?? "neutral"}>
-                {country.censorshipLevel.charAt(0).toUpperCase() + country.censorshipLevel.slice(1)}
-              </Badge>
+        <Heading level={2} class="text-2xl font-bold mb-8">Privacy & Internet Profile</Heading>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <Card variant="raised" padding="none" class="overflow-hidden">
+            <div class="p-6">
+              <Text size="xs" tone="muted" class="uppercase tracking-widest font-black mb-2">Censorship Level</Text>
+              <div class="mt-1">
+                <Badge tone={censorshipTone[country.censorshipLevel] ?? "neutral"} size="md" class="font-bold">
+                  {country.censorshipLevel.toUpperCase()}
+                </Badge>
+              </div>
             </div>
-          </div>
-          <div class="rounded-lg border border-border bg-surface p-4">
-            <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Surveillance</Text>
-            <Text size="sm" tone="muted" class="mt-1">{allianceNote[country.surveillanceAlliance ?? "unknown"]}</Text>
-          </div>
-          <div class="rounded-lg border border-border bg-surface p-4">
-            <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Data Retention Law</Text>
-            <Text weight="semibold" class="mt-1">
-              {country.dataRetentionLaw == null ? "Unknown" : country.dataRetentionLaw ? "Yes" : "No"}
-            </Text>
-          </div>
+          </Card>
+          <Card variant="raised" padding="none" class="overflow-hidden">
+            <div class="p-6">
+              <Text size="xs" tone="muted" class="uppercase tracking-widest font-black mb-2">Surveillance</Text>
+              <Text size="sm" tone="muted" class="mt-1">{allianceNote[country.surveillanceAlliance ?? "unknown"]}</Text>
+            </div>
+          </Card>
+          <Card variant="raised" padding="none" class="overflow-hidden">
+            <div class="p-6">
+              <Text size="xs" tone="muted" class="uppercase tracking-widest font-black mb-2">Data Retention Law</Text>
+              <Text weight="semibold" class="mt-1">
+                {country.dataRetentionLaw == null ? "Unknown" : country.dataRetentionLaw ? "Yes" : "No"}
+              </Text>
+            </div>
+          </Card>
           {country.internetPenetration != null && (
-            <div class="rounded-lg border border-border bg-surface p-4">
-              <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Internet Penetration</Text>
-              <Text weight="semibold" class="mt-1">{country.internetPenetration}%</Text>
-            </div>
+            <Card variant="raised" padding="none" class="overflow-hidden">
+              <div class="p-6">
+                <Text size="xs" tone="muted" class="uppercase tracking-widest font-black mb-2">Internet Penetration</Text>
+                <Text weight="semibold" class="mt-1">{country.internetPenetration}%</Text>
+              </div>
+            </Card>
           )}
         </div>
 

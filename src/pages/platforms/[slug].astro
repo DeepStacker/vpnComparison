@@ -40,70 +40,80 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section background padding="loose">
+  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+    </div>
     <Container>
-      <div class="flex items-start gap-4">
-        <Icon name={platform.icon as any} size={40} class="mt-1 shrink-0 text-primary" />
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <Badge>{platform.official ? "Official app" : "Compatible"}</Badge>
-            {platform.category && (
-              <Badge tone="neutral" size="sm">{platform.category}</Badge>
-            )}
-          </div>
-          <Heading level={1}>{platform.name} VPN</Heading>
-          <Text size="lg" tone="muted" class="mt-2 max-w-2xl">
-            {platform.official
-              ? `VPN providers with official ${platform.name} apps for seamless protection.`
-              : `VPN providers compatible with ${platform.name} setup.`}
-          </Text>
-          {platform.minOsVersion && (
-            <Badge tone="info" size="sm" class="mt-3">
-              <Icon name="info" size={11} class="mr-1" />Minimum: {platform.minOsVersion}
-            </Badge>
+      <div class="flex flex-col items-center text-center max-w-4xl mx-auto">
+        <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/5 text-primary border border-primary/10 shadow-sm mb-8">
+          <Icon name={platform.icon as any} size={40} />
+        </div>
+        
+        <div class="flex items-center justify-center gap-2 mb-6">
+          <Badge tone="primary" size="md" class="shadow-sm">{platform.official ? "Official app" : "Compatible"}</Badge>
+          {platform.category && (
+            <Badge tone="neutral" size="md" class="shadow-sm">{platform.category}</Badge>
           )}
         </div>
+        
+        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
+          {platform.name} <span class="text-primary">VPN</span>
+        </Heading>
+        
+        <Text size="xl" tone="muted" class="mt-6 leading-relaxed">
+          {platform.official
+            ? `VPN providers with official ${platform.name} apps for seamless protection.`
+            : `VPN providers compatible with ${platform.name} setup.`}
+        </Text>
+        
+        {platform.minOsVersion && (
+          <Badge tone="info" size="sm" class="mt-8 shadow-sm">
+            <Icon name="info" size={12} class="mr-2" />
+            Minimum: {platform.minOsVersion}
+          </Badge>
+        )}
       </div>
     </Container>
   </Section>
 
   {(platform.limitations || platform.commonIssues) && (
-    <Section>
+    <Section class="pb-20">
       <Container>
-        <Heading level={2}>Platform Notes</Heading>
-        <div class="mt-4 grid gap-6 lg:grid-cols-2">
+        <div class="grid gap-8 lg:grid-cols-2">
           {platform.limitations && platform.limitations.length > 0 && (
-            <Card variant="raised" padding="lg" class="border-t-4 border-warning">
-              <Heading level={3}>
-                <span class="flex items-center gap-2 text-warning">
-                  <Icon name="alert-triangle" size={18} /> Limitations
-                </span>
-              </Heading>
-              <ul class="mt-3 space-y-2">
-                {platform.limitations.map((l) => (
-                  <li class="flex items-start gap-2 text-sm text-foreground">
-                    <Icon name="x" size={14} class="mt-0.5 shrink-0 text-warning" />
-                    <span>{l}</span>
-                  </li>
-                ))}
-              </ul>
+            <Card variant="raised" padding="none" class="overflow-hidden border-t-4 border-warning">
+              <div class="p-8">
+                <Heading level={3} class="text-xl font-bold flex items-center gap-3 text-warning mb-6">
+                  <Icon name="alert-triangle" size={20} /> Limitations
+                </Heading>
+                <ul class="space-y-4">
+                  {platform.limitations.map((l) => (
+                    <li class="flex items-start gap-3 text-base text-foreground leading-relaxed">
+                      <Icon name="x" size={16} class="mt-1 shrink-0 text-warning" />
+                      <span>{l}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Card>
           )}
           {platform.commonIssues && platform.commonIssues.length > 0 && (
-            <Card variant="raised" padding="lg" class="border-t-4 border-info">
-              <Heading level={3}>
-                <span class="flex items-center gap-2 text-info">
-                  <Icon name="help-circle" size={18} /> Common Issues
-                </span>
-              </Heading>
-              <ul class="mt-3 space-y-2">
-                {platform.commonIssues.map((i) => (
-                  <li class="flex items-start gap-2 text-sm text-foreground">
-                    <Icon name="circle" size={14} class="mt-0.5 shrink-0 text-info" />
-                    <span>{i}</span>
-                  </li>
-                ))}
-              </ul>
+            <Card variant="raised" padding="none" class="overflow-hidden border-t-4 border-info">
+              <div class="p-8">
+                <Heading level={3} class="text-xl font-bold flex items-center gap-3 text-info mb-6">
+                  <Icon name="help-circle" size={20} /> Common Issues
+                </Heading>
+                <ul class="space-y-4">
+                  {platform.commonIssues.map((i) => (
+                    <li class="flex items-start gap-3 text-base text-foreground leading-relaxed">
+                      <Icon name="circle" size={14} class="mt-0.5 shrink-0 text-info" />
+                      <span>{i}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Card>
           )}
         </div>

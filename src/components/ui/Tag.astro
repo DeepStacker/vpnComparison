@@ -16,16 +16,16 @@ const { tone = "neutral", href, class: className } = Astro.props;
 const Tag = href ? "a" : "span";
 
 const toneClass: Record<string, string> = {
-  neutral: "border-border text-muted-foreground hover:bg-surface-raised",
-  primary: "border-primary/40 text-primary hover:bg-accent",
-  success: "border-success/40 text-success hover:bg-success-surface",
-  warning: "border-warning/40 text-warning hover:bg-warning-surface",
-  danger: "border-danger/40 text-danger hover:bg-danger-surface",
-  info: "border-info/40 text-info hover:bg-info-surface",
+  neutral: "border-border text-muted-foreground hover:bg-surface-raised hover:border-border-strong",
+  primary: "border-primary/30 text-primary bg-primary/5 hover:bg-primary/10 hover:border-primary/50",
+  success: "border-success/30 text-success bg-success/5 hover:bg-success/10 hover:border-success/50",
+  warning: "border-warning/30 text-warning bg-warning/5 hover:bg-warning/10 hover:border-warning/50",
+  danger: "border-danger/30 text-danger bg-danger/5 hover:bg-danger/10 hover:border-danger/50",
+  info: "border-info/30 text-info bg-info/5 hover:bg-info/10 hover:border-info/50",
 };
 
 const classes = cx(
-  "inline-flex items-center gap-1 rounded-md border bg-surface px-2 py-0.5 text-xs font-medium transition-colors",
+  "inline-flex items-center gap-1.5 rounded-lg border bg-surface px-2.5 py-1 text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm",
   toneClass[tone],
   href && "no-underline",
   className,

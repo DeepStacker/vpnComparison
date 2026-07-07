@@ -147,11 +147,11 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     for (let i = 0; i < steps.length; i++) {
       const dot = document.createElement("div");
       dot.className =
-        "h-2 rounded-full transition-all duration-300 " +
+        "h-2 rounded-full transition-all duration-500 " +
         (i === currentStep
-          ? "w-8 bg-primary"
+          ? "w-12 bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]"
           : i < currentStep
-            ? "w-2 bg-primary/50"
+            ? "w-2 bg-primary/40"
             : "w-2 bg-border");
       indicator.appendChild(dot);
     }
@@ -162,30 +162,30 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     content.innerHTML = "";
 
     const heading = document.createElement("h2");
-    heading.className = "text-xl font-semibold mb-2";
+    heading.className = "text-3xl font-black tracking-tight mb-2 text-foreground";
     heading.textContent = step.question;
     content.appendChild(heading);
 
     const stepNum = document.createElement("p");
-    stepNum.className = "text-sm text-muted-foreground mb-6";
+    stepNum.className = "text-sm font-bold uppercase tracking-widest text-muted-foreground mb-10";
     stepNum.textContent = `Step ${currentStep + 1} of ${steps.length}`;
     content.appendChild(stepNum);
 
     const optionsContainer = document.createElement("div");
-    optionsContainer.className = "space-y-3";
+    optionsContainer.className = "grid gap-4 sm:grid-cols-2";
 
     const currentAnswers = answers[step.id as keyof Answers] as string[] | string;
 
     for (const opt of step.options) {
       const label = document.createElement("label");
       label.className =
-        "flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface p-4 transition-all hover:border-primary hover:bg-surface-raised has-[:checked]:border-primary has-[:checked]:bg-primary/5";
+        "group flex cursor-pointer items-center gap-4 rounded-2xl border border-border bg-surface p-5 transition-all duration-300 hover:border-primary/30 hover:shadow-lg has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:shadow-md hover:-translate-y-0.5";
 
       const input = document.createElement("input");
       input.type = step.type === "single" ? "radio" : "checkbox";
       input.name = step.id;
       input.value = opt.value;
-      input.className = "h-4 w-4 accent-primary";
+      input.className = "h-5 w-5 accent-primary shrink-0";
 
       if (step.type === "single") {
         if (currentAnswers === opt.value) input.checked = true;
@@ -197,7 +197,7 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
       label.appendChild(input);
 
       const span = document.createElement("span");
-      span.className = "text-sm font-medium";
+      span.className = "text-base font-bold text-foreground group-hover:text-primary transition-colors";
       span.textContent = opt.label;
       label.appendChild(span);
 
@@ -206,26 +206,29 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     content.appendChild(optionsContainer);
 
     const btnRow = document.createElement("div");
-    btnRow.className = "mt-8 flex items-center gap-3";
+    btnRow.className = "mt-12 flex items-center justify-between gap-4 pt-8 border-t border-border";
 
     if (currentStep > 0) {
       const back = document.createElement("button");
       back.type = "button";
       back.className =
-        "rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-raised";
+        "rounded-xl border border-border bg-surface px-6 py-3 text-sm font-bold text-foreground transition-all duration-200 hover:bg-surface-raised hover:border-border-strong shadow-sm";
       back.textContent = "Back";
       back.addEventListener("click", () => {
         currentStep--;
         render();
       });
       btnRow.appendChild(back);
+    } else {
+      const spacer = document.createElement("div");
+      btnRow.appendChild(spacer);
     }
 
     const next = document.createElement("button");
     next.type = "button";
     next.className =
-      "rounded-lg bg-primary px-6 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-40 disabled:cursor-not-allowed";
-    next.textContent = currentStep === steps.length - 1 ? "See Results" : "Next";
+      "rounded-xl bg-primary px-8 py-3 text-sm font-black uppercase tracking-widest text-primary-foreground transition-all duration-200 hover:brightness-110 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg hover:-translate-y-0.5";
+    next.textContent = currentStep === steps.length - 1 ? "See Results" : "Next Step";
     const ans = answers[step.id as keyof Answers] as string[] | string;
     next.disabled = step.type === "single" ? !ans : (ans as string[]).length === 0;
     next.addEventListener("click", () => {
@@ -516,11 +519,11 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     content.innerHTML = "";
 
     const summary = document.createElement("div");
-    summary.className = "mb-8 text-center";
+    summary.className = "mb-12 text-center";
     summary.innerHTML = `
-      <h2 class="text-2xl font-bold">Your VPN Recommendations</h2>
-      <p class="mt-2 text-muted-foreground">
-        Based on your answers, here are the VPNs ranked by how well they match your needs.
+      <h2 class="text-3xl font-black tracking-tight">Your VPN Recommendations</h2>
+      <p class="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+        Based on your answers, here are the VPNs ranked by how well they match your specific requirements.
       </p>
     `;
     content.appendChild(summary);
@@ -531,77 +534,79 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
 
       const card = document.createElement("div");
       card.className =
-        "mb-6 rounded-xl border border-border bg-surface p-6 shadow-sm transition-all hover:shadow-md";
+        "mb-8 rounded-3xl border border-border bg-surface p-8 shadow-sm transition-all duration-300 hover:shadow-xl hover:border-primary/30";
 
-      const rankEmoji = index === 0 ? "\u{1F3C6}" : index === 1 ? "\u{1F948}" : index === 2 ? "\u{1F949}" : `#${index + 1}`;
+      const rankEmoji = index === 0 ? "🏆" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`;
 
       card.innerHTML = `
-        <div class="flex items-start justify-between gap-4">
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <span class="text-lg">${rankEmoji}</span>
-              <h3 class="text-xl font-bold">${escapeHtml(p.name)}</h3>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="flex items-center gap-6">
+            <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-surface-sunken border border-border shadow-inner text-2xl">
+              ${rankEmoji}
             </div>
-            <p class="mt-1 text-sm text-muted-foreground">${escapeHtml(p.tagline)}</p>
+            <div class="min-w-0">
+              <h3 class="text-2xl font-black tracking-tight text-foreground">${escapeHtml(p.name)}</h3>
+              <p class="mt-1 text-base text-muted-foreground leading-relaxed">${escapeHtml(p.tagline)}</p>
+            </div>
           </div>
-          <div class="shrink-0 text-right">
-            <div class="text-3xl font-bold text-primary">${result.totalScore}%</div>
-            <p class="text-xs text-muted-foreground">match</p>
+          <div class="shrink-0 flex flex-col items-center md:items-end">
+            <div class="text-4xl font-black text-primary tracking-tighter">${result.totalScore}%</div>
+            <p class="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">Match Score</p>
           </div>
         </div>
       `;
 
       const scoreBar = document.createElement("div");
-      scoreBar.className = "mt-4 h-2 w-full rounded-full bg-border overflow-hidden";
+      scoreBar.className = "mt-8 h-3 w-full rounded-full bg-surface-sunken border border-border/50 overflow-hidden shadow-inner";
       const fill = document.createElement("div");
       fill.className =
-        "h-full rounded-full transition-all duration-700 " +
+        "h-full rounded-full transition-all duration-1000 ease-out " +
         (result.totalScore >= 80 ? "bg-success" : result.totalScore >= 50 ? "bg-primary" : "bg-warning");
       fill.style.width = `${result.totalScore}%`;
       scoreBar.appendChild(fill);
       card.appendChild(scoreBar);
 
       const detailsDiv = document.createElement("div");
-      detailsDiv.className = "mt-4 space-y-2";
+      detailsDiv.className = "mt-10 grid gap-6 sm:grid-cols-2";
 
       for (const detail of result.details) {
-        const row = document.createElement("div");
-        row.className = "flex items-center justify-between gap-3";
+        const detailCard = document.createElement("div");
+        detailCard.className = "rounded-2xl bg-surface-sunken/50 border border-border/50 p-5";
 
+        const header = document.createElement("div");
+        header.className = "flex items-center justify-between mb-3";
+        
         const labelSpan = document.createElement("span");
-        labelSpan.className = "text-sm flex items-center gap-2 min-w-0";
-        const dot = document.createElement("span");
-        dot.className =
-          "inline-block h-2 w-2 shrink-0 rounded-full " +
-          (detail.score >= 70 ? "bg-success" : detail.score >= 40 ? "bg-primary" : "bg-warning");
-        labelSpan.appendChild(dot);
-        labelSpan.appendChild(document.createTextNode(detail.label));
-        row.appendChild(labelSpan);
+        labelSpan.className = "text-sm font-bold uppercase tracking-widest text-muted-foreground";
+        labelSpan.textContent = detail.label;
+        header.appendChild(labelSpan);
 
         const valSpan = document.createElement("span");
         valSpan.className =
-          "text-sm font-medium shrink-0 " +
+          "text-sm font-black " +
           (detail.score >= 70 ? "text-success" : detail.score >= 40 ? "text-primary" : "text-warning");
         valSpan.textContent = `${detail.score}%`;
-        row.appendChild(valSpan);
-
-        detailsDiv.appendChild(row);
+        header.appendChild(valSpan);
+        
+        detailCard.appendChild(header);
 
         const expl = document.createElement("p");
-        expl.className = "text-xs text-muted-foreground pl-4 -mt-1";
+        expl.className = "text-sm text-foreground font-medium leading-relaxed";
         expl.textContent = detail.explanation;
-        detailsDiv.appendChild(expl);
+        detailCard.appendChild(expl);
+
+        detailsDiv.appendChild(detailCard);
       }
 
       card.appendChild(detailsDiv);
 
       const ctaRow = document.createElement("div");
-      ctaRow.className = "mt-4 flex flex-wrap gap-3";
+      ctaRow.className = "mt-10 flex flex-wrap items-center gap-4 pt-8 border-t border-border";
 
       const detailBtn = document.createElement("a");
       detailBtn.href = `/vpn/${p.slug}/`;
       detailBtn.className =
-        "inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground no-underline transition-colors hover:bg-primary-hover";
+        "inline-flex items-center rounded-xl bg-primary px-6 py-3 text-sm font-black uppercase tracking-widest text-primary-foreground no-underline transition-all duration-200 hover:brightness-110 shadow-lg hover:-translate-y-0.5";
       detailBtn.textContent = "View Details";
       ctaRow.appendChild(detailBtn);
 
@@ -609,17 +614,10 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
         const reviewBtn = document.createElement("a");
         reviewBtn.href = `/vpn/${p.slug}/#review`;
         reviewBtn.className =
-          "inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:bg-surface-raised";
+          "inline-flex items-center rounded-xl border border-border bg-surface px-6 py-3 text-sm font-bold text-foreground no-underline transition-all duration-200 hover:bg-surface-raised hover:border-border-strong shadow-sm hover:-translate-y-0.5";
         reviewBtn.textContent = "Read Review";
         ctaRow.appendChild(reviewBtn);
       }
-
-      const compareBtn = document.createElement("a");
-      compareBtn.href = `/compare/${p.slug}-vs-${scored[0]!.provider.slug}/`;
-      compareBtn.className =
-        "inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground no-underline transition-colors hover:bg-surface-raised";
-      compareBtn.textContent = "Compare";
-      ctaRow.appendChild(compareBtn);
 
       card.appendChild(ctaRow);
 
@@ -627,12 +625,12 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     }
 
     const restartDiv = document.createElement("div");
-    restartDiv.className = "mt-8 text-center";
+    restartDiv.className = "mt-16 text-center pt-12 border-t border-border";
 
     const restartBtn = document.createElement("button");
     restartBtn.type = "button";
     restartBtn.className =
-      "rounded-lg border border-border px-6 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-raised";
+      "rounded-xl border border-border bg-surface px-8 py-3 text-sm font-bold text-foreground transition-all duration-200 hover:bg-surface-raised hover:border-border-strong shadow-sm";
     restartBtn.textContent = "Start Over";
     restartBtn.addEventListener("click", () => {
       answers = { goal: [], budget: "", platform: [], privacy: [], streaming: [] };
@@ -643,9 +641,9 @@ const { providers, reviews, streamingNames, countryNames } = Astro.props;
     content.appendChild(restartDiv);
 
     const methodologyP = document.createElement("p");
-    methodologyP.className = "mt-4 text-xs text-muted-foreground";
+    methodologyP.className = "mt-6 text-sm text-muted-foreground font-medium";
     methodologyP.innerHTML =
-      'Recommendations are based on your answers and our structured provider data. <a href="/methodology/" class="underline underline-offset-2 hover:text-foreground">Learn how we score providers \u2192</a>';
+      'Recommendations are based on our structured provider data. <a href="/methodology/" class="text-primary font-bold no-underline hover:underline underline-offset-4">Learn how we score providers &rarr;</a>';
     content.appendChild(methodologyP);
   }
 

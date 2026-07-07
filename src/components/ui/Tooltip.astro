@@ -31,8 +31,8 @@ const placementClass: Record<string, string> = {
     id={tooltipId}
     role="tooltip"
     class={cx(
-      "pointer-events-none absolute z-dropdown w-max max-w-xs rounded-md bg-neutral-900 px-2.5 py-1.5 text-xs text-white shadow-md",
-      "opacity-0 scale-95 transition duration-fast ease-standard",
+      "pointer-events-none absolute z-dropdown w-max max-w-xs rounded-xl bg-neutral-900/95 backdrop-blur-md px-3 py-2 text-xs font-bold text-white shadow-xl border border-white/10",
+      "opacity-0 scale-95 transition-all duration-200 ease-out",
       "group-hover:opacity-100 group-focus-within:opacity-100 group-hover:scale-100 group-focus-within:scale-100",
       placementClass[placement],
     )}

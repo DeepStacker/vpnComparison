@@ -10,16 +10,16 @@ const clamped = Math.min(10, Math.max(0, value));
 const pct = (clamped / 10) * 100;
 
 const color =
-  clamped >= 9 ? "var(--success)" : clamped >= 8 ? "var(--primary)" : clamped >= 6 ? "var(--warning)" : "var(--danger)";
+  clamped >= 9 ? "var(--color-success)" : clamped >= 8 ? "var(--color-primary)" : clamped >= 6 ? "var(--color-warning)" : "var(--color-danger)";
 ---
 
-<div class="group flex items-center gap-3 rounded-md px-2 py-1.5 -mx-2 transition-colors motion-safe:duration-150 hover:bg-surface-raised">
-  <span class="w-24 text-right text-sm font-medium text-foreground shrink-0">{label}</span>
-  <div class="flex-1 h-2.5 rounded-full bg-surface-sunken overflow-hidden">
+<div class="group flex items-center gap-4 rounded-lg px-3 py-2 -mx-3 transition-colors motion-safe:duration-150 hover:bg-surface-raised">
+  <span class="w-28 text-right text-sm font-bold text-foreground shrink-0">{label}</span>
+  <div class="flex-1 h-3 rounded-full bg-surface-sunken overflow-hidden border border-border/50">
     <div
-      class="h-full rounded-full transition-all motion-safe:duration-500 motion-safe:ease-emphasized group-hover:brightness-110"
+      class="h-full rounded-full transition-all motion-safe:duration-700 motion-safe:ease-emphasized group-hover:brightness-110 shadow-sm"
       style={`width: ${pct}%; background-color: ${color}`}
     />
   </div>
-  <span class="w-8 text-right text-sm font-semibold tabular-nums text-muted-foreground shrink-0">{value.toFixed(1)}</span>
+  <span class="w-10 text-right text-sm font-bold tabular-nums text-foreground shrink-0">{value.toFixed(1)}</span>
 </div>

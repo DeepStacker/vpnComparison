@@ -15,8 +15,8 @@ const isActive = (href: string) =>
   href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href.replace(/\/$/, "") + "/");
 ---
 
-<header class="sticky top-0 z-header border-b border-border bg-surface/95 backdrop-blur-sm shadow-xs">
-  <div class="container-page flex h-16 items-center justify-between gap-4">
+<header class="sticky top-4 z-[1200] mx-auto w-[calc(100%-2rem)] max-w-6xl rounded-2xl bg-glass-strong border border-glass-strong-border shadow-glass-inner shadow-2xl backdrop-blur-xl transition-all duration-300 after-glass-shine">
+  <div class="px-6 flex h-16 items-center justify-between gap-4">
     <Logo />
 
     <nav aria-label="Primary" class="hidden md:block">
@@ -28,13 +28,16 @@ const isActive = (href: string) =>
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
                 class={cx(
-                  "rounded-md px-3 py-2 text-sm font-medium no-underline transition-colors",
+                  "relative rounded-xl px-4 py-2 text-sm font-bold no-underline transition-all duration-200",
                   isActive(item.href)
-                    ? "bg-accent text-accent-foreground"
+                    ? "text-primary bg-primary/5"
                     : "text-muted-foreground hover:text-foreground hover:bg-surface-raised",
                 )}
               >
                 {item.label}
+                {isActive(item.href) && (
+                  <span class="absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
+                )}
               </a>
             </li>
           ))
@@ -43,25 +46,26 @@ const isActive = (href: string) =>
     </nav>
 
     <div class="flex items-center gap-2">
-      <a
-        href="/search/"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-surface-raised focus-visible:outline-none"
+      <button
+        type="button"
+        id="search-dialog-trigger"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-raised border border-transparent hover:border-border transition-all focus-visible:outline-none cursor-pointer"
         aria-label="Search"
         title="Search (⌘K)"
       >
-        <Icon name="search" size={18} />
-      </a>
+        <Icon name="search" size={20} />
+      </button>
       <ThemeToggle />
       <details class="group relative md:hidden">
         <summary
-          class="inline-flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-md border border-border bg-surface text-foreground hover:bg-surface-raised focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+          class="inline-flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-xl border border-border bg-surface text-foreground hover:bg-surface-raised focus-visible:outline-none [&::-webkit-details-marker]:hidden"
           aria-label="Open menu"
         >
-          <Icon name="menu" size={18} class="group-open:hidden" />
-          <Icon name="x" size={18} class="hidden group-open:block" />
+          <Icon name="menu" size={20} class="group-open:hidden" />
+          <Icon name="x" size={20} class="hidden group-open:block" />
         </summary>
         <div
-          class="absolute right-0 top-11 w-60 rounded-lg border border-border bg-surface p-2 shadow-lg"
+          class="absolute right-0 top-14 w-64 rounded-2xl bg-glass-strong border border-glass-strong-border p-2 shadow-glass-inner shadow-2xl animate-in fade-in zoom-in-95 duration-200 backdrop-blur-xl after-glass-shine"
         >
           <ul class="flex flex-col gap-1">
             {
@@ -71,9 +75,9 @@ const isActive = (href: string) =>
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}
                     class={cx(
-                      "block rounded-md px-3 py-2 text-sm font-medium no-underline",
+                      "block rounded-xl px-4 py-3 text-sm font-bold no-underline transition-all",
                       isActive(item.href)
-                        ? "bg-accent text-accent-foreground"
+                        ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-surface-raised",
                     )}
                   >
@@ -88,3 +92,14 @@ const isActive = (href: string) =>
     </div>
   </div>
 </header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.getElementById("search-dialog-trigger");
+    if (trigger && typeof (window as any).openSearchDialog === "function") {
+      trigger.addEventListener("click", () => {
+        (window as any).openSearchDialog();
+      });
+    }
+  });
+</script>

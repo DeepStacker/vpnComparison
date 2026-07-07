@@ -11,6 +11,7 @@ import Button from "@/components/ui/Button.astro";
 import Grid from "@/components/ui/Grid.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import type { Breadcrumb } from "@/types/site";
+import Icon from "@/components/ui/Icon.astro";
 
 const allComparisons = await getCollection("comparisons");
 const allProviders = await getCollection("providers");
@@ -28,50 +29,85 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section background>
+  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+    </div>
     <Container>
-      <div class="mx-auto max-w-2xl text-center">
-        <Heading level={1}>VPN Comparisons</Heading>
-        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
-          Side-by-side analysis of top VPN services. We compare speed, privacy, streaming, pricing, and features.
+      <div class="mx-auto max-w-3xl text-center">
+        <Badge tone="primary" class="mb-6">Head-to-Head Analysis</Badge>
+        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
+          VPN <span class="text-primary">Comparisons</span>
+        </Heading>
+        <Text size="xl" tone="muted" class="mt-6 max-w-2xl mx-auto leading-relaxed">
+          Side-by-side analysis of top VPN services. We compare speed, privacy, streaming, pricing, and features to help you choose the right provider.
         </Text>
       </div>
     </Container>
   </Section>
 
-  <Section>
+  <Section class="pb-32">
     <Container>
-      {allComparisons.length === 0 && (
-        <div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-surface-sunken/40 px-6 py-12 text-center">
-          <Text tone="muted">No comparisons published yet.</Text>
+      {allComparisons.length === 0 ? (
+        <div class="flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-surface-sunken/30 px-8 py-20 text-center">
+          <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface border border-border shadow-sm mb-6">
+            <Icon name="search" size={32} class="text-muted-foreground" />
+          </div>
+          <p class="text-xl font-bold text-foreground">No comparisons published yet</p>
+          <p class="mt-2 text-muted-foreground">Check back soon for our latest head-to-head analysis.</p>
         </div>
+      ) : (
+        <Grid cols={1} colsMd={2} colsLg={3} gap={8}>
+          {allComparisons.map((c) => (
+            <Card variant="raised" padding="none" class="group overflow-hidden flex flex-col h-full">
+              <div class="p-8 flex flex-col flex-grow">
+                <div class="flex items-start justify-between gap-4 mb-6">
+                  <div class="flex -space-x-3">
+                    {c.data.providers.slice(0, 2).map((ref) => (
+                      <div class="h-12 w-12 rounded-2xl border-4 border-surface bg-surface-sunken flex items-center justify-center shadow-sm overflow-hidden">
+                        <img 
+                          src={`/logos/${ref.id}.svg`} 
+                          alt={providerNameMap.get(ref.id) ?? ref.id}
+                          class="h-6 w-6 object-contain"
+                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        />
+                        <span class="hidden text-[10px] font-bold uppercase">{providerNameMap.get(ref.id)?.slice(0, 2) ?? ref.id.slice(0, 2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {c.data.winner && (
+                    <Badge tone="success" size="sm" class="shadow-sm">
+                      <Icon name="trophy" size={12} class="mr-1" />
+                      {providerNameMap.get(c.data.winner.id) ?? c.data.winner.id} Wins
+                    </Badge>
+                  )}
+                </div>
+                
+                <Heading level={2} class="text-2xl font-bold group-hover:text-primary transition-colors">
+                  {c.data.title}
+                </Heading>
+                
+                <Text size="base" tone="muted" class="mt-4 line-clamp-3 leading-relaxed">
+                  {c.data.summary}
+                </Text>
+                
+                <div class="mt-auto pt-8 flex items-center justify-between">
+                  <div class="flex flex-wrap gap-1.5">
+                    {c.data.providers.map((ref) => {
+                      const name = providerNameMap.get(ref.id);
+                      return <Badge tone="neutral" size="sm">{name ?? ref.id}</Badge>;
+                    })}
+                  </div>
+                  <Button variant="glass" size="sm" href={`/comparisons/${c.id}/`} class="rounded-xl">
+                    Compare
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </Grid>
       )}
-      <Grid cols={1} colsMd={2} colsLg={3} gap={6}>
-        {allComparisons.map((c) => (
-          <Card variant="raised" padding="md">
-            <div class="flex items-center justify-between gap-2">
-              <Heading level={2} class="text-xl">{c.data.title}</Heading>
-              {c.data.winner && (
-                <Badge tone="success" size="sm">
-                  {providerNameMap.get(c.data.winner.id) ?? c.data.winner.id} Wins
-                </Badge>
-              )}
-            </div>
-            <Text size="sm" tone="muted" class="mt-2">{c.data.summary}</Text>
-            <div class="mt-3 flex flex-wrap gap-1.5">
-              {c.data.providers.map((ref) => {
-                const name = providerNameMap.get(ref.id);
-                return <Badge tone="neutral">{name ?? ref.id}</Badge>;
-              })}
-            </div>
-            <div class="mt-4">
-              <Button variant="outline" size="sm" href={`/comparisons/${c.id}/`}>
-                Read Comparison
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </Grid>
     </Container>
   </Section>
 </SeoLayout>

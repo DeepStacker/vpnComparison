@@ -15,7 +15,7 @@
 @import "tailwindcss";
 @import "./tokens.css";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@variant dark (&:where(.dark, .dark *));
 
 /* ============================================================
  * Primitive tokens → Tailwind utilities + CSS variables.
@@ -62,12 +62,14 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
 
-  /* Shadows (soft, product feel) */
-  --shadow-xs: 0 1px 2px 0 rgb(16 18 22 / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(16 18 22 / 0.08), 0 1px 2px -1px rgb(16 18 22 / 0.08);
-  --shadow-md: 0 4px 12px -2px rgb(16 18 22 / 0.1), 0 2px 6px -2px rgb(16 18 22 / 0.08);
-  --shadow-lg: 0 12px 32px -8px rgb(16 18 22 / 0.14), 0 4px 12px -4px rgb(16 18 22 / 0.08);
-  --shadow-xl: 0 24px 56px -12px rgb(16 18 22 / 0.18);
+  /* Shadows (refined, multi-layered for depth) */
+  --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 0.1), 0 1px 2px -1px rgb(15 23 42 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.1), 0 2px 4px -2px rgb(15 23 42 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.1), 0 4px 6px -4px rgb(15 23 42 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(15 23 42 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(15 23 42 / 0.05);
 
   /* Z-index layers */
   --z-index-base: 0;
@@ -125,6 +127,17 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
   --color-info-surface: var(--info-surface);
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+  --color-glass-shadow: var(--glass-shadow);
+  --color-glass-subtle-bg: var(--glass-subtle-bg);
+  --color-glass-subtle-border: var(--glass-subtle-border);
+  --color-glass-subtle-shadow: var(--glass-subtle-shadow);
+  --color-glass-strong-bg: var(--glass-strong-bg);
+  --color-glass-strong-border: var(--glass-strong-border);
+  --color-glass-strong-shadow: var(--glass-strong-shadow);
+  --color-glass-shine: var(--glass-shine);
+  --color-glass-inner-shadow: var(--glass-inner-shadow);
 }
 
 /* ============================================================
@@ -150,8 +163,8 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.9375rem; /* 15px base for a more modern feel */
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -161,15 +174,21 @@
   :focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-sm);
   }
 
-  /* Headings */
+  /* Headings — tighter tracking, better hierarchy */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: var(--font-weight-semibold, 600);
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
     text-wrap: balance;
+    line-height: 1.2;
   }
+
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
 
   /* Links */
   a {
@@ -241,6 +260,103 @@
 
 .dark .shadow-glow {
   box-shadow: 0 0 24px -4px rgb(89 141 255 / 0.12);
+}
+
+/* ============================================================
+ * Glassmorphism Utilities — Full frosted glass system
+ * ============================================================ */
+
+/* Default glass — standard frosted effect */
+@utility bg-glass {
+  background-color: var(--color-glass-bg);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--color-glass-border);
+  box-shadow: var(--color-glass-shadow);
+}
+
+/* Subtle glass — lighter touch for background panels */
+@utility bg-glass-subtle {
+  background-color: var(--color-glass-subtle-bg);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  border: 1px solid var(--color-glass-subtle-border);
+  box-shadow: var(--color-glass-subtle-shadow);
+}
+
+/* Strong glass — more opaque, for foreground interactive elements */
+@utility bg-glass-strong {
+  background-color: var(--color-glass-strong-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--color-glass-strong-border);
+  box-shadow: var(--color-glass-strong-shadow);
+}
+
+/* Glass shine — top highlight overlay for realistic glass feel */
+@utility after-glass-shine {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--color-glass-shine);
+    pointer-events: none;
+  }
+}
+
+/* Glass inner shadow — subtle inset highlight */
+@utility shadow-glass-inner {
+  box-shadow: var(--color-glass-inner-shadow);
+}
+
+/* Glass hover — elevates on interaction */
+@utility hover-glass-raised {
+  transition: all 0.3s var(--ease-standard);
+  &:hover {
+    background-color: var(--color-glass-strong-bg);
+    backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: var(--color-glass-strong-shadow);
+    border-color: var(--color-glass-strong-border);
+  }
+}
+
+/* ============================================================
+ * Ambient Background Glows — Animated orbs
+ * ============================================================ */
+
+@utility bg-ambient-glow {
+  pointer-events: none;
+  overflow: hidden;
+}
+
+@utility bg-ambient-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  will-change: transform, opacity;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+  25% { transform: translate(30px, -20px) scale(1.1); opacity: 0.2; }
+  50% { transform: translate(-20px, 10px) scale(0.95); opacity: 0.12; }
+  75% { transform: translate(15px, 25px) scale(1.05); opacity: 0.18; }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+  33% { transform: translate(-25px, 15px) scale(1.08); opacity: 0.18; }
+  66% { transform: translate(20px, -25px) scale(0.92); opacity: 0.1; }
+}
+
+@utility animate-float-slow {
+  animation: float-slow 25s ease-in-out infinite;
+}
+
+@utility animate-float-medium {
+  animation: float-medium 18s ease-in-out infinite;
 }
 
 /* ============================================================

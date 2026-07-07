@@ -11,7 +11,7 @@ import { cx } from "@/lib/utils/string";
 import { radiusClass } from "./maps";
 
 interface Props {
-  variant?: "default" | "raised" | "outline";
+  variant?: "default" | "raised" | "outline" | "glass" | "glass-subtle" | "glass-strong";
   padding?: "none" | "sm" | "md" | "lg";
   href?: string;
   radius?: keyof typeof radiusClass;
@@ -29,16 +29,19 @@ const {
 } = Astro.props;
 
 const variantClass: Record<string, string> = {
-  default: "bg-surface border border-border",
+  default: "bg-surface border border-border shadow-sm",
   raised: "bg-surface border border-border shadow-md",
   outline: "bg-transparent border border-border-strong",
+  glass: "bg-glass border border-glass-border shadow-glass-inner",
+  "glass-subtle": "bg-glass-subtle border border-glass-subtle-border shadow-glass-inner",
+  "glass-strong": "bg-glass-strong border border-glass-strong-border shadow-glass-inner",
 };
 
 const padClass: Record<string, string> = {
   none: "p-0",
-  sm: "p-3",
-  md: "p-5",
-  lg: "p-6",
+  sm: "p-4",
+  md: "p-6",
+  lg: "p-8",
 };
 
 const isInteractive = Boolean(href);
@@ -47,9 +50,9 @@ const classes = cx(
   variantClass[variant],
   padClass[padding],
   radiusClass[radius],
-  isInteractive
-    ? "transition-all motion-safe:duration-200 motion-safe:ease-standard hover:shadow-lg hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    : "transition-shadow motion-safe:duration-200 motion-safe:ease-standard",
+  "transition-all duration-300 ease-standard",
+  isInteractive &&
+    "hover:-translate-y-1 hover:shadow-xl hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   className,
 );
 

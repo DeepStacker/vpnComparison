@@ -13,62 +13,120 @@
 
 :root {
   --background: #ffffff;
-  --foreground: var(--color-neutral-900);
+  --foreground: #0f172a;
   --surface: #ffffff;
-  --surface-raised: var(--color-neutral-50);
-  --surface-sunken: var(--color-neutral-100);
-  --border: var(--color-neutral-200);
-  --border-strong: var(--color-neutral-300);
-  --muted: var(--color-neutral-100);
-  --muted-foreground: var(--color-neutral-500);
-  --primary: var(--color-brand-600);
-  --primary-hover: var(--color-brand-700);
+  --surface-raised: #f8fafc;
+  --surface-sunken: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
   --primary-foreground: #ffffff;
-  --accent: var(--color-brand-50);
-  --accent-foreground: var(--color-brand-800);
-  --ring: var(--color-brand-500);
+  --accent: #eff6ff;
+  --accent-foreground: #1e40af;
+  --ring: #3b82f6;
 
-  --success: #157f4a;
+  /* ============================================================
+   * Glassmorphism Tokens — Multi-layered frosted glass system
+   * ============================================================ */
+
+  /* Subtle glass — lightest touch, good for large background panels */
+  --glass-subtle-bg: rgba(255, 255, 255, 0.5);
+  --glass-subtle-border: rgba(255, 255, 255, 0.6);
+  --glass-subtle-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.04);
+
+  /* Default glass — standard frosted card/menu */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px -4px rgba(15, 23, 42, 0.06);
+
+  /* Strong glass — more opaque, higher contrast, for foreground elements */
+  --glass-strong-bg: rgba(255, 255, 255, 0.85);
+  --glass-strong-border: rgba(255, 255, 255, 0.5);
+  --glass-strong-shadow: 0 12px 40px -8px rgba(15, 23, 42, 0.1);
+
+  /* Glass shine — top highlight for realistic glass feel */
+  --glass-shine: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0) 40%
+  );
+
+  /* Glass inner shadow for depth */
+  --glass-inner-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+
+  --success: #10b981;
   --success-foreground: #ffffff;
-  --success-surface: #e7f6ee;
-  --warning: #b7791f;
+  --success-surface: #ecfdf5;
+  --warning: #f59e0b;
   --warning-foreground: #ffffff;
-  --warning-surface: #fbf3e0;
-  --danger: #c2362e;
+  --warning-surface: #fffbeb;
+  --danger: #ef4444;
   --danger-foreground: #ffffff;
-  --danger-surface: #fbe9e8;
-  --info: #2563eb;
+  --danger-surface: #fef2f2;
+  --info: #3b82f6;
   --info-foreground: #ffffff;
-  --info-surface: #e8effe;
+  --info-surface: #eff6ff;
 }
 
 .dark {
-  --background: var(--color-neutral-950);
-  --foreground: var(--color-neutral-100);
-  --surface: var(--color-neutral-900);
-  --surface-raised: var(--color-neutral-800);
-  --surface-sunken: var(--color-neutral-950);
-  --border: var(--color-neutral-800);
-  --border-strong: var(--color-neutral-700);
-  --muted: var(--color-neutral-800);
-  --muted-foreground: var(--color-neutral-400);
-  --primary: var(--color-brand-400);
-  --primary-hover: var(--color-brand-300);
-  --primary-foreground: var(--color-neutral-950);
-  --accent: var(--color-brand-950);
-  --accent-foreground: var(--color-brand-200);
-  --ring: var(--color-brand-400);
+  --background: #020617;
+  --foreground: #f8fafc;
+  --surface: #0f172a;
+  --surface-raised: #1e293b;
+  --surface-sunken: #020617;
+  --border: #1e293b;
+  --border-strong: #334155;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-foreground: #ffffff;
+  --accent: rgba(59, 130, 246, 0.1);
+  --accent-foreground: #93c5fd;
+  --ring: #3b82f6;
 
-  --success: #4cb782;
-  --success-foreground: #07140c;
-  --success-surface: #122019;
-  --warning: #d8a23a;
-  --warning-foreground: #1a1406;
-  --warning-surface: #211a0d;
-  --danger: #ec6b62;
-  --danger-foreground: #1a0908;
-  --danger-surface: #231311;
-  --info: #6b95ff;
-  --info-foreground: #0a1024;
-  --info-surface: #131a2e;
+  /* ============================================================
+   * Glassmorphism Tokens — Dark mode (deeper, richer)
+   * ============================================================ */
+
+  /* Subtle glass */
+  --glass-subtle-bg: rgba(15, 23, 42, 0.4);
+  --glass-subtle-border: rgba(255, 255, 255, 0.04);
+  --glass-subtle-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.3);
+
+  /* Default glass */
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+
+  /* Strong glass */
+  --glass-strong-bg: rgba(15, 23, 42, 0.92);
+  --glass-strong-border: rgba(255, 255, 255, 0.1);
+  --glass-strong-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.6);
+
+  /* Glass shine — subtle top light */
+  --glass-shine: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0) 40%
+  );
+
+  /* Glass inner shadow */
+  --glass-inner-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+
+  --success: #10b981;
+  --success-foreground: #020617;
+  --success-surface: #064e3b;
+  --warning: #f59e0b;
+  --warning-foreground: #020617;
+  --warning-surface: #78350f;
+  --danger: #ef4444;
+  --danger-foreground: #020617;
+  --danger-surface: #7f1d1d;
+  --info: #3b82f6;
+  --info-foreground: #020617;
+  --info-surface: #1e3a8a;
 }

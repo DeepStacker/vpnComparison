@@ -1,85 +1,133 @@
 ---
+/**
+ * SearchDialog — full-screen modal search overlay with Fuse.js fuzzy search.
+ *
+ * Provides a Cmd+K / Ctrl+K keyboard shortcut and a global
+ * `window.openSearchDialog()` function for programmatic opening.
+ * Included once in BaseLayout so it's available on every page.
+ */
 import Icon from "@/components/ui/Icon.astro";
 ---
 
 <div
-  id="search-root"
-  class="relative mx-auto w-full max-w-2xl"
+  id="search-dialog"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search the site"
+  class="fixed inset-0 z-[2000] hidden items-start justify-center pt-[15vh]"
 >
-  <div class="relative group">
-    <Icon
-      name="search"
-      size={20}
-      class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors"
-    />
-    <input
-      type="search"
-      id="search-input"
-      placeholder="Search reviews, guides, comparisons…"
-      autocomplete="off"
-      role="combobox"
-      aria-haspopup="listbox"
-      aria-expanded="false"
-      aria-controls="search-results-listbox"
-      aria-activedescendant=""
-      class="w-full rounded-2xl bg-surface border border-border py-4 pl-12 pr-12 text-base font-medium text-foreground placeholder:text-muted-foreground transition-all focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10 focus-visible:border-primary/50 shadow-sm"
-    />
-    <button
-      id="search-clear"
-      type="button"
-      aria-label="Clear search"
-      class="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-      tabindex="-1"
-    >
-      <Icon name="x" size={20} />
-    </button>
-    <div
-      id="search-spinner"
-      class="absolute right-4 top-1/2 hidden -translate-y-1/2"
-    >
-      <span class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
-    </div>
-  </div>
-
+  <!-- Backdrop -->
   <div
-    id="search-results-listbox"
-    role="listbox"
-    aria-label="Search results"
-    class="absolute left-0 right-0 top-full z-50 mt-4 hidden"
+    id="search-dialog-backdrop"
+    class="absolute inset-0 bg-foreground/20 backdrop-blur-md"
+  ></div>
+
+  <!-- Dialog panel -->
+  <div
+    class="relative w-full max-w-2xl mx-4 rounded-2xl bg-surface border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
   >
-    <div id="search-recent" class="hidden">
-      <div class="rounded-2xl bg-surface border border-border shadow-2xl overflow-hidden">
-        <div class="px-5 py-3 text-xs font-black uppercase tracking-widest text-muted-foreground border-b border-border/50 bg-surface-sunken/50">
+    <!-- Search input -->
+    <div class="relative border-b border-border/50">
+      <Icon
+        name="search"
+        size={22}
+        class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground/60"
+      />
+      <input
+        type="search"
+        id="search-dialog-input"
+        placeholder="Search reviews, guides, comparisons…"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        aria-controls="search-dialog-results"
+        aria-activedescendant=""
+        class="w-full bg-transparent py-5 pl-14 pr-14 text-lg font-bold text-foreground placeholder:text-muted-foreground/50 transition-all focus-visible:outline-none"
+      />
+      <button
+        id="search-dialog-clear"
+        type="button"
+        aria-label="Clear search"
+        class="absolute right-5 top-1/2 hidden -translate-y-1/2 items-center justify-center text-muted-foreground/60 hover:text-foreground transition-colors"
+        tabindex="-1"
+      >
+        <Icon name="x" size={22} />
+      </button>
+      <div
+        id="search-dialog-spinner"
+        class="absolute right-5 top-1/2 hidden -translate-y-1/2"
+      >
+        <span class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
+      </div>
+    </div>
+
+    <!-- Results area -->
+    <div
+      id="search-dialog-results"
+      role="listbox"
+      aria-label="Search results"
+      class="max-h-[40vh] overflow-y-auto"
+    >
+      <!-- Recent searches -->
+      <div id="search-dialog-recent" class="hidden">
+        <div class="px-5 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 border-b border-border/30 bg-surface-sunken/30">
           Recent searches
         </div>
-        <div id="search-recent-list" class="divide-y divide-border/50"></div>
+        <div id="search-dialog-recent-list" class="divide-y divide-border/30"></div>
       </div>
-    </div>
-    <div id="search-results" class="hidden">
-      <div class="max-h-[32rem] overflow-y-auto rounded-2xl bg-surface border border-border shadow-2xl divide-y divide-border/50">
-        <div id="search-results-inner"></div>
+
+      <!-- Results -->
+      <div id="search-dialog-results-inner" class="hidden">
+        <!-- Populated by JS -->
       </div>
-    </div>
-    <div id="search-empty" class="hidden">
-      <div class="flex flex-col items-center justify-center rounded-2xl bg-surface border border-border px-8 py-12 text-center shadow-2xl">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-sunken border border-border mb-4">
-          <Icon name="search-x" size={24} class="text-muted-foreground" />
+
+      <!-- Empty state -->
+      <div id="search-dialog-empty" class="hidden">
+        <div class="flex flex-col items-center justify-center px-8 py-16 text-center">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-surface-sunken border border-border mb-4">
+            <Icon name="search-x" size={24} class="text-muted-foreground/60" />
+          </div>
+          <p class="text-lg font-bold text-foreground" id="search-dialog-empty-title">No results found</p>
+          <p class="mt-1 text-sm text-muted-foreground">
+            Try a different search term or browse our categories.
+          </p>
         </div>
-        <p class="text-lg font-bold text-foreground">No results found</p>
-        <p class="mt-1 text-sm text-muted-foreground">
-          Try a different search term or browse our categories.
-        </p>
       </div>
-    </div>
-    <div id="search-error" class="hidden">
-      <div class="flex flex-col items-center justify-center rounded-2xl bg-surface border border-border px-8 py-12 text-center shadow-2xl">
-        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-danger/10 text-danger border border-danger/20 mb-4">
-          <Icon name="alert-circle" size={24} />
+
+      <!-- Error state -->
+      <div id="search-dialog-error" class="hidden">
+        <div class="flex flex-col items-center justify-center px-8 py-16 text-center">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-danger/10 text-danger border border-danger/20 mb-4">
+            <Icon name="alert-circle" size={24} />
+          </div>
+          <p class="text-lg font-bold text-foreground">Something went wrong</p>
+          <p class="mt-1 text-sm text-muted-foreground">
+            Search is temporarily unavailable. Please try again later.
+          </p>
         </div>
-        <p class="text-lg font-bold text-foreground">Something went wrong</p>
-        <p class="mt-1 text-sm text-muted-foreground">
-          Search is temporarily unavailable. Please try again later.
-        </p>
+      </div>
+
+      <!-- Footer hint -->
+      <div id="search-dialog-footer" class="hidden border-t border-border/30 px-5 py-3">
+        <div class="flex items-center gap-6 text-xs text-muted-foreground/60">
+          <span class="flex items-center gap-2">
+            <kbd class="inline-flex items-center justify-center rounded-md border border-border bg-surface-sunken px-1.5 py-0.5 text-[10px] font-black min-w-[20px]">↑</kbd>
+            <kbd class="inline-flex items-center justify-center rounded-md border border-border bg-surface-sunken px-1.5 py-0.5 text-[10px] font-black min-w-[20px]">↓</kbd>
+            <span>Navigate</span>
+          </span>
+          <span class="flex items-center gap-2">
+            <kbd class="inline-flex items-center justify-center rounded-md border border-border bg-surface-sunken px-1.5 py-0.5 text-[10px] font-black">⏎</kbd>
+            <span>Open</span>
+          </span>
+          <span class="flex items-center gap-2">
+            <kbd class="inline-flex items-center justify-center rounded-md border border-border bg-surface-sunken px-1.5 py-0.5 text-[10px] font-black">Esc</kbd>
+            <span>Close</span>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -104,16 +152,16 @@ import Icon from "@/components/ui/Icon.astro";
   }
 
   const TYPE_LABELS: Record<string, string> = {
-    review: "Review",
-    guide: "Guide",
-    "best-list": "Best List",
-    comparison: "Comparison",
-    faq: "FAQ",
-    provider: "Provider",
-    country: "Country",
-    feature: "Feature",
-    protocol: "Protocol",
-    platform: "Platform",
+    review: "Reviews",
+    guide: "Guides",
+    "best-list": "Best Lists",
+    comparison: "Comparisons",
+    faq: "FAQs",
+    provider: "Providers",
+    country: "Countries",
+    feature: "Features",
+    protocol: "Protocols",
+    platform: "Platforms",
     streaming: "Streaming",
     tool: "Tools",
   };
@@ -140,16 +188,18 @@ import Icon from "@/components/ui/Icon.astro";
   const MAX_RECENT = 5;
 
   /* ---------- DOM refs ---------- */
-  const input = document.getElementById("search-input") as HTMLInputElement | null;
-  const listbox = document.getElementById("search-results-listbox")!;
-  const resultsOuter = document.getElementById("search-results")!;
-  const resultsInner = document.getElementById("search-results-inner")!;
-  const recentOuter = document.getElementById("search-recent")!;
-  const recentList = document.getElementById("search-recent-list")!;
-  const emptyEl = document.getElementById("search-empty")!;
-  const errorEl = document.getElementById("search-error")!;
-  const clearBtn = document.getElementById("search-clear") as HTMLButtonElement | null;
-  const spinner = document.getElementById("search-spinner")!;
+  const dialog = document.getElementById("search-dialog")!;
+  const backdrop = document.getElementById("search-dialog-backdrop")!;
+  const input = document.getElementById("search-dialog-input") as HTMLInputElement | null;
+  const resultsInner = document.getElementById("search-dialog-results-inner")!;
+  const recentOuter = document.getElementById("search-dialog-recent")!;
+  const recentList = document.getElementById("search-dialog-recent-list")!;
+  const emptyEl = document.getElementById("search-dialog-empty")!;
+  const emptyTitle = document.getElementById("search-dialog-empty-title")!;
+  const errorEl = document.getElementById("search-dialog-error")!;
+  const footerEl = document.getElementById("search-dialog-footer")!;
+  const clearBtn = document.getElementById("search-dialog-clear") as HTMLButtonElement | null;
+  const spinner = document.getElementById("search-dialog-spinner")!;
 
   /* ---------- State ---------- */
   let fuse: Fuse<SearchEntry> | null = null;
@@ -213,25 +263,15 @@ import Icon from "@/components/ui/Icon.astro";
 
   /* ---------- UI state ---------- */
   function hideAll(): void {
-    resultsOuter.classList.add("hidden");
+    resultsInner.classList.add("hidden");
     recentOuter.classList.add("hidden");
     emptyEl.classList.add("hidden");
     errorEl.classList.add("hidden");
+    footerEl.classList.add("hidden");
   }
 
-  function openResults(): void {
-    isOpen = true;
-    listbox.classList.remove("hidden");
-    input?.setAttribute("aria-expanded", "true");
-  }
-
-  function closeResults(): void {
-    isOpen = false;
-    activeIndex = -1;
-    listbox.classList.add("hidden");
-    hideAll();
-    input?.setAttribute("aria-expanded", "false");
-    input?.setAttribute("aria-activedescendant", "");
+  function showFooter(): void {
+    footerEl.classList.remove("hidden");
   }
 
   function showLoading(): void {
@@ -254,23 +294,24 @@ import Icon from "@/components/ui/Icon.astro";
   function showError(message?: string): void {
     hideAll();
     hideLoading();
-    errorEl.querySelector("p:last-child")!.textContent =
-      message ?? "Search is temporarily unavailable.";
+    const msgEl = errorEl.querySelector("p:last-child")!;
+    msgEl.textContent = message ?? "Search is temporarily unavailable.";
     errorEl.classList.remove("hidden");
-    openResults();
+    showFooter();
+    input?.setAttribute("aria-expanded", "true");
   }
 
   function showEmpty(query: string): void {
     hideAll();
     hideLoading();
-    const title = emptyEl.querySelector("p:first-of-type")!;
     if (query.length < MIN_QUERY) {
-      title.textContent = "Enter a search term to begin";
+      emptyTitle.textContent = "Enter a search term to begin";
     } else {
-      title.textContent = "No results found";
+      emptyTitle.textContent = "No results found";
     }
     emptyEl.classList.remove("hidden");
-    openResults();
+    showFooter();
+    input?.setAttribute("aria-expanded", "true");
   }
 
   function showRecent(): void {
@@ -317,7 +358,8 @@ import Icon from "@/components/ui/Icon.astro";
       recentList.appendChild(btn);
     }
     recentOuter.classList.remove("hidden");
-    openResults();
+    showFooter();
+    input?.setAttribute("aria-expanded", "true");
   }
 
   /* ---------- Render results ---------- */
@@ -350,7 +392,7 @@ import Icon from "@/components/ui/Icon.astro";
 
       const header = document.createElement("div");
       header.className =
-        "px-5 pt-5 pb-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 bg-surface-sunken/30";
+        "sticky top-0 z-10 px-5 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 bg-surface border-b border-border/30";
       header.textContent = label;
       resultsInner.appendChild(header);
 
@@ -358,16 +400,16 @@ import Icon from "@/components/ui/Icon.astro";
         const link = document.createElement("a");
         link.href = r.item.url;
         link.role = "option";
-        link.id = `search-option-${optionIndex}`;
+        link.id = `search-dialog-option-${optionIndex}`;
         link.setAttribute("aria-selected", "false");
         link.className =
-          "flex flex-col gap-1 px-5 py-4 text-left border-l-4 border-transparent transition-all hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:bg-primary/5";
+          "flex flex-col gap-0.5 px-5 py-3.5 text-left border-l-4 border-transparent transition-all hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:bg-primary/5";
         link.appendChild(
           createHighlightedElement(
             r.item.title,
             query,
             "span",
-            "text-base font-bold text-foreground group-hover:text-primary transition-colors",
+            "text-base font-bold text-foreground",
           ),
         );
         if (r.item.summary) {
@@ -385,8 +427,9 @@ import Icon from "@/components/ui/Icon.astro";
       }
     }
 
-    resultsOuter.classList.remove("hidden");
-    openResults();
+    resultsInner.classList.remove("hidden");
+    showFooter();
+    input?.setAttribute("aria-expanded", "true");
 
     activeIndex = -1;
     input?.setAttribute("aria-activedescendant", "");
@@ -421,6 +464,7 @@ import Icon from "@/components/ui/Icon.astro";
     const active = options[activeIndex] as HTMLAnchorElement | null;
     if (active?.href) {
       saveRecentSearch(input?.value.trim() ?? "");
+      closeDialog();
       window.location.href = active.href;
     }
   }
@@ -436,8 +480,6 @@ import Icon from "@/components/ui/Icon.astro";
       hideLoading();
       if (input === document.activeElement) {
         showRecent();
-      } else {
-        closeResults();
       }
       return;
     }
@@ -475,34 +517,25 @@ import Icon from "@/components/ui/Icon.astro";
         selectActive();
       } else if (currentResults.length === 1) {
         saveRecentSearch(input?.value.trim() ?? "");
+        closeDialog();
         window.location.href = currentResults[0]!.item.url;
+      } else if (currentResults.length > 1) {
+        // Navigate to search page with all results
+        saveRecentSearch(input?.value.trim() ?? "");
+        closeDialog();
+        window.location.href = `/search/?q=${encodeURIComponent(input?.value.trim() ?? "")}`;
       }
     } else if (e.key === "Escape") {
       e.preventDefault();
-      if (input?.value) {
-        input.value = "";
-        handleInput();
-      }
-      closeResults();
-      input?.blur();
+      closeDialog();
     }
   }
 
   function handleClear(): void {
     if (input) {
       input.value = "";
-      input.focus();
+      handleInput();
     }
-    handleInput();
-    closeResults();
-  }
-
-  function handleBlur(): void {
-    setTimeout(() => {
-      if (document.activeElement !== input) {
-        closeResults();
-      }
-    }, 200);
   }
 
   function handleRecentClick(e: Event): void {
@@ -517,10 +550,53 @@ import Icon from "@/components/ui/Icon.astro";
     }
   }
 
+  /* ---------- Dialog open/close ---------- */
+  function openDialog(): void {
+    if (isOpen) return;
+    isOpen = true;
+    dialog.classList.remove("hidden");
+    dialog.classList.add("flex");
+    activeIndex = -1;
+    currentResults = [];
+    hideAll();
+    hideLoading();
+
+    // Prevent body scroll
+    document.body.style.overflow = "hidden";
+
+    // Focus input after animation
+    requestAnimationFrame(() => {
+      input?.focus();
+      input?.select();
+      // Show recent searches
+      showRecent();
+    });
+  }
+
+  function closeDialog(): void {
+    if (!isOpen) return;
+    isOpen = false;
+    dialog.classList.add("hidden");
+    dialog.classList.remove("flex");
+    document.body.style.overflow = "";
+    input?.blur();
+    if (debounceTimer) clearTimeout(debounceTimer);
+    // Clear input
+    if (input) {
+      input.value = "";
+    }
+    hideAll();
+    hideLoading();
+    clearBtn?.classList.add("hidden");
+    activeIndex = -1;
+  }
+
+  // Expose globally
+  (window as any).openSearchDialog = openDialog;
+
   /* ---------- Init ---------- */
   async function init(): Promise<void> {
-    if (!input) return;
-
+    // Fetch search index
     try {
       const res = await fetch("/search-index.json");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -542,17 +618,33 @@ import Icon from "@/components/ui/Icon.astro";
       showError("Search index not available. Please try again later.");
     }
 
-    input.addEventListener("input", handleInput);
-    input.addEventListener("keydown", handleKeydown);
-    input.addEventListener("blur", handleBlur);
-    input.addEventListener("focus", () => {
-      const query = input.value.trim();
-      if (query.length < MIN_QUERY) {
-        showRecent();
-      }
-    });
+    // Event listeners
+    input?.addEventListener("input", handleInput);
+    input?.addEventListener("keydown", handleKeydown);
     clearBtn?.addEventListener("click", handleClear);
     recentList.addEventListener("click", handleRecentClick);
+
+    // Close on backdrop click
+    backdrop.addEventListener("click", closeDialog);
+
+    // Keyboard shortcut (Cmd+K / Ctrl+K)
+    document.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        openDialog();
+      }
+    });
+
+    // Close on resize to mobile breakpoint
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    window.addEventListener("resize", () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (isOpen && window.innerWidth < 768) {
+          closeDialog();
+        }
+      }, 200);
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {

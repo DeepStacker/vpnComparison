@@ -37,36 +37,38 @@ const recLabel =
 
 <a
   href={`/vpn/${slug}/`}
-  class="group block rounded-xl border border-border bg-surface p-6 no-underline transition-all hover:border-primary/50 hover:shadow-md motion-safe:duration-200"
+  class="group block rounded-2xl bg-surface border border-border p-6 no-underline transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/30"
 >
   <div class="flex items-start justify-between gap-4">
     <div class="min-w-0 flex-1">
-      <div class="flex items-center gap-3">
-        <img src={`/logos/${logoSlug}.svg`} alt="" class="h-8 w-8 rounded-md object-contain" width={32} height={32} loading="lazy" />
+      <div class="flex items-center gap-4">
+        <div class="h-12 w-12 flex items-center justify-center rounded-xl bg-surface-raised border border-border p-2 shadow-sm group-hover:shadow-md transition-all">
+          <img src={`/logos/${logoSlug}.svg`} alt="" class="h-full w-full object-contain" width={48} height={48} loading="lazy" />
+        </div>
         <div>
-          <h3 class="text-lg font-semibold text-foreground">{name}</h3>
-          {recLabel && <Badge tone="success" size="sm">{recLabel}</Badge>}
+          <h3 class="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{name}</h3>
+          {recLabel && <Badge tone="success" size="sm" class="mt-1 rounded-full">{recLabel}</Badge>}
         </div>
       </div>
-      <p class="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2">{tagline}</p>
+      <p class="mt-4 text-sm text-muted-foreground leading-relaxed line-clamp-2">{tagline}</p>
     </div>
     {review && (
-      <ScoreRing value={review.scores.overall} size={64} strokeWidth={5} label="Score" class="shrink-0" />
+      <ScoreRing value={review.scores.overall} size={60} strokeWidth={5} label="Score" className="shrink-0" />
     )}
   </div>
 
-  <div class="mt-4 flex flex-wrap items-center gap-4 border-t border-border pt-4">
+  <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border pt-5">
     <StatBlock label="Servers" value={servers.toLocaleString()} icon="server" />
     <StatBlock label="Countries" value={countries.toString()} icon="globe" />
     <StatBlock label="Jurisdiction" value={jurisdictionName ?? jurisdiction} icon="shield" />
   </div>
 
   {cheapest && (
-    <div class="mt-4 flex items-center justify-between border-t border-border pt-4">
+    <div class="mt-6 flex items-center justify-between border-t border-border pt-5">
       <PriceTag price={cheapest.effectiveMonthly} cycle={cheapest.cycle} featured={cheapest.featured} />
-      <span class="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:underline">
-        View review <Icon name="arrow-right" size={14} />
-      </span>
+      <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
+        View Review <Icon name="arrow-right" size={14} />
+      </div>
     </div>
   )}
 </a>

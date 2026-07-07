@@ -6,7 +6,6 @@ import Heading from "@/components/ui/Heading.astro";
 import Text from "@/components/ui/Text.astro";
 import Button from "@/components/ui/Button.astro";
 import Icon from "@/components/ui/Icon.astro";
-import SearchBar from "@/components/search/SearchBar.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 
 const seo = normalizeSeoMeta({
@@ -17,24 +16,48 @@ const seo = normalizeSeoMeta({
 ---
 
 <SeoLayout seo={seo}>
-  <Section>
+  <Section class="relative flex min-h-[80vh] items-center overflow-hidden py-20">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-1/2 h-[600px] w-[1200px] -translate-x-1/2 -translate-y-1/2 bg-primary/5 blur-[140px]"></div>
+    </div>
+    
     <Container>
-      <div class="mx-auto flex max-w-lg flex-col items-center text-center">
-        <Icon name="search-x" size={48} class="text-muted-foreground" />
-        <Heading level={1} class="mt-6">Page Not Found</Heading>
-        <Text tone="muted" size="lg" class="mt-3">
-          The page you're looking for doesn't exist or has been moved.
+      <div class="mx-auto max-w-2xl text-center">
+        <div class="mb-12 inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-glass-strong text-primary border border-glass-strong-border shadow-glass-inner shadow-xl backdrop-blur-xl after-glass-shine">
+          <Icon name="search" size={48} />
+        </div>
+        
+        <Heading level={1} class="text-6xl font-black tracking-tight md:text-8xl">
+          4<span class="text-primary">0</span>4
+        </Heading>
+        
+        <Heading level={2} class="mt-8 text-3xl font-bold tracking-tight md:text-4xl">
+          Page not found
+        </Heading>
+        
+        <Text size="xl" tone="muted" class="mt-6 leading-relaxed">
+          The page you're looking for doesn't exist or has been moved. 
+          Try searching for what you need or head back to the homepage.
         </Text>
-        <div class="mt-8 flex w-full max-w-sm flex-col gap-3">
-          <SearchBar />
+        
+        <div class="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button variant="primary" href="/" class="rounded-xl px-8 py-4 text-lg font-bold">
+            Back to Home
+          </Button>
+          <Button variant="glass" href="/vpn/" class="rounded-xl px-8 py-4 text-lg font-bold">
+            Browse VPNs
+          </Button>
         </div>
-        <div class="mt-6 flex flex-wrap justify-center gap-2">
-          <Button variant="outline" size="sm" href="/tools/finder/">VPN Finder</Button>
-          <Button variant="outline" size="sm" href="/tools/compare/">Compare VPNs</Button>
-        </div>
-        <div class="mt-4 flex flex-wrap justify-center gap-3">
-          <Button href="/">Go Home</Button>
-          <Button variant="outline" href="/search/">Search</Button>
+        
+        <div class="mt-20 rounded-2xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 shadow-glass-inner after-glass-shine">
+          <Text size="sm" tone="muted" class="mb-4 font-bold uppercase tracking-wider">Quick Links</Text>
+          <div class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+            <a href="/best-lists/" class="text-foreground/70 hover:text-primary transition-colors font-medium">Best VPNs</a>
+            <a href="/comparisons/" class="text-foreground/70 hover:text-primary transition-colors font-medium">Comparisons</a>
+            <a href="/guides/" class="text-foreground/70 hover:text-primary transition-colors font-medium">Guides</a>
+            <a href="/methodology/" class="text-foreground/70 hover:text-primary transition-colors font-medium">Methodology</a>
+          </div>
         </div>
       </div>
     </Container>

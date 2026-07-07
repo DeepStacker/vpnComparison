@@ -9,6 +9,7 @@ import Card from "@/components/ui/Card.astro";
 import Badge from "@/components/ui/Badge.astro";
 import Button from "@/components/ui/Button.astro";
 import Grid from "@/components/ui/Grid.astro";
+import Icon from "@/components/ui/Icon.astro";
 import { buildTitle, normalizeSeoMeta, canonicalUrl } from "@/lib/seo/meta";
 import { readingTimeLabel } from "@/lib/utils/reading-time";
 import type { Breadcrumb } from "@/types/site";
@@ -81,19 +82,30 @@ const breadcrumbs: Breadcrumb[] = [
   readingTime={readingTime}
   updatedAt={guide.updatedAt}
 >
-  <div slot="header">
-    <div class="flex flex-wrap gap-2 mb-3">
-      <Badge tone={difficultyTone[guide.difficulty] as any} size="md">
+  <div slot="header" class="max-w-4xl">
+    <div class="flex flex-wrap gap-2 mb-6">
+      <Badge tone={difficultyTone[guide.difficulty] as any} size="md" class="shadow-sm">
         {guide.difficulty.charAt(0).toUpperCase() + guide.difficulty.slice(1)}
       </Badge>
-      <Badge tone="neutral" size="md">{guide.category}</Badge>
+      <Badge tone="neutral" size="md" class="shadow-sm">{guide.category}</Badge>
     </div>
-    <Heading level={1}>{guide.title}</Heading>
-    <Text size="lg" tone="muted" class="mt-2 max-w-2xl">{guide.summary}</Text>
-    <div class="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
-      {authorName && <span>By {authorName}</span>}
-      <span>Published {guide.publishedAt}</span>
-      {guide.updatedAt && <span>· Updated {guide.updatedAt}</span>}
+    <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
+      {guide.title}
+    </Heading>
+    <Text size="xl" tone="muted" class="mt-6 leading-relaxed">
+      {guide.summary}
+    </Text>
+    <div class="mt-8 flex flex-wrap items-center gap-6">
+      {authorName && (
+        <div class="flex items-center gap-2 text-sm font-bold text-foreground uppercase tracking-widest">
+          <Icon name="user" size={16} />
+          By {authorName}
+        </div>
+      )}
+      <div class="flex items-center gap-2 text-sm font-bold text-muted-foreground uppercase tracking-widest">
+        <Icon name="calendar" size={16} />
+        Published {guide.publishedAt}
+      </div>
     </div>
   </div>
 
@@ -104,11 +116,11 @@ const breadcrumbs: Breadcrumb[] = [
       <Heading level={2}>Explore More</Heading>
       <Text tone="muted" class="mt-2">Browse VPNs by feature, protocol, platform, or streaming service.</Text>
       <div class="mt-4 flex flex-wrap gap-3">
-        <a href="/features/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Features</a>
-        <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
-        <a href="/platforms/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Platforms</a>
-        <a href="/countries/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Countries</a>
-        <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming</a>
+        <Button variant="outline" size="sm" href="/features/">Browse Features</Button>
+        <Button variant="outline" size="sm" href="/protocols/">Browse Protocols</Button>
+        <Button variant="outline" size="sm" href="/platforms/">Browse Platforms</Button>
+        <Button variant="outline" size="sm" href="/countries/">Browse Countries</Button>
+        <Button variant="outline" size="sm" href="/streaming/">Browse Streaming</Button>
         <a href="/comparisons/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Compare Providers</a>
       </div>
     </Container>

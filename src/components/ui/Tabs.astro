@@ -28,14 +28,14 @@ const { tabs, defaultTab, id = `tabs-${Math.random().toString(36).slice(2, 8)}`,
 const activeId = defaultTab ?? tabs[0]?.id;
 
 const tabButtonClass = cx(
-  "rounded-t-md border-b-2 border-transparent px-3 py-2 text-sm font-medium text-muted-foreground transition-colors",
-  "hover:text-foreground focus-visible:outline-none",
-  "[&[aria-selected='true']]:text-foreground [&[aria-selected='true']]:border-primary",
+  "rounded-md px-4 py-2 text-sm font-semibold text-muted-foreground transition-all duration-200 border border-transparent",
+  "hover:text-foreground hover:bg-surface-raised focus-visible:outline-none",
+  "[&[aria-selected='true']]:text-primary [&[aria-selected='true']]:bg-surface [&[aria-selected='true']]:border-border [&[aria-selected='true']]:shadow-sm",
 );
 ---
 
 <div class={cx("w-full", className)} data-tabs>
-  <div role="tablist" aria-label="Tabbed content" class="flex gap-1 border-b border-border">
+  <div role="tablist" aria-label="Tabbed content" class="inline-flex gap-1 rounded-lg bg-surface-sunken p-1 border border-border">
     {
       tabs.map((tab) => (
         <button

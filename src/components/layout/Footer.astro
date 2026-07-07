@@ -9,25 +9,35 @@ import { FOOTER_NAV, UTILITY_NAV } from "@/constants/navigation";
 import { SITE, copyrightYears } from "@/constants/site";
 ---
 
-<footer class="mt-20 border-t border-border bg-surface-raised">
-  <div class="container-page py-12">
-    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
-      <div class="lg:col-span-1">
+<footer class="mt-32 border-t border-border bg-surface-sunken/30 relative overflow-hidden">
+  <div class="absolute inset-0 -z-10">
+    <div class="absolute bottom-0 left-1/2 h-[400px] w-[800px] -translate-x-1/2 bg-primary/5 blur-[100px]"></div>
+    <div class="absolute top-0 left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+  </div>
+  
+  <div class="container-page py-24">
+    <div class="grid gap-16 md:grid-cols-2 lg:grid-cols-5">
+      <div class="lg:col-span-2">
         <Logo />
-        <p class="mt-3 max-w-xs text-sm text-muted-foreground">{SITE.tagline}</p>
+        <p class="mt-8 max-w-xs text-lg text-muted-foreground leading-relaxed font-medium">
+          {SITE.tagline}
+        </p>
+        <div class="mt-10 flex items-center gap-6">
+          {/* Social links could go here */}
+        </div>
       </div>
       {
         FOOTER_NAV.map((section) => (
-          <nav aria-label={section.title} class="text-sm">
-            <h2 class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          <nav aria-label={section.title}>
+            <h2 class="mb-8 text-xs font-black uppercase tracking-[0.2em] text-foreground/50">
               {section.title}
             </h2>
-            <ul class="flex flex-col gap-2">
+            <ul class="flex flex-col gap-5">
               {section.links.map((link) => (
                 <li>
                   <a
                     href={link.href}
-                    class="text-muted-foreground no-underline hover:text-foreground transition-colors"
+                    class="text-base font-bold text-muted-foreground no-underline hover:text-primary transition-all duration-200 hover:translate-x-1 inline-block"
                   >
                     {link.label}
                   </a>
@@ -39,13 +49,16 @@ import { SITE, copyrightYears } from "@/constants/site";
       }
     </div>
 
-    <div class="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row">
-      <p>© {copyrightYears()} {SITE.name}. All rights reserved.</p>
-      <ul class="flex flex-wrap items-center gap-4">
+    <div class="mt-24 flex flex-col items-center justify-between gap-10 border-t border-border pt-12 text-sm text-muted-foreground sm:flex-row">
+      <div class="flex flex-col items-center gap-3 sm:items-start">
+        <p class="font-bold text-foreground">© {copyrightYears()} {SITE.name}. All rights reserved.</p>
+        <p class="text-xs font-medium opacity-60">Expert VPN reviews and privacy guides for the modern web.</p>
+      </div>
+      <ul class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
         {
           UTILITY_NAV.map((link) => (
             <li>
-              <a href={link.href} class="no-underline hover:text-foreground transition-colors">
+              <a href={link.href} class="font-bold no-underline hover:text-primary transition-all hover:-translate-y-0.5 inline-block">
                 {link.label}
               </a>
             </li>

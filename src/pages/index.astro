@@ -47,21 +47,23 @@ const explorerLinks = [
 
 <SeoLayout seo={seo}>
   <!-- ============ HERO ============ -->
-  <Section class="relative overflow-hidden bg-gradient-hero" padding="loose">
-    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.04]" aria-hidden="true" />
-    <div class="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl" aria-hidden="true" />
-    <div class="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-brand-300/8 blur-3xl" aria-hidden="true" />
+  <Section class="relative overflow-hidden pt-20 pb-12" padding="none">
+    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.05]" aria-hidden="true" />
+    <div class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" aria-hidden="true" />
     <Container>
-      <div class="relative mx-auto max-w-2xl text-center">
-        <Badge tone="primary" class="border border-brand-400/20">FreeVPN4USA — VPN Intelligence Platform</Badge>
-        <h1 class="mt-4 text-4xl font-bold tracking-tight text-balance leading-tight text-white sm:text-5xl">Find the Right VPN, Not the Right Ad</h1>
-        <p class="mt-3 text-lg leading-relaxed text-white/75 max-w-prose mx-auto">
+      <div class="relative mx-auto max-w-3xl text-center">
+        <Badge tone="primary" class="mb-6 border border-primary/20 bg-primary/5 text-primary backdrop-blur-md px-4 py-1.5 rounded-full">
+          FreeVPN4USA — VPN Intelligence Platform
+        </Badge>
+        <h1 class="text-5xl font-bold tracking-tight text-balance leading-[1.1] text-foreground sm:text-6xl md:text-7xl">
+          Find the Right VPN, <br class="hidden sm:inline" /> <span class="text-primary">Not the Right Ad</span>
+        </h1>
+        <p class="mt-6 text-lg leading-relaxed text-muted-foreground max-w-2xl mx-auto">
           We test every VPN with the same methodology, present the data transparently, and never let affiliate commissions influence our recommendations.
         </p>
-        <div class="mt-6 flex flex-wrap justify-center gap-3">
-          <Button href="/tools/finder/" class="shadow-glow">Find Your VPN</Button>
-          <Button variant="outline" href="/vpn/" class="border-white/20 text-white hover:bg-white/10">Browse All Reviews</Button>
-          <Button variant="outline" href="/best-lists/" class="border-white/20 text-white hover:bg-white/10">Best VPN Lists</Button>
+        <div class="mt-10 flex flex-wrap justify-center gap-4">
+          <Button href="/tools/finder/" size="lg" class="rounded-full px-8">Find Your VPN</Button>
+          <Button variant="secondary" href="/vpn/" size="lg" class="rounded-full px-8">Browse Reviews</Button>
         </div>
       </div>
     </Container>
@@ -70,22 +72,22 @@ const explorerLinks = [
   <!-- ============ TRUST STATS BAND ============ -->
   <Section padding="tight">
     <Container>
-      <div class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-        <div class="bg-surface p-4 text-center">
-          <div class="text-xl font-bold text-foreground">{allProviders.length}</div>
-          <div class="text-xs text-muted-foreground mt-0.5">VPNs tested</div>
+      <div class="grid grid-cols-2 gap-y-8 rounded-3xl bg-glass-subtle border border-glass-subtle-border shadow-glass-inner shadow-xl p-8 divide-y divide-glass-subtle-border backdrop-blur-xl sm:grid-cols-4 sm:divide-y-0 sm:divide-x after-glass-shine">
+        <div class="px-4 text-center">
+          <div class="text-3xl font-bold text-foreground">{allProviders.length}</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">VPNs tested</div>
         </div>
-        <div class="bg-surface p-4 text-center">
-          <div class="text-xl font-bold text-foreground">{avgScore.toFixed(1)}</div>
-          <div class="text-xs text-muted-foreground mt-0.5">Avg score</div>
+        <div class="px-4 text-center">
+          <div class="text-3xl font-bold text-foreground">{avgScore.toFixed(1)}</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">Avg score</div>
         </div>
-        <div class="bg-surface p-4 text-center">
-          <div class="text-xl font-bold text-foreground">{allCountries.length}</div>
-          <div class="text-xs text-muted-foreground mt-0.5">Countries</div>
+        <div class="px-4 text-center">
+          <div class="text-3xl font-bold text-foreground">{allCountries.length}</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">Countries</div>
         </div>
-        <div class="bg-surface p-4 text-center">
-          <div class="text-xl font-bold text-foreground">{allFeatures.length}</div>
-          <div class="text-xs text-muted-foreground mt-0.5">Features tracked</div>
+        <div class="px-4 text-center border-t-0!">
+          <div class="text-3xl font-bold text-foreground">{allFeatures.length}</div>
+          <div class="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-1">Features</div>
         </div>
       </div>
     </Container>
@@ -95,26 +97,35 @@ const explorerLinks = [
   {editorChoice && (
     <Section background>
       <Container>
-        <div class="mx-auto mb-2 max-w-xl text-center">
-          <Badge tone="primary" size="sm">Editor's Choice</Badge>
+        <div class="mx-auto mb-4 max-w-xl text-center">
+          <Badge tone="primary" size="md" class="rounded-full">Editor's Choice</Badge>
         </div>
-        <Heading level={2} class="text-center">Our Top-Rated VPN</Heading>
-        <div class="mt-6 mx-auto max-w-lg">
-          <a href={`/vpn/${editorChoice.entry.data.slug}/`} class="group block rounded-xl border-2 border-primary/30 bg-surface p-6 no-underline transition-all hover:border-primary hover:shadow-lg motion-safe:duration-200">
-            <div class="flex flex-col items-center text-center">
-              <img src={`/logos/${editorChoice.entry.data.slug}.svg`} alt="" class="h-10 w-10 object-contain" width={40} height={40} loading="eager" />
-              <Heading level={3} class="mt-3 text-lg">{editorChoice.entry.data.name}</Heading>
-              <p class="mt-1 text-sm text-muted-foreground leading-relaxed max-w-sm">{editorChoice.entry.data.tagline}</p>
-              {editorChoice.review && (
-                <div class="mt-3">
-                  <ScoreRing value={editorChoice.review.scores.overall} size={64} strokeWidth={5} label="Overall score" />
+        <Heading level={2} class="text-center text-3xl font-bold">Our Top-Rated VPN</Heading>
+        <div class="mt-8 mx-auto max-w-3xl">
+          <a href={`/vpn/${editorChoice.entry.data.slug}/`} class="group block rounded-3xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-6 md:p-8 no-underline transition-all duration-300 hover:bg-glass hover:border-glass-border hover:shadow-xl hover:-translate-y-1 after-glass-shine">
+            <div class="flex flex-col md:flex-row items-center md:justify-between gap-8 text-center md:text-left">
+              <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="h-20 w-20 flex items-center justify-center rounded-2xl bg-surface-raised border border-border p-3 shadow-sm group-hover:shadow-md transition-all">
+                  <img src={`/logos/${editorChoice.entry.data.slug}.svg`} alt="" class="h-full w-full object-contain" width={80} height={80} loading="eager" />
                 </div>
-              )}
-              {editorChoice.review?.verdict && (
-                <p class="mt-2 text-sm font-medium text-primary">{editorChoice.review.verdict.headline}</p>
-              )}
-              <div class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                Read full review <Icon name="arrow-right" size={14} />
+                <div>
+                  <Heading level={3} class="text-xl font-bold">{editorChoice.entry.data.name}</Heading>
+                  <p class="mt-1 text-sm text-muted-foreground leading-relaxed max-w-md">{editorChoice.entry.data.tagline}</p>
+                  {editorChoice.review?.verdict && (
+                    <div class="mt-3 inline-flex items-center gap-2 text-sm font-bold text-primary">
+                      <Icon name="award" size={16} />
+                      {editorChoice.review.verdict.headline}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div class="flex flex-col md:flex-row items-center shrink-0 gap-6 border-t md:border-t-0 md:border-l border-border pt-6 md:pt-0 md:pl-8 w-full md:w-auto">
+                {editorChoice.review && (
+                  <ScoreRing value={editorChoice.review.scores.overall} size={64} strokeWidth={5} label="Overall score" />
+                )}
+                <div class="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground transition-all duration-200 group-hover:bg-primary-hover shadow-sm">
+                  Read Review <Icon name="arrow-right" size={16} />
+                </div>
               </div>
             </div>
           </a>
@@ -126,27 +137,27 @@ const explorerLinks = [
   <!-- ============ TOOLS ============ -->
   <Section>
     <Container>
-      <div class="mx-auto mb-2 max-w-xl text-center">
-        <Badge tone="primary" size="sm">Interactive tools</Badge>
+      <div class="mx-auto mb-4 max-w-xl text-center">
+        <Badge tone="primary" size="md" class="rounded-full">Interactive tools</Badge>
       </div>
-      <Heading level={2} class="text-center">Know Which VPN to Pick</Heading>
-      <p class="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
+      <Heading level={2} class="text-center text-3xl font-bold">Know Which VPN to Pick</Heading>
+      <p class="mx-auto mt-4 max-w-xl text-center text-lg text-muted-foreground">
         Not sure where to start? Our tools turn data into decisions — no guesswork.
       </p>
-      <div class="mt-6 grid gap-4 sm:grid-cols-2 max-w-3xl mx-auto">
-        <a href="/tools/finder/" class="group rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-primary hover:shadow-md">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <Icon name="wand-2" size={18} />
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 max-w-4xl mx-auto">
+        <a href="/tools/finder/" class="group rounded-3xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 no-underline transition-all duration-300 hover:-translate-y-1 hover:bg-glass hover:border-glass-border hover:shadow-xl after-glass-shine">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground shadow-sm">
+            <Icon name="wand-2" size={24} />
           </div>
-          <Heading level={3} class="mt-3 text-sm font-semibold">VPN Recommender</Heading>
-          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Answer a few questions and get a personalized recommendation with full transparency.</p>
+          <Heading level={3} class="mt-6 text-xl font-bold">VPN Recommender</Heading>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Answer a few questions and get a personalized recommendation with full transparency.</p>
         </a>
-        <a href="/tools/compare/" class="group rounded-xl border border-border bg-surface p-5 no-underline transition-all hover:border-primary hover:shadow-md">
-          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <Icon name="arrow-left-right" size={18} />
+        <a href="/tools/compare/" class="group rounded-3xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 no-underline transition-all duration-300 hover:-translate-y-1 hover:bg-glass hover:border-glass-border hover:shadow-xl after-glass-shine">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground shadow-sm">
+            <Icon name="arrow-left-right" size={24} />
           </div>
-          <Heading level={3} class="mt-3 text-sm font-semibold">Comparison Builder</Heading>
-          <p class="mt-1 text-sm text-muted-foreground leading-relaxed">Select any providers and compare side by side across pricing, privacy, features, and more.</p>
+          <Heading level={3} class="mt-6 text-xl font-bold">Comparison Builder</Heading>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">Select any providers and compare side by side across pricing, privacy, features, and more.</p>
         </a>
       </div>
     </Container>
@@ -155,22 +166,22 @@ const explorerLinks = [
   <!-- ============ EXPLORER LINKS ============ -->
   <Section background>
     <Container>
-      <div class="mx-auto mb-2 max-w-xl text-center">
-        <Badge tone="primary" size="sm">Browse by category</Badge>
+      <div class="mx-auto mb-4 max-w-xl text-center">
+        <Badge tone="primary" size="md" class="rounded-full">Browse by category</Badge>
       </div>
-      <Heading level={2} class="text-center">Explore Our Database</Heading>
-      <p class="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
+      <Heading level={2} class="text-center text-3xl font-bold">Explore Our Database</Heading>
+      <p class="mx-auto mt-4 max-w-xl text-center text-lg text-muted-foreground">
         Dive into any dimension of our VPN intelligence — every page is cross-linked and data-rich.
       </p>
-      <div class="mt-5 flex flex-wrap justify-center gap-2">
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
         {explorerLinks.map((link) => (
           <a
             href={link.href}
-            class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium no-underline text-foreground transition-all hover:border-primary hover:text-primary hover:shadow-sm"
+            class="inline-flex items-center gap-2 rounded-xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-lg px-5 py-3 text-sm font-bold no-underline text-foreground transition-all duration-300 hover:-translate-y-1 hover:bg-glass hover:border-glass-border hover:text-primary hover:shadow-lg"
           >
-            <Icon name={link.icon} size={16} class="text-primary shrink-0" />
+            <Icon name={link.icon} size={18} class="text-primary shrink-0" />
             {link.label}
-            <Badge tone="neutral" size="sm">{link.count}</Badge>
+            <Badge tone="neutral" size="sm" class="ml-2 !px-2 rounded-full">{link.count}</Badge>
           </a>
         ))}
       </div>
@@ -180,41 +191,49 @@ const explorerLinks = [
   <!-- ============ BEST LISTS + GUIDES ============ -->
   <Section>
     <Container>
-      <div class="grid gap-6 lg:grid-cols-2">
+      <div class="grid gap-12 lg:grid-cols-2">
         <div>
-          <Heading level={2} class="text-base">Best VPN Lists</Heading>
-          <p class="mt-1 text-xs text-muted-foreground">Curated by use case with transparent criteria</p>
-          <div class="mt-3 space-y-2">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <Heading level={2} class="text-2xl font-bold">Best VPN Lists</Heading>
+              <p class="mt-1 text-sm text-muted-foreground">Curated by use case with transparent criteria</p>
+            </div>
+            <Button variant="ghost" size="sm" href="/best-lists/" class="rounded-full">View all</Button>
+          </div>
+          <div class="space-y-3">
             {allBestLists.slice(0, 4).map((bl) => (
-              <a href={`/best-lists/${bl.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-3 no-underline transition-all hover:border-primary hover:shadow-sm">
+              <a href={`/best-lists/${bl.id}/`} class="group flex items-center justify-between rounded-2xl bg-surface border border-border p-4 no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
                 <div class="min-w-0">
-                  <div class="text-sm font-medium text-foreground">{bl.data.title}</div>
-                  <div class="text-xs text-muted-foreground mt-0.5">{bl.data.entries.length} entries</div>
+                  <div class="text-base font-bold text-foreground group-hover:text-primary transition-colors">{bl.data.title}</div>
+                  <div class="text-xs text-muted-foreground mt-1">{bl.data.entries.length} providers reviewed</div>
                 </div>
-                <Icon name="arrow-right" size={14} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <div class="h-8 w-8 flex items-center justify-center rounded-full bg-surface-raised border border-border group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Icon name="arrow-right" size={14} />
+                </div>
               </a>
             ))}
-          </div>
-          <div class="mt-3">
-            <Button variant="ghost" size="sm" href="/best-lists/">View all lists</Button>
           </div>
         </div>
         <div>
-          <Heading level={2} class="text-base">Popular Guides</Heading>
-          <p class="mt-1 text-xs text-muted-foreground">Learn how VPNs work and how to choose one</p>
-          <div class="mt-3 space-y-2">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <Heading level={2} class="text-2xl font-bold">Popular Guides</Heading>
+              <p class="mt-1 text-sm text-muted-foreground">Learn how VPNs work and how to choose one</p>
+            </div>
+            <Button variant="ghost" size="sm" href="/guides/" class="rounded-full">View all</Button>
+          </div>
+          <div class="space-y-3">
             {allGuides.slice(0, 4).map((g) => (
-              <a href={`/guides/${g.id}/`} class="group flex items-center justify-between rounded-lg border border-border bg-surface p-3 no-underline transition-all hover:border-primary hover:shadow-sm">
+              <a href={`/guides/${g.id}/`} class="group flex items-center justify-between rounded-2xl bg-surface border border-border p-4 no-underline transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
                 <div class="min-w-0">
-                  <div class="text-sm font-medium text-foreground">{g.data.title}</div>
-                  <div class="text-xs text-muted-foreground mt-0.5 capitalize">{g.data.difficulty}</div>
+                  <div class="text-base font-bold text-foreground group-hover:text-primary transition-colors">{g.data.title}</div>
+                  <div class="text-xs text-muted-foreground mt-1 capitalize">{g.data.difficulty} level</div>
                 </div>
-                <Icon name="arrow-right" size={14} class="shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <div class="h-8 w-8 flex items-center justify-center rounded-full bg-surface-raised border border-border group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                  <Icon name="arrow-right" size={14} />
+                </div>
               </a>
             ))}
-          </div>
-          <div class="mt-3">
-            <Button variant="ghost" size="sm" href="/guides/">View all guides</Button>
           </div>
         </div>
       </div>
@@ -224,22 +243,27 @@ const explorerLinks = [
   <!-- ============ TRUST / METHODOLOGY ============ -->
   <Section background padding="loose">
     <Container>
-      <div class="mx-auto max-w-xl text-center">
-        <Icon name="shield-check" size={28} class="mx-auto text-primary" />
-        <Heading level={2} class="mt-4">Independent, Methodical, Transparent</Heading>
-        <p class="mt-3 text-sm text-muted-foreground leading-relaxed">
-          Every VPN is tested using a consistent methodology across:
-        </p>
-        <div class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm">
-          <span class="flex items-center gap-1.5"><Icon name="zap" size={14} class="text-success" /> Speed</span>
-          <span class="flex items-center gap-1.5"><Icon name="shield" size={14} class="text-success" /> Privacy</span>
-          <span class="flex items-center gap-1.5"><Icon name="lock" size={14} class="text-success" /> Security</span>
-          <span class="flex items-center gap-1.5"><Icon name="play" size={14} class="text-success" /> Streaming</span>
-          <span class="flex items-center gap-1.5"><Icon name="download" size={14} class="text-success" /> Torrenting</span>
-        </div>
-        <div class="mt-6 flex flex-wrap justify-center gap-3">
-          <Button variant="outline" size="sm" href="/methodology/">View Methodology</Button>
-          <Button variant="outline" size="sm" href="/tools/finder/">Try VPN Finder</Button>
+      <div class="mx-auto max-w-3xl bg-surface border border-border rounded-3xl p-8 md:p-12 shadow-xl text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+        <div class="relative z-10">
+          <div class="h-16 w-16 mx-auto flex items-center justify-center rounded-2xl bg-primary/10 text-primary mb-6">
+            <Icon name="shield-check" size={32} />
+          </div>
+          <Heading level={2} class="text-3xl font-bold">Independent, Methodical, Transparent</Heading>
+          <p class="mt-4 text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Every VPN is tested using a consistent methodology across five critical dimensions. We don't just review; we audit.
+          </p>
+          <div class="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-4">
+            <span class="flex items-center gap-2 text-sm font-bold text-foreground"><Icon name="zap" size={18} class="text-success" /> Speed</span>
+            <span class="flex items-center gap-2 text-sm font-bold text-foreground"><Icon name="shield" size={18} class="text-success" /> Privacy</span>
+            <span class="flex items-center gap-2 text-sm font-bold text-foreground"><Icon name="lock" size={18} class="text-success" /> Security</span>
+            <span class="flex items-center gap-2 text-sm font-bold text-foreground"><Icon name="play" size={18} class="text-success" /> Streaming</span>
+            <span class="flex items-center gap-2 text-sm font-bold text-foreground"><Icon name="download" size={18} class="text-success" /> Torrenting</span>
+          </div>
+          <div class="mt-12 flex flex-wrap justify-center gap-4">
+            <Button href="/methodology/" size="lg" class="rounded-full px-8">Our Methodology</Button>
+            <Button variant="secondary" href="/tools/finder/" size="lg" class="rounded-full px-8">Try VPN Finder</Button>
+          </div>
         </div>
       </div>
     </Container>

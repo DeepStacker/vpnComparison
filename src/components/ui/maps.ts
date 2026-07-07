@@ -61,9 +61,9 @@ export const colsXlClass: Record<number, string> = {
 /** Vertical padding scale for <Section>. */
 export const sectionPadClass: Record<string, string> = {
   none: "py-0",
-  tight: "py-4",
-  default: "py-8",
-  loose: "py-12",
+  tight: "py-3",
+  default: "py-6",
+  loose: "py-10",
 };
 
 /** Container max-width variants. */

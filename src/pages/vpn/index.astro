@@ -30,13 +30,13 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section class="relative overflow-hidden bg-gradient-hero" padding="loose">
-    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.04]" aria-hidden="true" />
+  <Section class="relative overflow-hidden bg-gradient-hero pt-24 pb-16" padding="none">
+    <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.05]" aria-hidden="true" />
     <Container>
-      <div class="mx-auto max-w-2xl text-center">
-        <Badge tone="primary" class="border border-brand-400/20">VPN Reviews</Badge>
-        <Heading level={1} class="mt-5 text-balance leading-tight !text-white">Independently Tested VPN Reviews</Heading>
-        <Text size="lg" class="mt-3 max-w-prose mx-auto leading-relaxed !text-white/75">
+      <div class="mx-auto max-w-3xl text-center">
+        <Badge tone="primary" class="mb-6 border border-white/20 bg-white/10 text-white backdrop-blur-md px-4 py-1.5 rounded-full">VPN Reviews</Badge>
+        <Heading level={1} class="text-4xl font-bold tracking-tight text-balance leading-tight !text-white sm:text-5xl md:text-6xl">Independently Tested <br/> VPN Reviews</Heading>
+        <Text size="lg" class="mt-6 max-w-2xl mx-auto leading-relaxed !text-white/80">
           Every VPN on this site has been tested using a consistent methodology. We measure speed, verify privacy claims, and assess real-world streaming performance.
         </Text>
       </div>
@@ -45,13 +45,13 @@ const breadcrumbs: Breadcrumb[] = [
 
   <Section>
     <Container>
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-10">
         <div>
-          <Badge tone="primary" size="sm">All providers</Badge>
-          <Heading level={2} class="mt-2">{allProviders.length} VPNs Reviewed</Heading>
+          <Badge tone="primary" size="md" class="rounded-full">All providers</Badge>
+          <Heading level={2} class="mt-4 text-3xl font-bold">{allProviders.length} VPNs Reviewed</Heading>
         </div>
       </div>
-      <Grid cols={1} colsMd={2} colsLg={3} gap={6}>
+      <Grid cols={1} colsMd={2} colsLg={3} gap={8}>
         {allProviders.map((e) => {
           const p = e.data;
           const review = reviewMap.get(p.id);

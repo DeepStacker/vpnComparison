@@ -52,11 +52,18 @@ const breadcrumbs: Breadcrumb[] = [
 ---
 
 <SeoLayout seo={seo} breadcrumbs={breadcrumbs}>
-  <Section background>
+  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+    </div>
     <Container>
-      <div class="mx-auto max-w-2xl text-center">
-        <Heading level={1}>VPN Server Locations</Heading>
-        <Text tone="muted" size="lg" class="mt-3 max-w-prose mx-auto">
+      <div class="mx-auto max-w-3xl text-center">
+        <Badge tone="primary" class="mb-6">Global Network</Badge>
+        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
+          VPN Server <span class="text-primary">Locations</span>
+        </Heading>
+        <Text size="xl" tone="muted" class="mt-6 max-w-2xl mx-auto leading-relaxed">
           Browse VPN server availability by country. Each page shows which providers have servers in that location, privacy jurisdiction notes, and related content.
         </Text>
       </div>
@@ -67,13 +74,15 @@ const breadcrumbs: Breadcrumb[] = [
     const countries = grouped.get(region) ?? [];
     if (countries.length === 0) return null;
     return (
-      <Section>
+      <Section class="pb-20">
         <Container>
-          <div class="mb-2">
-            <Badge tone="primary" size="sm">{regionLabels[region]}</Badge>
+          <div class="flex items-center gap-4 mb-8">
+            <div class="h-px flex-grow bg-border"></div>
+            <Badge tone="primary" size="md" class="shadow-sm uppercase tracking-widest font-black">{regionLabels[region]}</Badge>
+            <div class="h-px flex-grow bg-border"></div>
           </div>
-          <Heading level={2}>{regionLabels[region]}</Heading>
-          <Grid cols={2} colsMd={3} colsLg={4} gap={3} class="mt-4">
+          
+          <Grid cols={1} colsMd={2} colsLg={4} gap={4}>
             {countries
               .sort((a, b) => a.data.name.localeCompare(b.data.name))
               .map((c) => {
@@ -81,17 +90,16 @@ const breadcrumbs: Breadcrumb[] = [
                 return (
                   <a
                     href={countryHref(c.data.slug)}
-                    class="flex items-center gap-3 rounded-lg border border-border bg-surface p-3 no-underline transition-all hover:border-primary hover:shadow-sm motion-safe:duration-150"
+                    class="group flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 no-underline transition-all duration-200 hover:border-primary/30 hover:shadow-md hover:-translate-y-0.5"
                   >
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-sunken text-lg leading-none">
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-sunken text-2xl leading-none shadow-inner group-hover:bg-primary/5 transition-colors">
                       {c.data.flagEmoji}
                     </span>
                     <div class="min-w-0">
-                      <Text weight="semibold" size="sm">{c.data.name}</Text>
-                      <Text size="xs" tone="muted">
+                      <div class="text-base font-bold text-foreground group-hover:text-primary transition-colors truncate">{c.data.name}</div>
+                      <div class="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-0.5">
                         {count} {count === 1 ? "provider" : "providers"}
-                        {c.data.privacyFriendly && " · Privacy-friendly"}
-                      </Text>
+                      </div>
                     </div>
                   </a>
                 );

@@ -17,23 +17,23 @@ interface Props {
 
 const { variant = "skeleton", lines = 3, label = "Loading…", class: className } = Astro.props;
 
-const pulse = "animate-pulse rounded-md bg-surface-sunken";
+const pulse = "animate-pulse rounded-lg bg-surface-sunken";
 ---
 
 <div class={cx("w-full", className)} role="status" aria-live="polite">
   {
     variant === "spinner" && (
-      <div class="flex items-center gap-3 text-sm text-muted-foreground">
-        <span class="inline-block h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
-        <span>{label}</span>
+      <div class="flex flex-col items-center justify-center gap-4 py-12">
+        <span class="inline-block h-10 w-10 animate-spin rounded-full border-4 border-border border-t-primary" />
+        <span class="text-sm font-bold uppercase tracking-widest text-muted-foreground">{label}</span>
       </div>
     )
   }
   {
     variant === "skeleton" && (
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-4">
         {Array.from({ length: lines }).map((_, i) => (
-          <div class={cx(pulse, "h-4", i % 3 === 0 ? "w-2/3" : "w-full")} />
+          <div class={cx(pulse, "h-5", i % 3 === 0 ? "w-2/3" : "w-full")} />
         ))}
       </div>
     )

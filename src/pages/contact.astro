@@ -4,6 +4,7 @@ import Section from "@/components/ui/Section.astro";
 import Container from "@/components/ui/Container.astro";
 import Heading from "@/components/ui/Heading.astro";
 import Text from "@/components/ui/Text.astro";
+import Badge from "@/components/ui/Badge.astro";
 import { SITE } from "@/constants/site";
 import { buildSeoMeta } from "@/lib/seo/meta";
 
@@ -15,32 +16,60 @@ const seo = buildSeoMeta({
 ---
 
 <SeoLayout seo={seo}>
-  <Section>
+  <Section class="relative overflow-hidden pb-20 pt-24 md:pb-28 md:pt-32">
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+      <div class="absolute left-1/2 top-0 h-[500px] w-[1000px] -translate-x-1/2 bg-primary/5 blur-[120px]"></div>
+    </div>
+    <Container>
+      <div class="mx-auto max-w-3xl text-center">
+        <Badge tone="primary" class="mb-6">Support & Feedback</Badge>
+        <Heading level={1} class="text-4xl font-black tracking-tight md:text-6xl">
+          Contact <span class="text-primary">Us</span>
+        </Heading>
+        <Text size="xl" tone="muted" class="mt-6 max-w-2xl mx-auto leading-relaxed">
+          Have a question, feedback, or press inquiry? We'd love to hear from you.
+        </Text>
+      </div>
+    </Container>
+  </Section>
+
+  <Section class="pb-32">
     <Container size="prose">
-      <Heading level={1}>Contact Us</Heading>
-      <Text tone="muted" size="lg" class="mt-2">
-        Have a question, feedback, or press inquiry? We'd love to hear from you.
-      </Text>
-
-      <div class="mt-8 space-y-6">
-        <div>
-          <Heading level={2}>General Inquiries</Heading>
-          <Text>For general questions about our reviews, methodology, or the site, email us at <a href="mailto:hello@freevpn4usa.com" class="text-primary underline">hello@freevpn4usa.com</a>.</Text>
+      <div class="grid gap-8">
+        <div class="group rounded-2xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 transition-all duration-300 hover:bg-glass hover:border-glass-border hover:shadow-xl after-glass-shine">
+          <Heading level={2} class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">General Inquiries</Heading>
+          <Text size="base" tone="muted" class="leading-relaxed">
+            For general questions about our reviews, methodology, or the site, email us at 
+            <a href="mailto:hello@freevpn4usa.com" class="text-primary font-bold no-underline hover:underline underline-offset-4">hello@freevpn4usa.com</a>.
+          </Text>
         </div>
 
-        <div>
-          <Heading level={2}>Review Requests</Heading>
-          <Text>VPN providers interested in having their service reviewed can reach out to <a href="mailto:reviews@freevpn4usa.com" class="text-primary underline">reviews@freevpn4usa.com</a>. Note that we maintain full editorial independence — a review request does not guarantee coverage or a positive rating.</Text>
+        <div class="group rounded-2xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 transition-all duration-300 hover:bg-glass hover:border-glass-border hover:shadow-xl after-glass-shine">
+          <Heading level={2} class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">Review Requests</Heading>
+          <Text size="base" tone="muted" class="leading-relaxed">
+            VPN providers interested in having their service reviewed can reach out to 
+            <a href="mailto:reviews@freevpn4usa.com" class="text-primary font-bold no-underline hover:underline underline-offset-4">reviews@freevpn4usa.com</a>. 
+            Note that we maintain full editorial independence — a review request does not guarantee coverage or a positive rating.
+          </Text>
         </div>
 
-        <div>
-          <Heading level={2}>Press & Media</Heading>
-          <Text>Members of the press can contact us at <a href="mailto:press@freevpn4usa.com" class="text-primary underline">press@freevpn4usa.com</a> for interview requests, data citations, or expert commentary.</Text>
+        <div class="group rounded-2xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 transition-all duration-300 hover:bg-glass hover:border-glass-border hover:shadow-xl after-glass-shine">
+          <Heading level={2} class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">Press & Media</Heading>
+          <Text size="base" tone="muted" class="leading-relaxed">
+            Members of the press can contact us at 
+            <a href="mailto:press@freevpn4usa.com" class="text-primary font-bold no-underline hover:underline underline-offset-4">press@freevpn4usa.com</a> 
+            for interview requests, data citations, or expert commentary.
+          </Text>
         </div>
 
-        <div>
-          <Heading level={2}>Corrections</Heading>
-          <Text>If you've spotted an error in our content, please email <a href="mailto:corrections@freevpn4usa.com" class="text-primary underline">corrections@freevpn4usa.com</a> with the page URL and the correction needed.</Text>
+        <div class="group rounded-2xl bg-glass-subtle border border-glass-subtle-border backdrop-blur-xl p-8 transition-all duration-300 hover:bg-glass hover:border-glass-border hover:shadow-xl after-glass-shine">
+          <Heading level={2} class="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">Corrections</Heading>
+          <Text size="base" tone="muted" class="leading-relaxed">
+            If you've spotted an error in our content, please email 
+            <a href="mailto:corrections@freevpn4usa.com" class="text-primary font-bold no-underline hover:underline underline-offset-4">corrections@freevpn4usa.com</a> 
+            with the page URL and the correction needed.
+          </Text>
         </div>
       </div>
     </Container>

@@ -45,45 +45,47 @@ const hasPrev = currentPage > 1;
 const hasNext = currentPage < totalPages;
 ---
 
-<nav aria-label="Pagination" class={cx("flex items-center gap-1 text-sm", className)}>
+<nav aria-label="Pagination" class={cx("flex items-center justify-center gap-2 text-sm", className)}>
   <a
     href={hasPrev ? href(currentPage - 1) : undefined}
     aria-disabled={!hasPrev}
     rel="prev"
-    class="inline-flex h-9 items-center gap-1 rounded-md border border-border px-3 hover:bg-surface-raised aria-disabled:pointer-events-none aria-disabled:opacity-40"
+    class="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-surface px-4 font-bold text-foreground transition-all hover:bg-surface-raised hover:border-border-strong aria-disabled:pointer-events-none aria-disabled:opacity-40 shadow-sm"
   >
-    <Icon name="chevron-left" size={16} />
+    <Icon name="chevron-left" size={18} />
     <span class="sr-only sm:not-sr-only">Previous</span>
   </a>
 
-  {
-    pages.map((page) =>
-      page === "ellipsis" ? (
-        <span class="inline-flex h-9 w-9 items-center justify-center text-muted-foreground">…</span>
-      ) : (
-        <a
-          href={href(page)}
-          aria-current={page === currentPage ? "page" : undefined}
-          class={cx(
-            "inline-flex h-9 min-w-9 items-center justify-center rounded-md border px-3",
-            page === currentPage
-              ? "border-primary bg-primary text-primary-foreground"
-              : "border-border hover:bg-surface-raised",
-          )}
-        >
-          {page}
-        </a>
-      ),
-    )
-  }
+  <div class="flex items-center gap-1.5">
+    {
+      pages.map((page) =>
+        page === "ellipsis" ? (
+          <span class="inline-flex h-10 w-10 items-center justify-center text-muted-foreground font-bold">…</span>
+        ) : (
+          <a
+            href={href(page)}
+            aria-current={page === currentPage ? "page" : undefined}
+            class={cx(
+              "inline-flex h-10 min-w-10 items-center justify-center rounded-xl border px-4 font-bold transition-all shadow-sm",
+              page === currentPage
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-surface text-foreground hover:bg-surface-raised hover:border-border-strong",
+            )}
+          >
+            {page}
+          </a>
+        ),
+      )
+    }
+  </div>
 
   <a
     href={hasNext ? href(currentPage + 1) : undefined}
     aria-disabled={!hasNext}
     rel="next"
-    class="inline-flex h-9 items-center gap-1 rounded-md border border-border px-3 hover:bg-surface-raised aria-disabled:pointer-events-none aria-disabled:opacity-40"
+    class="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-surface px-4 font-bold text-foreground transition-all hover:bg-surface-raised hover:border-border-strong aria-disabled:pointer-events-none aria-disabled:opacity-40 shadow-sm"
   >
     <span class="sr-only sm:not-sr-only">Next</span>
-    <Icon name="chevron-right" size={16} />
+    <Icon name="chevron-right" size={18} />
   </a>
 </nav>

@@ -4,6 +4,8 @@
  * @prop padding - vertical padding scale: "default" | "tight" | "loose" | "none".
  * @prop as - element tag.
  * @prop id - optional anchor id.
+ * @prop background - set to true for a subtle sunken background with dot grid.
+ * @prop glass - set to true for a frosted glass background.
  */
 import { cx } from "@/lib/utils/string";
 import { sectionPadClass } from "./maps";
@@ -11,18 +13,22 @@ import { sectionPadClass } from "./maps";
 interface Props {
   padding?: keyof typeof sectionPadClass;
   background?: boolean;
+  glass?: boolean;
   element?: "section" | "div" | "main" | "article";
   id?: string;
   class?: string;
 }
 
-const { padding = "default", background = false, element: Tag = "section", id, class: className } = Astro.props;
-const classes = cx("relative", sectionPadClass[padding], background && "bg-surface-sunken overflow-hidden", className);
+const { padding = "default", background = false, glass = false, element: Tag = "section", id, class: className } = Astro.props;
+const classes = cx("relative", sectionPadClass[padding], background && "bg-surface-sunken overflow-hidden", glass && "bg-glass-subtle overflow-hidden", className);
 ---
 
 <Tag id={id} class={classes}>
-  {background && (
+  {(background || glass) && (
     <div class="pointer-events-none absolute inset-0 bg-dot-grid opacity-[0.02]" aria-hidden="true" />
+  )}
+  {glass && (
+    <div class="pointer-events-none absolute inset-0 after-glass-shine" aria-hidden="true" />
   )}
   <slot />
 </Tag>
