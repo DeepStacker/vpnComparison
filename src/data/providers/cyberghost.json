@@ -1,0 +1,83 @@
+{
+  "id": "cyberghost",
+  "slug": "cyberghost",
+  "name": "CyberGhost",
+  "tagline": "Romania-based VPN with streaming-optimized servers, strong privacy protections, and beginner-friendly apps.",
+  "websiteUrl": "https://www.cyberghost.com/",
+  "foundedYear": 2011,
+  "jurisdiction": "RO",
+  "hqCountry": "RO",
+  "parentCompany": "Kape Technologies",
+  "ownership": "subsidiary",
+  "warrantCanary": false,
+  "ramOnlyServers": true,
+  "transparencyReports": ["https://www.cyberghost.com/blog/tag/transparency/"],
+  "serverNetwork": {
+    "serverCount": 11000,
+    "countryCount": 100,
+    "countries": ["AL","AR","AT","AU","BA","BD","BE","BG","BH","BO","BR","CA","CH","CL","CN","CO","CR","CY","CZ","DE","DK","EC","EE","EG","ES","FI","FR","GB","GE","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LA","LB","LT","LU","LV","MA","MD","ME","MK","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
+    "virtualLocations": false,
+    "ownedInfrastructure": true
+  },
+  "protocols": ["wireguard", "openvpn", "ikev2"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "android-tv", "browser-extension"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "ad-blocker", "obfuscation"],
+  "streaming": [
+    { "service": "netflix", "support": "verified", "verifiedAt": "2025-11-20", "notes": "Dedicated streaming servers reliably unblock Netflix US, UK, CA, JP, DE, FR and more.", "regionsTested": ["US","GB","CA","JP","DE","FR"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2025-11-20", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "verified", "verifiedAt": "2025-10-15", "regionsTested": ["US","GB","DE"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2025-10-15", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "verified", "verifiedAt": "2025-10-15", "regionsTested": ["US"] },
+    { "service": "bbc-iplayer", "support": "verified", "verifiedAt": "2025-09-01", "regionsTested": ["GB"] }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": true,
+    "portForwarding": false,
+    "rating": 8,
+    "notes": "Dedicated torrenting servers optimized for P2P traffic. Port forwarding not available."
+  },
+  "loggingPolicy": "no-logs",
+  "dnsHandling": "Private DNS servers with DNS leak protection. DNS queries routed through encrypted tunnel.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Automatic kill switch on all platforms.",
+  "obfuscationType": "stealth",
+  "postQuantum": false,
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": true,
+  "multiHop": false,
+  "dedicatedIp": false,
+  "simultaneousConnections": 7,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      { "cycle": "monthly", "price": 12.99, "currency": "USD", "effectiveMonthly": 12.99 },
+      { "cycle": "yearly", "price": 47.88, "currency": "USD", "effectiveMonthly": 3.99 },
+      { "cycle": "biennially", "price": 56.94, "currency": "USD", "effectiveMonthly": 2.37, "featured": true }
+    ],
+    "moneyBackGuaranteeDays": 45,
+    "paymentMethods": ["credit-card", "paypal", "bitcoin"],
+    "freeTier": false
+  },
+  "support": {
+    "liveChat": true,
+    "email": true,
+    "knowledgeBase": true,
+    "averageResponseTime": "Within 2 minutes (live chat)"
+  },
+  "audits": [
+    {
+      "auditor": "Deloitte",
+      "date": "2024-03-01",
+      "scope": "No-logs policy audit and infrastructure security assessment.",
+      "reportUrl": "https://www.cyberghost.com/blog/deloitte-audit-2024",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-15",
+  "sources": [
+    "https://www.cyberghost.com/servers",
+    "https://www.cyberghost.com/features",
+    "https://www.cyberghost.com/blog/deloitte-audit-2024"
+  ]
+}

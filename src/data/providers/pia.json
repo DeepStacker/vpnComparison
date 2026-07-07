@@ -1,0 +1,82 @@
+{
+  "id": "pia",
+  "slug": "pia",
+  "name": "Private Internet Access",
+  "tagline": "Proven no-logs VPN with a massive server network, port forwarding, and the MACE ad-blocker — all at a budget price.",
+  "websiteUrl": "https://www.privateinternetaccess.com/",
+  "foundedYear": 2010,
+  "jurisdiction": "US",
+  "hqCountry": "US",
+  "parentCompany": "Kape Technologies",
+  "ownership": "subsidiary",
+  "warrantCanary": false,
+  "ramOnlyServers": true,
+  "transparencyReports": ["https://www.privateinternetaccess.com/blog/category/transparency/"],
+  "serverNetwork": {
+    "serverCount": 10000,
+    "countryCount": 84,
+    "countries": ["AL","AR","AT","AU","AZ","BD","BE","BG","BH","BO","BR","CA","CH","CL","CO","CR","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GE","GR","GT","HK","HN","HR","HU","ID","IE","IL","IN","IS","IT","JM","JP","KE","KH","KR","KZ","LA","LB","LI","LK","LT","LU","LV","MA","MD","ME","MK","MN","MT","MU","MX","MY","NG","NI","NL","NO","NP","NZ","PA","PE","PH","PK","PL","PR","PT","PY","QA","RO","RS","SA","SE","SG","SI","SK","SV","TH","TR","TW","UA","US","UY","VE","VN","ZA"],
+    "virtualLocations": true,
+    "ownedInfrastructure": false
+  },
+  "protocols": ["wireguard", "openvpn", "ikev2"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "browser-extension"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "port-forwarding", "ad-blocker", "obfuscation"],
+  "streaming": [
+    { "service": "netflix", "support": "partial", "verifiedAt": "2025-10-15", "notes": "Access varies by region. Some Netflix libraries are consistently accessible while others require server switching." },
+    { "service": "disney-plus", "support": "partial", "verifiedAt": "2025-10-15" },
+    { "service": "prime-video", "support": "partial", "verifiedAt": "2025-10-01" },
+    { "service": "hbo-max", "support": "partial", "verifiedAt": "2025-10-01" },
+    { "service": "hulu", "support": "unsupported", "verifiedAt": "2025-10-01" },
+    { "service": "bbc-iplayer", "support": "unsupported" }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": true,
+    "portForwarding": true,
+    "rating": 9,
+    "notes": "Port forwarding supported on all servers. P2P traffic allowed and optimized across the network."
+  },
+  "loggingPolicy": "no-logs",
+  "dnsHandling": "Private DNS servers via MACE feature. DNS queries filtered for ads, trackers, and malware.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch available on all major platforms. PIA MACE provides additional DNS-level filtering.",
+  "obfuscationType": "stealth",
+  "postQuantum": false,
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": true,
+  "multiHop": false,
+  "dedicatedIp": false,
+  "simultaneousConnections": 0,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      { "cycle": "monthly", "price": 11.99, "currency": "USD", "effectiveMonthly": 11.99 },
+      { "cycle": "yearly", "price": 39.95, "currency": "USD", "effectiveMonthly": 3.33 },
+      { "cycle": "triennially", "price": 69.75, "currency": "USD", "effectiveMonthly": 1.94, "featured": true }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": ["credit-card", "paypal", "bitcoin", "ethereum", "gift-card"],
+    "freeTier": false
+  },
+  "support": {
+    "liveChat": true,
+    "email": true,
+    "knowledgeBase": true,
+    "averageResponseTime": "Within 10 minutes (live chat)"
+  },
+  "audits": [
+    {
+      "auditor": "Deloitte",
+      "date": "2023-08-01",
+      "scope": "No-logs policy audit covering data collection, retention, and infrastructure controls.",
+      "reportUrl": "https://www.privateinternetaccess.com/blog/pia-completes-annual-no-log-audit-with-deloitte/",
+      "independent": true
+    }
+  ],
+  "updatedAt": "2025-12-10",
+  "sources": [
+    "https://www.privateinternetaccess.com/pages/vpn-servers/",
+    "https://www.privateinternetaccess.com/blog/pia-completes-annual-no-log-audit-with-deloitte/"
+  ]
+}

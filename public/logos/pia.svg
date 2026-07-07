@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 32" fill="none">
+  <rect y="0" width="32" height="32" rx="8" fill="#24954D"/>
+  <path d="M11 10v12l5-6 5 6V10" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <text x="40" y="23" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="currentColor" letter-spacing="-0.3">Private Internet Access</text>
+</svg>

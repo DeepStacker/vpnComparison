@@ -1,0 +1,75 @@
+{
+  "id": "windscribe",
+  "slug": "windscribe",
+  "name": "Windscribe",
+  "tagline": "Generous free tier with 10 GB/month, unique R.O.B.E.R.T. custom DNS blocking, and Build-a-Plan pricing.",
+  "websiteUrl": "https://windscribe.com/",
+  "foundedYear": 2015,
+  "jurisdiction": "CA",
+  "hqCountry": "CA",
+  "parentCompany": "Windscribe Limited",
+  "ownership": "private",
+  "warrantCanary": false,
+  "ramOnlyServers": true,
+  "transparencyReports": ["https://windscribe.com/transparency"],
+  "serverNetwork": {
+    "serverCount": 500,
+    "countryCount": 63,
+    "countries": ["AL","AR","AT","AU","BA","BE","BG","BR","CA","CH","CL","CO","CR","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GE","GR","HK","HR","HU","ID","IE","IL","IN","IS","IT","JP","KR","LT","LU","LV","MD","MX","MY","NG","NL","NO","NZ","PA","PE","PH","PL","PT","RO","RS","SA","SE","SG","SI","SK","TH","TR","TW","UA","US","VN","ZA"],
+    "virtualLocations": false,
+    "ownedInfrastructure": false
+  },
+  "protocols": ["wireguard", "openvpn", "ikev2"],
+  "platforms": ["windows", "macos", "linux", "android", "ios", "browser-extension"],
+  "features": ["no-logs", "kill-switch", "split-tunneling", "dns-leak-protection", "ad-blocker", "port-forwarding", "obfuscation"],
+  "streaming": [
+    { "service": "netflix", "support": "verified", "verifiedAt": "2025-10-20", "notes": "Windscribe unblocks Netflix US reliably with desktop and mobile apps. Free-tier servers also work for Netflix US.", "regionsTested": ["US"] },
+    { "service": "disney-plus", "support": "verified", "verifiedAt": "2025-10-20", "regionsTested": ["US","GB","CA"] },
+    { "service": "prime-video", "support": "partial", "verifiedAt": "2025-09-15", "regionsTested": ["US","GB"] },
+    { "service": "hbo-max", "support": "verified", "verifiedAt": "2025-09-15", "regionsTested": ["US"] },
+    { "service": "hulu", "support": "partial", "verifiedAt": "2025-09-15" },
+    { "service": "bbc-iplayer", "support": "unsupported" }
+  ],
+  "torrenting": {
+    "supported": true,
+    "labeledServers": false,
+    "portForwarding": true,
+    "rating": 7,
+    "notes": "P2P allowed on all servers. Port forwarding available on paid plans via WireGuard."
+  },
+  "loggingPolicy": "no-logs",
+  "dnsHandling": "R.O.B.E.R.T. custom DNS blocking. Users can configure block lists at the account level — ads, trackers, malware, social media, and more.",
+  "leakProtection": "Built-in DNS and IPv6 leak protection. Kill switch (Firewall) on all platforms. Configurable firewall rules.",
+  "obfuscationType": "stealth",
+  "postQuantum": false,
+  "killSwitch": true,
+  "splitTunneling": true,
+  "adBlocker": true,
+  "multiHop": false,
+  "dedicatedIp": false,
+  "simultaneousConnections": 0,
+  "pricing": {
+    "currency": "USD",
+    "plans": [
+      { "cycle": "monthly", "price": 9.00, "currency": "USD", "effectiveMonthly": 9.00 },
+      { "cycle": "yearly", "price": 49.00, "currency": "USD", "effectiveMonthly": 4.08, "featured": true }
+    ],
+    "moneyBackGuaranteeDays": 30,
+    "paymentMethods": ["credit-card", "paypal", "bitcoin"],
+    "freeTier": true,
+    "freeTierNotes": "Free plan includes 10 GB/month data, access to servers in 10+ countries, R.O.B.E.R.T. ad blocking, and unlimited bandwidth within the cap. No credit card required."
+  },
+  "support": {
+    "liveChat": true,
+    "email": true,
+    "knowledgeBase": true,
+    "averageResponseTime": "Within 6 hours (email)"
+  },
+  "audits": [],
+  "updatedAt": "2025-12-10",
+  "sources": [
+    "https://windscribe.com/features",
+    "https://windscribe.com/transparency",
+    "https://windscribe.com/upgrade"
+  ]
+}
