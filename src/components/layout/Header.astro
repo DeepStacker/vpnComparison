@@ -12,7 +12,7 @@ import { cx } from "@/lib/utils/string";
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
-  pathname === href || pathname.startsWith(href.replace(/\/$/, "") + "/");
+  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href.replace(/\/$/, "") + "/");
 ---
 
 <header class="sticky top-0 z-header border-b border-border bg-surface/95 backdrop-blur-sm shadow-xs">

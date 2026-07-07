@@ -45,19 +45,73 @@ const breadcrumbs: Breadcrumb[] = [
       <div class="flex items-start gap-4">
         <Icon name={platform.icon as any} size={40} class="mt-1 shrink-0 text-primary" />
         <div>
-          <Badge class="mb-2">{platform.official ? "Official app" : "Compatible"}</Badge>
+          <div class="flex items-center gap-2 mb-2">
+            <Badge>{platform.official ? "Official app" : "Compatible"}</Badge>
+            {platform.category && (
+              <Badge tone="neutral" size="sm">{platform.category}</Badge>
+            )}
+          </div>
           <Heading level={1}>{platform.name} VPN</Heading>
           <Text size="lg" tone="muted" class="mt-2 max-w-2xl">
             {platform.official
               ? `VPN providers with official ${platform.name} apps for seamless protection.`
               : `VPN providers compatible with ${platform.name} setup.`}
           </Text>
+          {platform.minOsVersion && (
+            <Badge tone="info" size="sm" class="mt-3">
+              <Icon name="info" size={11} class="mr-1" />Minimum: {platform.minOsVersion}
+            </Badge>
+          )}
         </div>
       </div>
     </Container>
   </Section>
 
-  <Section>
+  {(platform.limitations || platform.commonIssues) && (
+    <Section>
+      <Container>
+        <Heading level={2}>Platform Notes</Heading>
+        <div class="mt-4 grid gap-6 lg:grid-cols-2">
+          {platform.limitations && platform.limitations.length > 0 && (
+            <Card variant="raised" padding="lg" class="border-t-4 border-warning">
+              <Heading level={3}>
+                <span class="flex items-center gap-2 text-warning">
+                  <Icon name="alert-triangle" size={18} /> Limitations
+                </span>
+              </Heading>
+              <ul class="mt-3 space-y-2">
+                {platform.limitations.map((l) => (
+                  <li class="flex items-start gap-2 text-sm text-foreground">
+                    <Icon name="x" size={14} class="mt-0.5 shrink-0 text-warning" />
+                    <span>{l}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
+          {platform.commonIssues && platform.commonIssues.length > 0 && (
+            <Card variant="raised" padding="lg" class="border-t-4 border-info">
+              <Heading level={3}>
+                <span class="flex items-center gap-2 text-info">
+                  <Icon name="help-circle" size={18} /> Common Issues
+                </span>
+              </Heading>
+              <ul class="mt-3 space-y-2">
+                {platform.commonIssues.map((i) => (
+                  <li class="flex items-start gap-2 text-sm text-foreground">
+                    <Icon name="circle" size={14} class="mt-0.5 shrink-0 text-info" />
+                    <span>{i}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <Section background>
     <Container>
       <Heading level={2}>
         VPNs for {platform.name}
@@ -87,7 +141,7 @@ const breadcrumbs: Breadcrumb[] = [
   </Section>
 
   {relatedGuides.length > 0 && (
-    <Section background>
+    <Section>
       <Container>
         <Heading level={2}>Related Guides</Heading>
         <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
@@ -106,14 +160,14 @@ const breadcrumbs: Breadcrumb[] = [
     </Section>
   )}
 
-  <Section>
+  <Section background padding="tight">
     <Container>
-      <Heading level={2}>Explore by Other Dimensions</Heading>
-      <div class="mt-4 flex flex-wrap gap-3">
-        <a href="/features/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Features</a>
-        <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
-        <a href="/countries/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Countries</a>
-        <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming</a>
+      <Heading level={2} class="text-center">Explore by Other Dimensions</Heading>
+      <div class="mt-4 flex flex-wrap justify-center gap-3">
+        <Button variant="outline" size="sm" href="/features/">Browse Features</Button>
+        <Button variant="outline" size="sm" href="/protocols/">Browse Protocols</Button>
+        <Button variant="outline" size="sm" href="/countries/">Browse Countries</Button>
+        <Button variant="outline" size="sm" href="/streaming/">Browse Streaming</Button>
       </div>
     </Container>
   </Section>

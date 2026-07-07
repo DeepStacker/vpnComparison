@@ -15,7 +15,7 @@ import type { NavItem, NavSection } from "@/types/site";
 export const PRIMARY_NAV: NavItem[] = [
   {
     label: "Reviews",
-    href: "/",
+    href: "/vpn/",
     description: "In-depth VPN reviews with real test data and scores.",
   },
   {
@@ -52,11 +52,11 @@ export const FOOTER_NAV: NavSection[] = [
   {
     title: "Discover",
     links: [
-      { label: "All providers", href: "/#providers" },
+      { label: "All providers", href: "/vpn/" },
       { label: "Best VPNs", href: "/best-lists/" },
       { label: "Comparisons", href: "/comparisons/" },
       { label: "Tools", href: "/tools/" },
-      { label: "Reviews", href: "/" },
+      { label: "Reviews", href: "/vpn/" },
     ],
   },
   {

@@ -28,18 +28,26 @@ const matches = await getProvidersByCountry(country.code);
 const relatedGuides = await getRelatedGuidesForEntity(country.slug);
 
 const regionLabels: Record<string, string> = {
-  "north-america": "North America",
-  "south-america": "South America",
-  europe: "Europe",
-  asia: "Asia",
-  africa: "Africa",
-  oceania: "Oceania",
-  "middle-east": "Middle East",
+  "north-america": "North America", "south-america": "South America",
+  europe: "Europe", asia: "Asia", africa: "Africa",
+  oceania: "Oceania", "middle-east": "Middle East",
+};
+
+const censorshipTone: Record<string, "success" | "warning" | "danger" | "neutral"> = {
+  low: "success", moderate: "warning", high: "danger", extreme: "danger", unknown: "neutral",
+};
+
+const allianceNote: Record<string, string> = {
+  "five-eyes": "Member of Five Eyes intelligence alliance",
+  "nine-eyes": "Member of Nine Eyes intelligence alliance",
+  "fourteen-eyes": "Member of 14 Eyes intelligence alliance",
+  none: "Not part of any surveillance alliance",
+  unknown: "Alliance status unknown",
 };
 
 const seo = normalizeSeoMeta({
   title: `VPNs with Servers in ${country.name} — Providers & Privacy Info`,
-  description: `Find VPN providers with servers in ${country.name}. ${country.jurisdictionNote ? `Privacy note: ${country.jurisdictionNote}` : `Compare ${matches.length} VPNs available in ${country.name}.`}`,
+  description: `Find VPN providers with servers in ${country.name}. Compare ${matches.length} VPNs available in ${country.name}.`,
   canonical: canonicalUrl(`/countries/${slug}/`),
 });
 
@@ -60,34 +68,75 @@ const breadcrumbs: Breadcrumb[] = [
             </span>
             <div>
               <Heading level={1}>{country.name}</Heading>
-              {regionLabels[country.region] && (
-                <Badge tone="neutral" size="sm">{regionLabels[country.region]}</Badge>
-              )}
+              <div class="flex items-center gap-2 mt-1">
+                {regionLabels[country.region] && (
+                  <Badge tone="neutral" size="sm">{regionLabels[country.region]}</Badge>
+                )}
+                {country.privacyFriendly ? (
+                  <Badge tone="success" size="sm">
+                    <Icon name="shield-check" size={11} class="mr-1" />Privacy-Friendly
+                  </Badge>
+                ) : (
+                  <Badge tone="warning" size="sm">
+                    <Icon name="alert-triangle" size={11} class="mr-1" />Surveillance Risk
+                  </Badge>
+                )}
+              </div>
             </div>
-          </div>
-          {country.jurisdictionNote && (
-            <div class="mt-4 flex items-start gap-2 rounded-lg border border-warning/20 bg-warning-surface/30 p-3 text-sm">
-              <Icon name="info" size={16} class="mt-0.5 shrink-0 text-warning" />
-              <Text size="sm">{country.jurisdictionNote}</Text>
-            </div>
-          )}
-          <div class="mt-4 flex flex-wrap gap-2">
-            {country.privacyFriendly ? (
-              <Badge tone="success" size="sm">
-                <Icon name="shield-check" size={12} class="mr-1" />Privacy-Friendly Jurisdiction
-              </Badge>
-            ) : (
-              <Badge tone="warning" size="sm">
-                <Icon name="alert-triangle" size={12} class="mr-1" />Surveillance Alliance Member
-              </Badge>
-            )}
           </div>
         </div>
       </div>
     </Container>
   </Section>
 
-  <Section>
+  {country.censorshipLevel && (
+    <Section>
+      <Container>
+        <Heading level={2}>Privacy & Internet Profile</Heading>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-lg border border-border bg-surface p-4">
+            <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Censorship Level</Text>
+            <div class="mt-1">
+              <Badge tone={censorshipTone[country.censorshipLevel] ?? "neutral"}>
+                {country.censorshipLevel.charAt(0).toUpperCase() + country.censorshipLevel.slice(1)}
+              </Badge>
+            </div>
+          </div>
+          <div class="rounded-lg border border-border bg-surface p-4">
+            <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Surveillance</Text>
+            <Text size="sm" tone="muted" class="mt-1">{allianceNote[country.surveillanceAlliance ?? "unknown"]}</Text>
+          </div>
+          <div class="rounded-lg border border-border bg-surface p-4">
+            <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Data Retention Law</Text>
+            <Text weight="semibold" class="mt-1">
+              {country.dataRetentionLaw == null ? "Unknown" : country.dataRetentionLaw ? "Yes" : "No"}
+            </Text>
+          </div>
+          {country.internetPenetration != null && (
+            <div class="rounded-lg border border-border bg-surface p-4">
+              <Text size="xs" tone="muted" class="uppercase tracking-wide font-semibold">Internet Penetration</Text>
+              <Text weight="semibold" class="mt-1">{country.internetPenetration}%</Text>
+            </div>
+          )}
+        </div>
+
+        {country.recommendedProtocols && country.recommendedProtocols.length > 0 && (
+          <div class="mt-4">
+            <Text size="sm" weight="semibold" class="flex items-center gap-2">
+              <Icon name="terminal" size={14} class="text-primary" /> Recommended Protocols
+            </Text>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {country.recommendedProtocols.map((p) => (
+                <Badge tone="info" size="sm">{p}</Badge>
+              ))}
+            </div>
+          </div>
+        )}
+      </Container>
+    </Section>
+  )}
+
+  <Section background>
     <Container>
       <Heading level={2}>
         VPNs with Servers in {country.name}
@@ -115,9 +164,7 @@ const breadcrumbs: Breadcrumb[] = [
               </Badge>
             </div>
             <div class="mt-auto pt-4">
-              <Button variant="outline" size="sm" href={`/vpn/${provider.slug}/`}>
-                View Details
-              </Button>
+              <Button variant="outline" size="sm" href={`/vpn/${provider.slug}/`}>View Details</Button>
             </div>
           </Card>
         ))}
@@ -126,7 +173,7 @@ const breadcrumbs: Breadcrumb[] = [
   </Section>
 
   {relatedGuides.length > 0 && (
-    <Section background>
+    <Section>
       <Container>
         <Heading level={2}>Related Guides</Heading>
         <Grid cols={1} colsMd={2} colsLg={3} gap={4} class="mt-6">
@@ -145,15 +192,15 @@ const breadcrumbs: Breadcrumb[] = [
     </Section>
   )}
 
-  <Section>
+  <Section background padding="tight">
     <Container>
-      <Heading level={2}>Explore by Other Dimensions</Heading>
-      <div class="mt-4 flex flex-wrap gap-3">
-        <a href="/features/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Features</a>
-        <a href="/protocols/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Protocols</a>
-        <a href="/platforms/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Platforms</a>
-        <a href="/streaming/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Browse Streaming</a>
-        <a href="/comparisons/" class="rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium no-underline text-foreground transition-colors hover:border-primary hover:text-primary">Compare Providers</a>
+      <Heading level={2} class="text-center">Explore by Other Dimensions</Heading>
+      <div class="mt-4 flex flex-wrap justify-center gap-3">
+        <Button variant="outline" size="sm" href="/features/">Browse Features</Button>
+        <Button variant="outline" size="sm" href="/protocols/">Browse Protocols</Button>
+        <Button variant="outline" size="sm" href="/platforms/">Browse Platforms</Button>
+        <Button variant="outline" size="sm" href="/streaming/">Browse Streaming</Button>
+        <Button variant="outline" size="sm" href="/comparisons/">Compare Providers</Button>
       </div>
     </Container>
   </Section>
